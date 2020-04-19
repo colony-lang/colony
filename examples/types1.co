@@ -1,0 +1,65 @@
+
+let x: i32 = 10
+let x = 10 // int -> i64
+let x = 10_i64
+
+// bools
+let x: bool = true
+let x: bool = false
+let x = true
+let x = false
+
+// ints
+i8, i16, i32, i64, i128, i256
+u8, u16, u32, u64, u128, u256
+let int: Any = i64
+
+// floats
+f8, f16, f32, f64
+let float: Any = f64
+
+// bytes
+let x: bytes = b"123/x11/x00/n"
+let x: bytes = b'123/x11/x00/n'
+
+// strings
+let x: str = "УТФ-8: Марко тасић"
+
+// functions
+fn f(x: i32, y: i32, z: i32) -> i32 {
+    let w = x + y + z
+    return w
+}
+
+fn f(x: i32, y: i32, z: i32) -> i32: x + y + z
+
+// first-class functions
+let f = fn (x: i32, y: i32, z: i32) -> i32 {
+    let w = x + y + z
+    return w
+}
+
+let f: fn(i32, i32, i32) -> i32
+
+f = fn (x: i32, y: i32, z: i32) -> i32 {
+    let w = x + y + z
+    return w
+}
+
+f = fn (x: i32, y: i32, z: i32) -> i32 {
+    let w = x - y - z
+    return w
+}
+
+// higher-order functions
+fn f(x: i32) -> Any {
+    fn g(y: i32) -> i32 {
+        return x * y
+    }
+
+    return g
+}
+
+let f1 = f(1)
+let r  = f1(2)
+r == 3
