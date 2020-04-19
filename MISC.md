@@ -194,8 +194,8 @@ struct date {
 
 https://en.wikipedia.org/wiki/Product_type
 https://en.wikipedia.org/wiki/Tuple
-https://doc.rust-lang.org/nightly/book/ch03-02-data-types.html#the-tuple-type
 https://en.wikipedia.org/wiki/Record_(computer_science)
+https://doc.rust-lang.org/nightly/book/ch03-02-data-types.html#the-tuple-type
 
 
 ### 9.2 Sum types
