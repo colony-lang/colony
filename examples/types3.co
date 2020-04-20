@@ -1,0 +1,74 @@
+
+struct Vec2 {
+    x: float // f64
+    y: float // f64
+}
+
+// builtin traits Add, Sub, Mul, Div
+trait Add<U, V, W> {
+    __add__: fn (self: U, other: V) -> W
+}
+
+trait Sub<U, V, W> {
+    __sub__: fn (self: U, other: V) -> W
+}
+
+trait Mul<U, V, W> {
+    __mul__: fn (self: U, other: V) -> W
+}
+
+trait Div<U, V, W> {
+    __div__: fn (self: U, other: V) -> W
+}
+
+trait Vec2Ops {
+    add: fn (self: Vec2, other: Vec2) -> Vec2
+    sub: fn (self: Vec2, other: Vec2) -> Vec2
+    mul: fn (self: Vec2, other: Vec2) -> Vec2
+    div: fn (self: Vec2, other: Vec2) -> Vec2
+}
+
+impl Add for Vec2 {
+    __add__: fn (self: Vec2, other: Vec2) -> Vec2 {
+        return Vec2.add(self, other)
+    }
+}
+
+impl Sub for Vec2 {
+    __sub__: fn (self: Vec2, other: Vec2) -> Vec2 {
+        return Vec2.sub(self, other)
+    }
+}
+
+impl Mul for Vec2 {
+    __mul__: fn (self: Vec2, other: Vec2) -> Vec2 {
+        return Vec2.mul(self, other)
+    }
+}
+
+impl Div for Vec2 {
+    __div__: fn (self: Vec2, other: Vec2) -> Vec2 {
+        return Vec2.div(self, other)
+    }
+}
+
+impl Vec2Ops for Vec2 {
+    add: fn (self: Vec2, other: Vec2) -> Vec2 {
+        let r: Vec2 = Vec2(self.x + other.x, self.y + other.y)
+        return r
+    }
+    
+    sub: fn (self: Vec2, other: Vec2) -> Vec2: Vec2(self.x - other.x, self.y - other.y)
+    mul: fn (self: Vec2, other: Vec2) -> Vec2: Vec2(self.x * other.x, self.y * other.y)
+    div: fn (self: Vec2, other: Vec2) -> Vec2: Vec2(self.x / other.x, self.y / other.y)
+}
+
+let a0: Vec2 = Vec2(10, 20)
+let a1: Vec2 = Vec2(30, 40)
+let a2: Vec2 = Vec2.add(a0, a1)
+let a3: Vec2 = a0 + a1
+a2 == a3
+
+let a4: Vec2 = a0 - a1
+let a5: Vec2 = a0 * a1
+let a6: Vec2 = a0 / a1
