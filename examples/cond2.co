@@ -1,0 +1,26 @@
+/* example 1 js
+let s0 = 0;
+
+for (let i = 0; i < 10; i++) {
+    s0 += (i * 2);
+}
+*/
+
+// let a0 = range(10)
+// a0 == [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+let s0 = sum(range(10).map(fn n: n * 2))
+let s0_a = sum(map(range(10), fn n: n * 2))
+
+/* example 2 js
+let s1 = 0;
+
+for (let i = 0; i < 10; i++) {
+    s1 += (i * 2);
+
+    if (i >= 5) {
+        break;
+    }
+}
+*/
+let s1 = sum(range(10).filter(fn n: n < 5).map(fn n: n * 2))
+let s1_0 = sum(map(filter(range(10), fn n: n < 5), fn n: n * 2))

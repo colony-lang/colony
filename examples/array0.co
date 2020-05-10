@@ -1,0 +1,47 @@
+
+// example 1
+let a = range(5, 1, -1)
+// a == [5, 4, 3, 2]
+
+fn range<T>(begin: T, end: T, step: T) -> Array[T] {
+    // assert: step == 1
+
+    // determin size of array
+    let len = if (begin < end) {
+        end - begin
+    } else {
+        begin - end
+    }
+
+    // create array
+    let arr: Array[T] = _Array_new_with_len(len)
+
+    // populate
+    let curr: T = begin
+
+    for (let i = 0; i < len; i++) {
+        arr[i] = curr
+        curr += step
+    }
+
+    return arr
+}
+
+
+// example 2
+let b = range(2)
+b += range(2, 4)
+b += range(4, 6)
+b += range(6, 8)
+b += range(8, 10)
+// b == [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+
+let c = trans_range(10)
+
+fn trans_range(end: int) -> Array[int] {
+    let mut_arr = _Mutable_Array_new_with_len(end)
+    each(mut_arr.items(), fn (i, n): mut_arr[i] = i)
+    let arr = mut_arr.get_array()
+    return arr
+}
