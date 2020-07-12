@@ -126,7 +126,7 @@ type A: Object {
 }
 
 // let _target = A
-// let _func = _target.__getattr__("__call__")
+// let _func = _target.__type__.__getattr__("__call__")
 // let a0: A = _func(...[0], ...{.y: 1})
 let a0: A = A(0, y=1)
 let a1: A = A(0)
@@ -138,11 +138,11 @@ let {x: x1, y: y1, {rest}} = a1
 let {x, y} = a2
 
 // let _target = a0
-// let _func = _target.__getattr__("__add__")
+// let _func = _target.__type__.__getattr__("__add__")
 // let a3: A = _func(a1)
 let a3: A = a0 + a1
 
 // let _target = a0
-// let _func = _target.__getattr__("add")
+// let _func = _target.__type__.__getattr__("add")
 // let a4: A = _func(a1)
 let a4: A = a0.add(a1)
