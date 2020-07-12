@@ -43,12 +43,27 @@ type Object {
         "<{} at {}>".format(self.__type__.__name__, addressof(self))
     }
 
-    fn __getattr__(self: __type__, attr: str) -> Object {
-        // TODO
+    fn __getattr__(self: __type__, attr: str) -> Option<Object> {
+        let value: Option<Object> = self.__fields__.get(attr)
+
+        match value {
+            Some(_) -> value
+            None -> {
+                value = self.__funcs__.get(attr)
+
+                match value {
+                    Fn -> fn([args], {kwargs}) -> Object {
+                        value(self, ...args, ...kwargs)
+                    }
+                    _ -> value
+                }
+            }
+        }
     }
 
     fn __setattr__(self: __type__, attr: str, value: Object) -> __type__ {
-        // TODO
+        let res: __type__ = {...self, attr: value} // Preserve order of fields?!
+        res
     }
 }
 
@@ -61,19 +76,9 @@ type Type {
     __fields__: Dict<str, List<Type, Object>> = {} // field_name: field_type = field_default_value
 
     __funcs__: Dict<str, Fn> = {
-        "__getattr__": ...,
-        "__setattr__": ...,
         "__call__": ...,
     }
     */
-    fn __getattr__(tp: Type, attr: str) -> Object {
-        // TODO
-    }
-
-    fn __setattr__(tp: Type, attr: str, value: Object) -> Type {
-        // TODO
-    }
-
     fn __call__(tp: Type, [args], {kwargs}) -> Type {
         let self: tp = tp.__new__(...[args], ...{kwargs})
         self = self.__init__(...[args], ...{kwargs})
