@@ -12,6 +12,8 @@ type Object {
         "__init__": ...,
         "__del__": ...,
         "__repr__": ...,
+        "__getattr__": ...,
+        "__setattr__": ...,
     }
     */
     fn __new__(tp: Type, [args], {kwargs}) -> __type__ {
@@ -40,6 +42,14 @@ type Object {
     fn __repr__(self: __type__) -> str {
         "<{} at {}>".format(self.__type__.__name__, addressof(self))
     }
+
+    fn __getattr__(self: __type__, attr: str) -> Object {
+        // TODO
+    }
+
+    fn __setattr__(self: __type__, attr: str, value: Object) -> __type__ {
+        // TODO
+    }
 }
 
 type Type {
@@ -51,9 +61,18 @@ type Type {
     __fields__: Dict<str, List<Type, Object>> = {} // field_name: field_type = field_default_value
 
     __funcs__: Dict<str, Fn> = {
+        "__getattr__": ...,
+        "__setattr__": ...,
         "__call__": ...,
     }
     */
+    fn __getattr__(tp: Type, attr: str) -> Object {
+        // TODO
+    }
+
+    fn __setattr__(tp: Type, attr: str, value: Object) -> Type {
+        // TODO
+    }
 
     fn __call__(tp: Type, [args], {kwargs}) -> Type {
         let self: tp = tp.__new__(...[args], ...{kwargs})
@@ -64,7 +83,7 @@ type Type {
 
 // type "A" is derived from "Object"
 // NOTE: all types are by defauly derived from "Object"
-//       so developer do not need to manually derive it
+//       so developer does not need to manually derive it
 type A: Object {
     /*
     __type__: Type = Type
@@ -102,8 +121,8 @@ type A: Object {
 }
 
 // let _target = A
-// let _func = _target.__type__.__call__
-// let a0: A = _func(_target, ...[0], ...{.y: 1})
+// let _func = _target.__getattr__("__call__")
+// let a0: A = _func(...[0], ...{.y: 1})
 let a0: A = A(0, y=1)
 let a1: A = A(0)
 let a2: A = A()
@@ -114,11 +133,11 @@ let {x: x1, y: y1, {rest}} = a1
 let {x, y} = a2
 
 // let _target = a0
-// let _func = _target.__type__.__add__
-// let a3: A = _func(_target, a1)
+// let _func = _target.__getattr__("__add__")
+// let a3: A = _func(a1)
 let a3: A = a0 + a1
 
 // let _target = a0
-// let _func = _target.__type__.add
-// let a3: A = _func(_target, a1)
+// let _func = _target.__getattr__("add")
+// let a4: A = _func(a1)
 let a4: A = a0.add(a1)
