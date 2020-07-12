@@ -1,74 +1,124 @@
 
-struct Vec2 {
-    x: float // f64
-    y: float // f64
-}
+type Object {
+    /*
+    __type__: Type = Type
+    __bases__: List[Type] = []
+    __name__: str = "Object"
+    
+    __fields__: Dict<str, List<Type, Object>> = {} // field_name: field_type = field_default_value
+    
+    __funcs__: Dict<str, Fn> = {
+        "__new__": ...,
+        "__init__": ...,
+        "__del__": ...,
+        "__repr__": ...,
+    }
+    */
+    fn __new__(tp: Type, [args], {kwargs}) -> __type__ {
+        let self: tp = {
+            .__type__: tp,
+            ...tp.__fields__
+                 .items()
+                 .slice(0, args.len())
+                 .zip(args)
+                 .map(fn (field: List<str, List<Type, Object>>, arg: Object): [field[0], arg])
+                 .dict(),
+            ...kwargs
+        }
 
-// builtin traits Add, Sub, Mul, Div
-trait Add<U, V, W> {
-    __add__: fn (self: U, other: V) -> W
-}
+        self
+    }
 
-trait Sub<U, V, W> {
-    __sub__: fn (self: U, other: V) -> W
-}
+    fn __init__(self: __type__, [args], {kwargs}) -> __type__ {
+        self
+    }
 
-trait Mul<U, V, W> {
-    __mul__: fn (self: U, other: V) -> W
-}
+    fn __del__(self: __type__) {
+        // pass
+    }
 
-trait Div<U, V, W> {
-    __div__: fn (self: U, other: V) -> W
-}
-
-trait Vec2Ops {
-    add: fn (self: Vec2, other: Vec2) -> Vec2
-    sub: fn (self: Vec2, other: Vec2) -> Vec2
-    mul: fn (self: Vec2, other: Vec2) -> Vec2
-    div: fn (self: Vec2, other: Vec2) -> Vec2
-}
-
-impl Add for Vec2 {
-    __add__: fn (self: Vec2, other: Vec2) -> Vec2 {
-        return Vec2.add(self, other)
+    fn __repr__(self: __type__) -> str {
+        "<{} at {}>".format(self.__type__.__name__, addressof(self))
     }
 }
 
-impl Sub for Vec2 {
-    __sub__: fn (self: Vec2, other: Vec2) -> Vec2 {
-        return Vec2.sub(self, other)
+type Type {
+    /*
+    __type__: Type = Type
+    __bases__: List[Type] = [Object]
+    __name__: str = "Type"
+
+    __fields__: Dict<str, List<Type, Object>> = {} // field_name: field_type = field_default_value
+
+    __funcs__: Dict<str, Fn> = {
+        "__call__": ...,
+    }
+    */
+
+    fn __call__(tp: Type, [args], {kwargs}) -> Type {
+        let self: tp = tp.__new__(...[args], ...{kwargs})
+        self = self.__init__(...[args], ...{kwargs})
+        self
     }
 }
 
-impl Mul for Vec2 {
-    __mul__: fn (self: Vec2, other: Vec2) -> Vec2 {
-        return Vec2.mul(self, other)
-    }
-}
-
-impl Div for Vec2 {
-    __div__: fn (self: Vec2, other: Vec2) -> Vec2 {
-        return Vec2.div(self, other)
-    }
-}
-
-impl Vec2Ops for Vec2 {
-    add: fn (self: Vec2, other: Vec2) -> Vec2 {
-        let r: Vec2 = Vec2(self.x + other.x, self.y + other.y)
-        return r
+// type "A" is derived from "Object"
+// NOTE: all types are by defauly derived from "Object"
+//       so developer do not need to manually derive it
+type A: Object {
+    /*
+    __type__: Type = Type
+    __bases__: List[Type] = [Object]
+    __name__: str = "A"
+    
+    __fields__: Dict<str, List<Type, Object>> = {
+        .x: [i32, i32.default()],
+        .y: [i32, 0],
     }
     
-    sub: fn (self: Vec2, other: Vec2) -> Vec2: Vec2(self.x - other.x, self.y - other.y)
-    mul: fn (self: Vec2, other: Vec2) -> Vec2: Vec2(self.x * other.x, self.y * other.y)
-    div: fn (self: Vec2, other: Vec2) -> Vec2: Vec2(self.x / other.x, self.y / other.y)
+    __funcs__: Dict<str, Fn> = {
+        "__init__": fn ... ,
+        "__add__": fn ... ,
+        "add": fn ... ,
+    }
+    */
+    x: i32
+    y: i32 = 0
+
+    fn __init__(self: A, x: i32=0, y: i32=0) -> A {
+        self.x = x // self = self.__setattr__('x', x)
+        self.y = y // self = self.__setattr__('y', y)
+        self
+    }
+
+    fn __add__(self: A, other: A) -> A {
+        let res: A = A(self.x + other.x, self.y + other.y)
+        res
+    }
+
+    fn add(self: A, other: A) -> A {
+        self.__add__(other)
+    }
 }
 
-let a0: Vec2 = Vec2(10, 20)
-let a1: Vec2 = Vec2(30, 40)
-let a2: Vec2 = Vec2.add(a0, a1)
-let a3: Vec2 = a0 + a1
-a2 == a3
+// let _target = A
+// let _func = _target.__type__.__call__
+// let a0: A = _func(_target, ...[0], ...{.y: 1})
+let a0: A = A(0, y=1)
+let a1: A = A(0)
+let a2: A = A()
 
-let a4: Vec2 = a0 - a1
-let a5: Vec2 = a0 * a1
-let a6: Vec2 = a0 / a1
+// destructure object
+let [0: x0, 1: y0, [rest]] = a0
+let {x: x1, y: y1, {rest}} = a1
+let {x, y} = a2
+
+// let _target = a0
+// let _func = _target.__type__.__add__
+// let a3: A = _func(_target, a1)
+let a3: A = a0 + a1
+
+// let _target = a0
+// let _func = _target.__type__.add
+// let a3: A = _func(_target, a1)
+let a4: A = a0.add(a1)

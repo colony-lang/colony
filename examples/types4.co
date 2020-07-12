@@ -1,74 +1,14 @@
 
-struct Vec2 {
-    x: f64 = 0.0
-    y: f64 = 0.0
-}
+type B<U, V> {
+    x: U
+    y: V
 
-trait Vec2ops {
-    new_with_y: fn(self: Vec2, y: f64) -> Vec2
-}
-
-impl Vec2ops for Vec2 {
-    /*new_with_y: fn(cls: Type, y: f64) -> Vec2 {
-        return Vec2(0.0, y)
-    }*/
-
-    /*new_with_y: fn(cls: Type, y: f64) -> Vec2 {
-        Vec2(0.0, y)
-    }*/
-
-    /*new_with_y: fn(cls: Type, y: f64) -> Vec2: Vec2(0.0, y)*/
-    
-    new_with_y: fn(cls: Type, y: f64) -> Vec2: Vec2(Vec2.x.value, y)
-}
-
-let a0: Vec2 = Vec2(1.0, 2.0)
-let a1: Vec2 = Vec2(2.0)
-let a2: Vec2 = Vec2.new_with_y(2.0)
-let a3: Vec2 = Vec2(Vec2.x.value, 2.0)
-
-
-
-impl GetAttr for Vec2 {
-    __getattr__: fn(self: Vec2, attr: str) -> Any {
-        /*
-        if attr == 'z': return -1.0
-        elif attr == 'w': return -2.0
-        elif attr == 'r': return -3.0
-        else: return -0.0
-        */
-        
-        /*
-        return if attr == 'z': -1.0
-               elif attr == 'w': -2.0
-               elif attr == 'r': -3.0
-               else: -0.0
-        */
-
-        match attr {
-            'z' -> -1.0
-            'w' -> -2.0
-            'r' -> -3.0
-            _ -> -0.0
-        }
+    fn __add__(self: B, other: B) -> B {
+        let res: B = B(self.x + other.x, self.y + other.y)
+        res
     }
 }
 
-let a0: Vec2 = Vec2()
-print(a0.z) // stdout: -1.0
-print(a0.w) // stdout: -2.0
-print(a0.r) // stdout: -3.0
-print(a0.s) // stdout: -0.0
-print(a0.t) // stdout: -0.0
-
-
-impl SetAttr for Vec2 {
-    __setattr__: fn(self: Vec2, attr: str, value: Any) -> Vec2 {
-        match attr {
-            'q' -> Vec2(-100_f64, -100_f64)
-            _ -> Vec2()
-        }
-    }
-}
-
-let a1: Vec2 = (a0.q = 1000.0)
+let b0: B<f64, i64> = B(1.0, 1)
+let b1: B<f64, i64> = B(2.0, 2)
+let b2: B = b0 + b1

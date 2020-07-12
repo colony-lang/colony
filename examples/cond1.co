@@ -1,16 +1,16 @@
 
-let a = 10;
+let a: i32 = 10
 
-let b = if a == 10 {
+let b: i32 = if a == 10 {
     a * 2
 }
 
-let c = if a == 10: a * 2
+let c: Option<i32> = if a == 10: a * 2
 
-let d = if a % 2 {
+let d: str = if a % 2 {
     'odd'
 } else {
     'even'
 }
 
-let e = if a % 2: 'odd'; else: 'even'
+let e: str = if a % 2: 'odd'; else: 'even'

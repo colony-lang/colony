@@ -12,47 +12,56 @@ let x = false
 // ints
 i8, i16, i32, i64, i128, i256
 u8, u16, u32, u64, u128, u256
-let int: Any = i64
+let int: Type = i64
 
 // floats
 f8, f16, f32, f64
-let float: Any = f64
+let float: Type = f64
 
 // bytes
 let x: bytes = b"123/x11/x00/n"
 let x: bytes = b'123/x11/x00/n'
 
 // strings
-let x: str = "УТФ-8: Марко тасић"
+let x: str = "УТФ-8: Марко Тасић"
 
 // functions
 fn f(x: i32, y: i32, z: i32) -> i32 {
-    let w = x + y + z
+    let w: i32 = x + y + z
     return w
+}
+
+fn f(x: i32, y: i32, z: i32) -> i32 {
+    let w: i32 = x + y + z
+    w
+}
+
+fn f(x: i32, y: i32, z: i32) -> i32 {
+    x + y + z
 }
 
 fn f(x: i32, y: i32, z: i32) -> i32: x + y + z
 
 // first-class functions
 let f = fn (x: i32, y: i32, z: i32) -> i32 {
-    let w = x + y + z
+    let w: i32 = x + y + z
     return w
 }
 
-let f: fn(i32, i32, i32) -> i32
+let f: Fn<i32, i32, i32, i32>
 
 f = fn (x: i32, y: i32, z: i32) -> i32 {
-    let w = x + y + z
+    let w: i32 = x + y + z
     return w
 }
 
 f = fn (x: i32, y: i32, z: i32) -> i32 {
-    let w = x - y - z
+    let w: i32 = x - y - z
     return w
 }
 
 // higher-order functions
-fn f(x: i32) -> Any {
+fn f(x: i32) -> Fn<i32, i32> {
     fn g(y: i32) -> i32 {
         return x * y
     }
@@ -60,6 +69,8 @@ fn f(x: i32) -> Any {
     return g
 }
 
-let f1 = f(1)
-let r  = f1(2)
+fn f(x: i32) -> Fn<i32, i32>: fn g(y: i32) -> i32: x * y
+
+let f1: Fn<i32, i32> = f(1)
+let r: i32  = f1(2)
 r == 3
