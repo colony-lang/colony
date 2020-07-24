@@ -42,32 +42,9 @@ type Object {
     fn __repr__(self: __type__) -> str {
         "<{} at {}>".format(self.__type__.__name__, addressof(self))
     }
-
-    fn __getattr__(self: __type__, attr: str) -> Option<Object> {
-        let value: Option<Object> = self.__fields__.get(attr)
-
-        match value {
-            Some(_) -> value
-            None -> {
-                value = self.__funcs__.get(attr)
-
-                match value {
-                    Fn -> fn([args], {kwargs}) -> Object {
-                        value(self, ...args, ...kwargs)
-                    }
-                    _ -> value
-                }
-            }
-        }
-    }
-
-    fn __setattr__(self: __type__, attr: str, value: Object) -> __type__ {
-        let res: __type__ = {...self, attr: value} // Preserve order of fields?!
-        res
-    }
 }
 
-type Type {
+type Type: Object {
     /*
     __type__: Type = Type
     __bases__: List[Type] = [Object]
@@ -84,6 +61,37 @@ type Type {
         self = self.__init__(...[args], ...{kwargs})
         self
     }
+}
+
+type Fn: Object {
+    fn __get__(self: Fn, owner: Object) -> Fn {
+        match owner {
+            Type -> fn ([args], {kwargs}) -> Object {
+                self(...args, ...kwargs)
+            }
+            _ -> fn ([args], {kwargs}) -> Object {
+                self(owner, ...args, ...kwargs)
+            }
+        }
+    }
+}
+
+fn getattr(obj: Object, attr: str) -> Object {
+    let value: Option<Object> = obj.__type__[attr]
+    
+    // TODO
+    match value {
+        Some { v } -> {}
+        None -> {
+            
+        }
+    }
+
+    value
+}
+
+fn setattr(obj: Object, attr: str, value: Object) -> Object {
+    // TODO
 }
 
 // type "A" is derived from "Object"
@@ -126,7 +134,7 @@ type A: Object {
 }
 
 // let _target = A
-// let _func = _target.__type__.__getattr__("__call__")
+// let _func = getattr(_target, "__call__")
 // let a0: A = _func(...[0], ...{.y: 1})
 let a0: A = A(0, y=1)
 let a1: A = A(0)
@@ -138,11 +146,11 @@ let {x: x1, y: y1, {rest}} = a1
 let {x, y} = a2
 
 // let _target = a0
-// let _func = _target.__type__.__getattr__("__add__")
+// let _func = getattr(_target, "__add__")
 // let a3: A = _func(a1)
 let a3: A = a0 + a1
 
 // let _target = a0
-// let _func = _target.__type__.__getattr__("add")
+// let _func = getattr(_target, "add")
 // let a4: A = _func(a1)
 let a4: A = a0.add(a1)
