@@ -2,9 +2,9 @@
 #define CO_FRAME_H
 
 #include "vm.h"
-#include "code.h"
 #include "object.h"
 
+struct co_frame_t;
 
 typedef struct co_frame_t {
     struct co_vm_t* vm;

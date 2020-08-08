@@ -1,7 +1,6 @@
 #include <stdlib.h>
 
 #include "vm.h"
-#include "code.h"
 #include "frame.h"
 #include "object.h"
 
