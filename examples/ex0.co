@@ -1,0 +1,29 @@
+
+let a: i32 = 10_i32 // ok
+let b: i32 = i32.from_u32(10_u32) // ok
+
+let a: Array = [0_u32, 1_i64, 2.0_f32, 3.0_f64, false, true] // ok
+let a: Array<Object> = [0_u32, 1_i64, 2.0_f32, 3.0_f64, false, true] // ok
+let b: Array<u8> = [0_u8, 1_u8, 2_u8, 255_u8] // ok
+
+let a: bool = if 10_i64 == 10_i64 {
+    false
+} else if 10_u32 == 10_u32 {
+    true
+} else {
+    false
+}
+
+fn f1(x: f32, y: f32) -> f32 {
+    return x + y
+}
+
+let f2: Fn = fn (x: f32, y: f32) -> f32 {
+    return x + y
+}
+
+let f3: Fn = fn (x: f32, y: f32) -> f32: x + y
+
+let f4: Fn[[f32, f32], f32] = fn (x: f32, y: f32) -> f32: x + y
+
+let f5 = fn (x, y): x + y
