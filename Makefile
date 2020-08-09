@@ -1,7 +1,7 @@
-CC=gcc
+CC=clang
 CFLAGS=-c -Wall -O0 -g
 LDFLAGS=-lm -lpthread
-SOURCES=main.c colony.c vm.c frame.c object.c
+SOURCES=main.c colony.c vm.c compiler.c object.c
 OBJECTS=$(SOURCES:.c=.o)
 EXECUTABLE=colony
 

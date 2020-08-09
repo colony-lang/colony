@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 #include "vm.h"
-#include "frame.h"
+#include "compiler.h"
 #include "object.h"
 
 #endif
