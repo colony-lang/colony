@@ -188,10 +188,104 @@ void co_str_free(co_vm_t* vm, co_object_t* self) {
 /*
  * mut_array
  */
+co_object_t* co_mut_array_new(co_vm_t* vm, co_own_t own, size_t cap, size_t len, co_object_t** items) {
+    if (cap == 0) {
+        cap = 8;
+    }
+
+    if (len > 0 && items == NULL) {
+        len = 0;
+    }
+
+    if (items == NULL) {
+        own = CO_OWN_FULL;
+        items = calloc(cap, sizeof(co_object_t*));
+    }
+
+    co_mut_array_t mut_array = {.len = len, .cap = cap, .items = items};
+    co_value_t value = {.mut_array = mut_array};
+    co_object_t* self = co_object_new(vm, own, CO_KIND_MUT_ARRAY, value);
+    return self;
+}
+
+void co_mut_array_free(co_vm_t* vm, co_object_t* self) {
+    co_value_t value = self->value;
+    co_mut_array_t mut_array = value.mut_array;
+    co_object_t* item = NULL;
+
+    switch (self->own) {
+        case CO_OWN_FULL:
+            for (size_t i = 0; i < mut_array.len; i++) {
+                item = mut_array.items[i];
+                CO_OBJECT_UNREF(vm, item);
+            }
+        case CO_OWN_CONTAINER:
+            free(mut_array.items);
+        case CO_OWN_NONE:
+        default:
+            ;
+    }
+
+    free(self);
+}
 
 /*
  * mut_map
  */
+co_object_t* co_mut_map_new(co_vm_t* vm, co_own_t own, size_t cap, size_t used, size_t fill, co_map_entry_t* entries) {
+    if (cap == 0) {
+        cap = 8;
+    }
+
+    if (used > 0 && entries == NULL) {
+        used = 0;
+    }
+
+    if (fill > 0 && entries == NULL) {
+        fill = 0;
+    }
+
+    if (entries == NULL) {
+        own = CO_OWN_FULL;
+        entries = calloc(cap, sizeof(co_map_entry_t));
+    }
+
+    co_mut_map_t mut_map = {.cap = cap, .fill = fill, .used = used, .entries = entries};
+    co_value_t value = {.mut_map = mut_map};
+    co_object_t* self = co_object_new(vm, own, CO_KIND_MUT_MAP, value);
+    return self;
+}
+
+void co_mut_map_free(co_vm_t* vm, co_object_t* self) {
+    co_value_t value = self->value;
+    co_mut_map_t mut_map = value.mut_map;
+    co_map_entry_t entry;
+    co_object_t* k = NULL;
+    co_object_t* v = NULL;
+
+    switch (self->own) {
+        case CO_OWN_FULL:
+            for (size_t i = 0; i < mut_map.cap; i++) {
+                entry = mut_map.entries[i];
+                k = entry.key;
+                v = entry.value;
+                
+                if (k == NULL) {
+                    continue;
+                }
+
+                CO_OBJECT_UNREF(vm, k);
+                CO_OBJECT_UNREF(vm, v);
+            }
+        case CO_OWN_CONTAINER:
+            free(mut_map.entries);
+        case CO_OWN_NONE:
+        default:
+            ;
+    }
+
+    free(self);
+}
 
 /*
  * array
@@ -275,8 +369,10 @@ void co_object_free(co_vm_t* vm, co_object_t* self) {
             co_str_free(vm, self);
             break;
         case CO_KIND_MUT_ARRAY:
+            co_mut_array_free(vm, self);
             break;
         case CO_KIND_MUT_MAP:
+            co_mut_map_free(vm, self);
             break;
         case CO_KIND_ARRAY:
             break;
@@ -297,4 +393,12 @@ void co_object_free(co_vm_t* vm, co_object_t* self) {
         default:
             free(self);
     }
+}
+
+inline void co_object_ref(co_vm_t* vm, co_object_t* self) {
+    CO_OBJECT_REF(vm, self);
+}
+
+inline void co_object_unref(co_vm_t* vm, co_object_t* self) {
+    CO_OBJECT_UNREF(vm, self);
 }

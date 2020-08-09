@@ -22,7 +22,7 @@ int main(int argc, char** argv, char** env_var_ptr) {
     /* parse argv */
     int opt;
     bool arg_compile = false;
-    char* main_module_path = NULL; 
+    char* main_module_path = NULL;
 
     while ((opt = getopt(argc, argv, "ch")) != -1) {
         switch (opt) {
@@ -30,7 +30,7 @@ int main(int argc, char** argv, char** env_var_ptr) {
                 arg_compile = true;
                 break;
             case '?':
-                fprintf(stderr, "Unrecognized option: '-%c'\n", optopt);
+                fprintf(stderr, "colony: panic, unrecognized option: '-%c'\n", optopt);
                 exit_code = EXIT_FAILURE;
                 goto exit;
             case 'h':
@@ -43,6 +43,7 @@ int main(int argc, char** argv, char** env_var_ptr) {
                 );
                 goto exit;
             default:
+                fprintf(stderr, "colony: panic, unrecognized option\n");
                 exit_code = EXIT_FAILURE;
                 goto exit;
         }
@@ -55,7 +56,7 @@ int main(int argc, char** argv, char** env_var_ptr) {
     if (arg_compile && main_module_path == NULL) {
         fprintf(
             stderr,
-            "Option '-c' requires path to file\n"
+            "colony: panic, option '-c' requires path to file\n"
             "Example: colony -c example.co\n"
         );
 
@@ -85,7 +86,7 @@ int main(int argc, char** argv, char** env_var_ptr) {
     }
 
     /* create compiler */
-    co_compiler_t* compiler = co_compiler_new();
+    co_compiler_t* compiler = co_compiler_new(vm);
 
     if (compiler == NULL) {
         fprintf(stderr, "colony: panic, could not create 'compiler' object\n");

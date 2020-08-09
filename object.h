@@ -63,11 +63,12 @@ typedef struct co_map_entry_t {
 } co_map_entry_t;
 
 typedef struct co_mut_map_t {
+    size_t cap;
     size_t fill;
     size_t used;
-    size_t mask;
+    struct co_map_entry_t* entries;
     struct co_map_entry_t* first_entry; // by default NULL
-    struct co_map_entry_t** entries;
+    struct co_map_entry_t* last_entry; // by default NULL
 } co_mut_map_t;
 
 typedef struct co_array_t {
@@ -76,10 +77,11 @@ typedef struct co_array_t {
 } co_array_t;
 
 typedef struct co_map_t {
+    size_t cap;
     size_t used;
-    size_t mask;
+    struct co_map_entry_t* entries;
     struct co_map_entry_t* first_entry; // by default NULL
-    struct co_map_entry_t** entries;
+    struct co_map_entry_t* last_entry; // by default NULL
 } co_map_t;
 
 typedef struct co_code_t {
@@ -269,10 +271,14 @@ void co_str_free(co_vm_t* vm, co_object_t* self);
 /*
  * mut_array
  */
+co_object_t* co_mut_array_new(co_vm_t* vm, co_own_t own, size_t cap, size_t len, co_object_t** items);
+void co_mut_array_free(co_vm_t* vm, co_object_t* self);
 
 /*
  * mut_map
  */
+co_object_t* co_mut_map_new(co_vm_t* vm, co_own_t own, size_t cap, size_t used, size_t fill, co_map_entry_t* entries);
+void co_mut_map_free(co_vm_t* vm, co_object_t* self);
 
 /*
  * array
@@ -305,7 +311,14 @@ void co_str_free(co_vm_t* vm, co_object_t* self);
 /*
  * object
  */
+#define CO_OBJECT_REF(vm, self) self->rc++
+#define CO_OBJECT_UNREF(vm, self) \
+    self->rc--; \
+    if (self->rc == 0) co_object_free(vm, self)
+
 co_object_t* co_object_new(co_vm_t* vm, co_own_t own, co_kind_t kind, co_value_t value);
 void co_object_free(co_vm_t* vm, co_object_t* self);
+inline void co_object_ref(co_vm_t* vm, co_object_t* self);
+inline void co_object_unref(co_vm_t* vm, co_object_t* self);
 
 #endif
