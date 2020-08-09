@@ -63,19 +63,25 @@ int main(int argc, char** argv, char** env_var_ptr) {
         goto exit;
     }
 
-    /* create vm */
-    co_vm_t* vm = co_vm_new();
-
     if (arg_compile) {
         fprintf(stderr, "Compile-to-file currently unsupported\n");
         exit_code = EXIT_FAILURE;
-        goto cleanup_0;
+        goto exit;
     }
 
     if (main_module_path == NULL) {
         fprintf(stderr, "Interactive REPL currently unsupported\n");
         exit_code = EXIT_FAILURE;
-        goto cleanup_0;
+        goto exit;
+    }
+    
+    /* create vm */
+    co_vm_t* vm = co_vm_new();
+
+    if (vm == NULL) {
+        fprintf(stderr, "Could not create 'vm' object\n");
+        exit_code = EXIT_FAILURE;
+        goto exit;
     }
 
     /* create compiler */
