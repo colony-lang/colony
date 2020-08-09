@@ -64,13 +64,13 @@ int main(int argc, char** argv, char** env_var_ptr) {
     }
 
     if (arg_compile) {
-        fprintf(stderr, "Compile-to-file currently unsupported\n");
+        fprintf(stderr, "colony: panic, compile-to-file currently unsupported\n");
         exit_code = EXIT_FAILURE;
         goto exit;
     }
 
     if (main_module_path == NULL) {
-        fprintf(stderr, "Interactive REPL currently unsupported\n");
+        fprintf(stderr, "colony: panic, interactive REPL currently unsupported\n");
         exit_code = EXIT_FAILURE;
         goto exit;
     }
@@ -79,7 +79,7 @@ int main(int argc, char** argv, char** env_var_ptr) {
     co_vm_t* vm = co_vm_new();
 
     if (vm == NULL) {
-        fprintf(stderr, "Could not create 'vm' object\n");
+        fprintf(stderr, "colony: panic, could not create 'vm' object\n");
         exit_code = EXIT_FAILURE;
         goto exit;
     }
@@ -88,7 +88,7 @@ int main(int argc, char** argv, char** env_var_ptr) {
     co_compiler_t* compiler = co_compiler_new();
 
     if (compiler == NULL) {
-        fprintf(stderr, "Could not create 'compiler' object\n");
+        fprintf(stderr, "colony: panic, could not create 'compiler' object\n");
         exit_code = EXIT_FAILURE;
         goto cleanup_0;
     }
@@ -97,7 +97,7 @@ int main(int argc, char** argv, char** env_var_ptr) {
     co_object_t* path = co_str_new(vm, CO_OWN_NONE, strlen(main_module_path), main_module_path);
 
     if (path == NULL) {
-        fprintf(stderr, "Could not create 'path' object\n");
+        fprintf(stderr, "colony: panic, could not create 'path' object\n");
         exit_code = EXIT_FAILURE;
         goto cleanup_1;
     }
@@ -106,7 +106,7 @@ int main(int argc, char** argv, char** env_var_ptr) {
     co_object_t* code = co_compiler_compile_path(compiler, path);
 
     if (code == NULL) {
-        fprintf(stderr, "Could not compile main module from path\n");
+        fprintf(stderr, "colony: panic, could not compile main module from path\n");
         exit_code = EXIT_FAILURE;
         goto cleanup_2;
     }
