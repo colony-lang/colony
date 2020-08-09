@@ -123,10 +123,15 @@ typedef struct co_pointer_t {
 } co_pointer_t;
 
 typedef enum co_own_t {
-    CO_OWN_NONE = 0,    // the recipient does not own the value
-    CO_OWN_CONTAINER,   // the recipient owns the container, but not the elements
-    CO_OWN_FULL         // the recipient owns the entire value.
-                        // container type, this means the recipient owns both container and elements.
+    CO_OWN_NONE = 0,    // default for scalar type POINTER.
+                        // the recipient does not own the value
+    
+    CO_OWN_CONTAINER,   // default for container types: MUT_ARRAY and ARRAY.
+                        // the recipient owns the container, but not the elements
+    
+    CO_OWN_FULL         // default for scalar types.
+                        // the recipient owns the entire value.
+                        // for container type, this means the recipient owns both container and elements.
 } co_own_t;
 
 typedef enum co_kind_t {
