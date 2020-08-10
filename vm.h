@@ -3,21 +3,13 @@
 
 #include <stdlib.h>
 
-
 struct co_vm_t;
-struct co_frame_t;
 
+#include "object.h"
 
 typedef struct co_vm_t {
-    void* _dummy;
+    struct co_object_t* queued_frames;  // mut_array
 } co_vm_t;
-
-typedef struct co_frame_t {
-    struct co_vm_t* vm;
-    struct co_frame_t* prev_frame;
-    struct co_object_t* regs;       // array
-    struct co_object_t* code;       // code
-} co_frame_t;
 
 
 co_vm_t* co_vm_new(void);

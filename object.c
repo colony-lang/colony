@@ -3,150 +3,150 @@
 /*
  * bool
  */
-co_object_t* co_bool_new(co_vm_t* vm, co_bool_t b) {
+co_object_t* co_bool_new(struct co_vm_t* vm, co_bool_t b) {
     co_value_t value = {.b = b};
     co_object_t* self = co_object_new(vm, CO_KIND_BOOL, value);
     return self;
 }
 
-void co_bool_free(co_vm_t* vm, co_object_t* self) {
+void co_bool_free(struct co_vm_t* vm, co_object_t* self) {
     free(self);
 }
 
 /*
  * i8
  */
-co_object_t* co_i8_new(co_vm_t* vm, co_i8_t i8) {
+co_object_t* co_i8_new(struct co_vm_t* vm, co_i8_t i8) {
     co_value_t value = {.i8 = i8};
     co_object_t* self = co_object_new(vm, CO_KIND_I8, value);
     return self;
 }
 
-void co_i8_free(co_vm_t* vm, co_object_t* self) {
+void co_i8_free(struct co_vm_t* vm, co_object_t* self) {
     free(self);
 }
 
 /*
  * u8
  */
-co_object_t* co_u8_new(co_vm_t* vm, co_u8_t u8) {
+co_object_t* co_u8_new(struct co_vm_t* vm, co_u8_t u8) {
     co_value_t value = {.u8 = u8};
     co_object_t* self = co_object_new(vm, CO_KIND_U8, value);
     return self;
 }
 
-void co_u8_free(co_vm_t* vm, co_object_t* self) {
+void co_u8_free(struct co_vm_t* vm, co_object_t* self) {
     free(self);
 }
 
 /*
  * i16
  */
-co_object_t* co_i16_new(co_vm_t* vm, co_i16_t i16) {
+co_object_t* co_i16_new(struct co_vm_t* vm, co_i16_t i16) {
     co_value_t value = {.i16 = i16};
     co_object_t* self = co_object_new(vm, CO_KIND_I16, value);
     return self;
 }
 
-void co_i16_free(co_vm_t* vm, co_object_t* self){
+void co_i16_free(struct co_vm_t* vm, co_object_t* self){
     free(self);
 }
 
 /*
  * u16
  */
-co_object_t* co_u16_new(co_vm_t* vm, co_u16_t u16) {
+co_object_t* co_u16_new(struct co_vm_t* vm, co_u16_t u16) {
     co_value_t value = {.u16 = u16};
     co_object_t* self = co_object_new(vm, CO_KIND_U16, value);
     return self;
 }
 
-void co_u16_free(co_vm_t* vm, co_object_t* self) {
+void co_u16_free(struct co_vm_t* vm, co_object_t* self) {
     free(self);
 }
 
 /*
  * i32
  */
-co_object_t* co_i32_new(co_vm_t* vm, co_i32_t i32) {
+co_object_t* co_i32_new(struct co_vm_t* vm, co_i32_t i32) {
     co_value_t value = {.i32 = i32};
     co_object_t* self = co_object_new(vm, CO_KIND_I32, value);
     return self;
 }
 
-void co_i32_free(co_vm_t* vm, co_object_t* self) {
+void co_i32_free(struct co_vm_t* vm, co_object_t* self) {
     free(self);
 }
 
 /*
  * u32
  */
-co_object_t* co_u32_new(co_vm_t* vm, co_u32_t u32) {
+co_object_t* co_u32_new(struct co_vm_t* vm, co_u32_t u32) {
     co_value_t value = {.u32 = u32};
     co_object_t* self = co_object_new(vm, CO_KIND_U32, value);
     return self;
 }
 
-void co_u32_free(co_vm_t* vm, co_object_t* self) {
+void co_u32_free(struct co_vm_t* vm, co_object_t* self) {
     free(self);
 }
 
 /*
  * i64
  */
-co_object_t* co_i64_new(co_vm_t* vm, co_i64_t i64) {
+co_object_t* co_i64_new(struct co_vm_t* vm, co_i64_t i64) {
     co_value_t value = {.i64 = i64};
     co_object_t* self = co_object_new(vm, CO_KIND_I64, value);
     return self;
 }
 
-void co_i64_free(co_vm_t* vm, co_object_t* self) {
+void co_i64_free(struct co_vm_t* vm, co_object_t* self) {
     free(self);
 }
 
 /*
  * u64
  */
-co_object_t* co_u64_new(co_vm_t* vm, co_u64_t u64) {
+co_object_t* co_u64_new(struct co_vm_t* vm, co_u64_t u64) {
     co_value_t value = {.u64 = u64};
     co_object_t* self = co_object_new(vm, CO_KIND_U64, value);
     return self;
 }
 
-void co_u64_free(co_vm_t* vm, co_object_t* self) {
+void co_u64_free(struct co_vm_t* vm, co_object_t* self) {
     free(self);
 }
 
 /*
  * f32
  */
-co_object_t* co_f32_new(co_vm_t* vm, co_f32_t f32) {
+co_object_t* co_f32_new(struct co_vm_t* vm, co_f32_t f32) {
     co_value_t value = {.f32 = f32};
     co_object_t* self = co_object_new(vm, CO_KIND_F32, value);
     return self;
 }
 
-void co_f32_free(co_vm_t* vm, co_object_t* self) {
+void co_f32_free(struct co_vm_t* vm, co_object_t* self) {
     free(self);
 }
 
 /*
  * f64
  */
-co_object_t* co_f64_new(co_vm_t* vm, co_f64_t f64) {
+co_object_t* co_f64_new(struct co_vm_t* vm, co_f64_t f64) {
     co_value_t value = {.f64 = f64};
     co_object_t* self = co_object_new(vm, CO_KIND_F64, value);
     return self;
 }
 
-void co_f64_free(co_vm_t* vm, co_object_t* self) {
+void co_f64_free(struct co_vm_t* vm, co_object_t* self) {
     free(self);
 }
 
 /*
  * bytes
  */
-co_object_t* co_bytes_new(co_vm_t* vm, size_t len, char* data, co_own_t own) {
+co_object_t* co_bytes_new(struct co_vm_t* vm, size_t len, char* data, co_own_t own) {
     co_bytes_t* bytes = malloc(sizeof(co_bytes_t));
     bytes->len = len;
     bytes->data = data;
@@ -156,7 +156,7 @@ co_object_t* co_bytes_new(co_vm_t* vm, size_t len, char* data, co_own_t own) {
     return self;
 }
 
-void co_bytes_free(co_vm_t* vm, co_object_t* self) {
+void co_bytes_free(struct co_vm_t* vm, co_object_t* self) {
     co_value_t value = self->value;
     co_bytes_t* bytes = value.bytes;
 
@@ -171,7 +171,7 @@ void co_bytes_free(co_vm_t* vm, co_object_t* self) {
 /*
  * str
  */
-co_object_t* co_str_new(co_vm_t* vm, size_t len, char* data, co_own_t own) {
+co_object_t* co_str_new(struct co_vm_t* vm, size_t len, char* data, co_own_t own) {
     co_str_t* str = malloc(sizeof(co_str_t));
     str->len = len;
     str->data = data;
@@ -181,7 +181,7 @@ co_object_t* co_str_new(co_vm_t* vm, size_t len, char* data, co_own_t own) {
     return self;
 }
 
-void co_str_free(co_vm_t* vm, co_object_t* self) {
+void co_str_free(struct co_vm_t* vm, co_object_t* self) {
     co_value_t value = self->value;
     co_str_t* str = value.str;
 
@@ -196,7 +196,7 @@ void co_str_free(co_vm_t* vm, co_object_t* self) {
 /*
  * mut_array
  */
-co_object_t* co_mut_array_new(co_vm_t* vm, size_t cap, size_t len, co_object_t* items, co_own_t own) {
+co_object_t* co_mut_array_new(struct co_vm_t* vm, size_t cap, size_t len, co_object_t* items, co_own_t own) {
     co_object_t item;
 
     if (cap == 0) {
@@ -227,7 +227,7 @@ co_object_t* co_mut_array_new(co_vm_t* vm, size_t cap, size_t len, co_object_t* 
     return self;
 }
 
-void co_mut_array_free(co_vm_t* vm, co_object_t* self) {
+void co_mut_array_free(struct co_vm_t* vm, co_object_t* self) {
     co_value_t value = self->value;
     co_mut_array_t* mut_array = value.mut_array;
     co_object_t* items = mut_array->items;
@@ -256,7 +256,7 @@ void co_mut_array_free(co_vm_t* vm, co_object_t* self) {
 /*
  * mut_map
  */
-co_object_t* co_mut_map_new(co_vm_t* vm, size_t cap, size_t used, size_t fill, co_map_entry_t* entries, co_own_t own) {
+co_object_t* co_mut_map_new(struct co_vm_t* vm, size_t cap, size_t used, size_t fill, co_map_entry_t* entries, co_own_t own) {
     co_map_entry_t entry;
     co_object_t k;
     co_object_t v;
@@ -297,7 +297,7 @@ co_object_t* co_mut_map_new(co_vm_t* vm, size_t cap, size_t used, size_t fill, c
     return self;
 }
 
-void co_mut_map_free(co_vm_t* vm, co_object_t* self) {
+void co_mut_map_free(struct co_vm_t* vm, co_object_t* self) {
     co_value_t value = self->value;
     co_mut_map_t* mut_map = value.mut_map;
     co_map_entry_t* entries = mut_map->entries;
@@ -344,7 +344,19 @@ void co_mut_map_free(co_vm_t* vm, co_object_t* self) {
  */
 
 /*
+ * frame
+ */
+
+/*
+ * mut_type
+ */
+
+/*
  * type
+ */
+
+/*
+ * mut_instance
  */
 
 /*
@@ -352,7 +364,7 @@ void co_mut_map_free(co_vm_t* vm, co_object_t* self) {
  */
 
 /*
- * mut_instance
+ * mut_module
  */
 
 /*
@@ -362,7 +374,7 @@ void co_mut_map_free(co_vm_t* vm, co_object_t* self) {
 /*
  * object
  */
-co_object_t* co_object_new(co_vm_t* vm, co_kind_t kind, co_value_t value) {
+co_object_t* co_object_new(struct co_vm_t* vm, co_kind_t kind, co_value_t value) {
     co_object_t* self = malloc(sizeof(co_object_t));
     self->rc = 1;
     self->kind = kind;
@@ -370,7 +382,7 @@ co_object_t* co_object_new(co_vm_t* vm, co_kind_t kind, co_value_t value) {
     return self;
 }
 
-void co_object_free(co_vm_t* vm, co_object_t* self) {
+void co_object_free(struct co_vm_t* vm, co_object_t* self) {
     switch (self->kind) {
         case CO_KIND_BOOL:
             co_bool_free(vm, self);
@@ -425,11 +437,17 @@ void co_object_free(co_vm_t* vm, co_object_t* self) {
             break;
         case CO_KIND_FUNC:
             break;
+        case CO_KIND_FRAME:
+            break;
+        case CO_KIND_MUT_TYPE:
+            break;
         case CO_KIND_TYPE:
             break;
         case CO_KIND_MUT_INSTANCE:
             break;
         case CO_KIND_INSTANCE:
+            break;
+        case CO_KIND_MUT_MODULE:
             break;
         case CO_KIND_MODULE:
             break;
@@ -440,10 +458,10 @@ void co_object_free(co_vm_t* vm, co_object_t* self) {
     }
 }
 
-void co_object_ref(co_vm_t* vm, co_object_t* self) {
+void co_object_ref(struct co_vm_t* vm, co_object_t* self) {
     CO_OBJECT_REF(vm, self);
 }
 
-void co_object_unref(co_vm_t* vm, co_object_t* self) {
+void co_object_unref(struct co_vm_t* vm, co_object_t* self) {
     CO_OBJECT_UNREF(vm, self);
 }
