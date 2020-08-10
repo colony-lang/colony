@@ -95,7 +95,7 @@ int main(int argc, char** argv, char** env_var_ptr) {
     }
 
     /* path to main module */
-    co_object_t* path = co_str_new(vm, CO_OWN_NONE, strlen(main_module_path), main_module_path);
+    co_object_t* path = co_str_new(vm, strlen(main_module_path), main_module_path, CO_OWN_NONE);
 
     if (path == NULL) {
         fprintf(stderr, "colony: panic, could not create 'path' object\n");
