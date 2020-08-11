@@ -18,8 +18,8 @@ typedef enum co_opcode_name_t {
     
     CO_OPCODE_MOV,              // UU; R[a] = R[b]
     CO_OPCODE_LOAD,             // UU; R[a] = C[b]; used for Bytes, Str, Code, Pointer
-    CO_OPCODE_LOAD_NONE,        // UU; R[a] = None
-    CO_OPCODE_LOAD_BOOL,        // Ub; R[a] = Bool
+    CO_OPCODE_LOAD_NONE,        // U; R[a] = None
+    CO_OPCODE_LOAD_BOOL,        // Ub; R[a] = b
     CO_OPCODE_LOAD_I8,          // UI8; R[a] = I8
     CO_OPCODE_LOAD_I16,         // UI16; R[a] = I16
     CO_OPCODE_LOAD_I32,         // UI32; R[a] = I32
