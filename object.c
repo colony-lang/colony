@@ -208,7 +208,7 @@ co_object_t* co_mut_array_new(struct co_vm_t* vm, size_t cap, size_t len, co_obj
     }
 
     if (items == NULL) {
-        own = CO_OWN_FULL;
+        own = CO_OWN_CONTAINER;
         items = calloc(cap, sizeof(co_object_t));
     } else {
         for (size_t i = 0; i < len; i++) {
@@ -241,6 +241,9 @@ void co_mut_array_free(struct co_vm_t* vm, co_object_t* self) {
     switch (mut_array->own) {
         case CO_OWN_NONE:
             break;
+        case CO_OWN_CONTAINER:
+            free(items);
+            break;
         case CO_OWN_FULL:
             free(items);
             break;
@@ -268,7 +271,7 @@ co_object_t* co_mut_map_new(struct co_vm_t* vm, size_t cap, size_t used, size_t 
     if (entries == NULL) {
         used = 0;
         fill = 0;
-        own = CO_OWN_FULL;
+        own = CO_OWN_CONTAINER;
         entries = calloc(cap, sizeof(co_map_entry_t));
     } else {
         for (size_t i = 0; i < cap; i++) {
@@ -305,22 +308,27 @@ void co_mut_map_free(struct co_vm_t* vm, co_object_t* self) {
     co_object_t k;
     co_object_t v;
 
-    for (size_t i = 0; i < mut_map->cap; i++) {
-        entry = entries[i];
-        k = entry.key;
-        v = entry.value;
-        
-        if (k.kind != CO_KIND_EMPTY) {
-            co_object_unref(vm, &k);
-        }
+    if (mut_map->own == CO_OWN_NONE || mut_map->own == CO_OWN_CONTAINER) {
+        for (size_t i = 0; i < mut_map->cap; i++) {
+            entry = entries[i];
+            k = entry.key;
+            v = entry.value;
+            
+            if (k.kind != CO_KIND_EMPTY) {
+                co_object_unref(vm, &k);
+            }
 
-        if (v.kind != CO_KIND_EMPTY) {
-            co_object_unref(vm, &v);
+            if (v.kind != CO_KIND_EMPTY) {
+                co_object_unref(vm, &v);
+            }
         }
     }
 
     switch (mut_map->own) {
         case CO_OWN_NONE:
+            break;
+        case CO_OWN_CONTAINER:
+            free(entries);
             break;
         case CO_OWN_FULL:
             free(entries);
@@ -435,7 +443,7 @@ void co_object_free(struct co_vm_t* vm, co_object_t* self) {
             break;
         case CO_KIND_CODE:
             break;
-        case CO_KIND_FUNC:
+        case CO_KIND_FN:
             break;
         case CO_KIND_FRAME:
             break;

@@ -1,13 +1,10 @@
 #ifndef CO_OBJECT_H
 #define CO_OBJECT_H
 
+#include <float.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include <float.h>
-
-#include "vm.h"
-
 
 enum co_own_t;
 
@@ -29,7 +26,7 @@ struct co_array_t;
 struct co_mut_map_t;
 struct co_map_t;
 struct co_code_t;
-struct co_func_t;
+struct co_fn_t;
 struct co_frame_t;
 struct co_mut_type_t;
 struct co_type_t;
@@ -43,17 +40,23 @@ struct co_object_t;
 
 struct co_map_entry_t; // used for mut_map and map
 
+#include "vm.h"
+
 /*
  * ownership, used for str, bytes, mut_array, array, mut_map, map 
  */
 typedef enum co_own_t {
-    CO_OWN_NONE = 0,    // the recipient does not own the value
+    CO_OWN_NONE = 0,        // the recipient does not own the value
+    
+    CO_OWN_CONTAINER = 1,   // the recipient owns the container, but not the elements.
 
-    CO_OWN_FULL = 255   // for scalar types, the recipient owns the entire value
-                        //
-                        // for container types, this means the recipient owns
-                        // container, but "ref counts" its elements
+    CO_OWN_FULL = 128       // for scalar types, the recipient owns the entire value
+                            //
+                            // for container types, this means the recipient owns
+                            // container, but "ref counts" its elements
 } co_own_t;
+
+// typedef struct co_object_t* (*co_cfunc_t)(struct co_vm_t* vm, struct co_object_t* args, struct co_object_t* kwargs);
 
 typedef struct co_bytes_t {
     size_t len;
@@ -68,6 +71,7 @@ typedef struct co_str_t {
 } co_str_t;
 
 typedef struct co_mut_array_t {
+    struct co_object_t* item_type;      // Object, default
     size_t cap;
     size_t len;
     struct co_object_t* items;
@@ -75,86 +79,92 @@ typedef struct co_mut_array_t {
 } co_mut_array_t;
 
 typedef struct co_array_t {
+    struct co_object_t* item_type;      // Object, default
     size_t len;
     struct co_object_t* items;
     enum co_own_t own;
 } co_array_t;
 
 typedef struct co_mut_map_t {
+    struct co_object_t* key_type;       // Object, default
+    struct co_object_t* value_type;     // Object, default
     size_t cap;
     size_t fill;
     size_t used;
     struct co_map_entry_t* entries;
     enum co_own_t own;
     struct co_map_entry_t* first_entry; // by default NULL
-    struct co_map_entry_t* last_entry; // by default NULL
+    struct co_map_entry_t* last_entry;  // by default NULL
 } co_mut_map_t;
 
 typedef struct co_map_t {
+    struct co_object_t* key_type;       // Object, default
+    struct co_object_t* value_type;     // Object, default
     size_t cap;
     size_t used;
     struct co_map_entry_t* entries;
     enum co_own_t own;
     struct co_map_entry_t* first_entry; // by default NULL
-    struct co_map_entry_t* last_entry; // by default NULL
+    struct co_map_entry_t* last_entry;  // by default NULL
 } co_map_t;
 
 typedef struct co_code_t {
-    void* insts; // TODO
+    size_t len;
+    struct co_inst_t* insts;
 } co_code_t;
 
-typedef struct co_func_t {
-    struct co_object_t* name; // function name, can be NULL if lambda
-    struct co_object_t* typeparams; // used for generics, `fn f1<T, U, V, W>(x: T, y: U, z: V) -> W { ... }`
-    struct co_object_t* params; // `name [: type] [= default_value]`
-    struct co_object_t* args; // variable args name, `[args]`, can be NULL 
-    struct co_object_t* kwargs; // variable kwargs name, `{kwargs}`, can be NULL 
-    struct co_object_t* code;
-} co_func_t;
+typedef struct co_fn_t {
+    struct co_object_t* name;               // Optional<Str>, function name
+    struct co_object_t* type_param_names;   // Array<Str>, example: ['T', 'U', 'V', 'W'], used for generics, `fn f1<T, U, V, W>(x: T, y: U, z: V) -> W { ... }`
+    struct co_object_t* params;             // Array<Param(name: Str, type: Type, default_value: Optional<Object>)>, `name [: type] [= default_value]`
+    struct co_object_t* code;               // Optional<Code>
+    struct co_object_t* ic_code;            // Optional<Code>, inline cache code, by default always None
+    // co_cfunc_t cfunc;                    // can be NULL if code and/or ic_code is set
+} co_fn_t;
 
 typedef struct co_frame_t {
-    struct co_vm_t* vm;
-    struct co_frame_t* prev_frame;
-    struct co_object_t* regs;       // array
-    struct co_object_t* code;       // code
+    struct co_object_t* prev_frame;         // Optional<Frame>
+    struct co_object_t* regs;               // Array[Object]
+    struct co_object_t* func;               // Optional<Fn>
+    struct co_object_t* code;               // Code
 } co_frame_t;
 
 typedef struct co_mut_type_t {
-    struct co_object_t* name;       // str, type name, can be NULL if anonymous
-    struct co_object_t* typeparams; // mut_map, used for generics, `type Some<T, U, V, W> { ... }`
-    struct co_object_t* interfaces; // mut_array, interfaces, `type A: B, C {}`, where [B, C] are interfaces
-    struct co_object_t* fields;     // mut_map, struct-like fields
-    struct co_object_t* funcs;      // mut_map, methods-like
+    struct co_object_t* name;               // str, type name, can be NULL if anonymous
+    struct co_object_t* type_param_names;   // mut_map, used for generics, `type Some<T, U, V, W> { ... }`
+    struct co_object_t* interfaces;         // mut_array, interfaces, `type A: B, C {}`, where [B, C] are interfaces
+    struct co_object_t* fields;             // mut_map, struct-like fields
+    struct co_object_t* funcs;              // mut_map, methods-like
 } co_mut_type_t;
 
 typedef struct co_type_t {
-    struct co_object_t* name;       // str, type name, can be NULL if anonymous
-    struct co_object_t* typeparams; // map, used for generics, `type Some<T, U, V, W> { ... }`
-    struct co_object_t* interfaces; // array, interfaces, `type A: B, C {}`, where [B, C] are interfaces
-    struct co_object_t* fields;     // map, struct-like fields
-    struct co_object_t* funcs;      // map, methods-like
+    struct co_object_t* name;           // str, type name, can be NULL if anonymous
+    struct co_object_t* typeparams;     // map, used for generics, `type Some<T, U, V, W> { ... }`
+    struct co_object_t* interfaces;     // array, interfaces, `type A: B, C {}`, where [B, C] are interfaces
+    struct co_object_t* fields;         // map, struct-like fields
+    struct co_object_t* funcs;          // map, methods-like
 } co_type_t;
 
 typedef struct co_mut_instance_t {
-    struct co_object_t* type;   // type, instance-of
-    struct co_object_t* fields; // mut_map, struct-like fields
+    struct co_object_t* type;           // type, instance-of
+    struct co_object_t* fields;         // mut_map, struct-like fields
 } co_mut_instance_t;
 
 typedef struct co_instance_t {
-    struct co_object_t* type;   // type, instance-of
-    struct co_object_t* fields; // map, struct-like fields
+    struct co_object_t* type;           // type, instance-of
+    struct co_object_t* fields;         // map, struct-like fields
 } co_instance_t;
 
 typedef struct co_mut_module_t {
-    struct co_object_t* path;   // str, path to module such as "/home/user/proj/a.co"
-    struct co_object_t* name;   // str, name of module such as "a"
-    struct co_object_t* ns;     // mut_map, namespace containing module's types/functions/objects
+    struct co_object_t* path;           // str, path to module such as "/home/user/proj/a.co"
+    struct co_object_t* name;           // str, name of module such as "a"
+    struct co_object_t* ns;             // mut_map, namespace containing module's types/functions/objects
 } co_mut_module_t;
 
 typedef struct co_module_t {
-    struct co_object_t* path;   // str, path to module such as "/home/user/proj/a.co"
-    struct co_object_t* name;   // str, name of module such as "a"
-    struct co_object_t* ns;     // map, namespace containing module's types/functions/objects
+    struct co_object_t* path;           // str, path to module such as "/home/user/proj/a.co"
+    struct co_object_t* name;           // str, name of module such as "a"
+    struct co_object_t* ns;             // map, namespace containing module's types/functions/objects
 } co_module_t;
 
 typedef struct co_pointer_t {
@@ -166,7 +176,7 @@ typedef struct co_pointer_t {
 
 typedef enum co_kind_t {
     CO_KIND_EMPTY = 0, // used in mut_array, array, mut_map, map for not yet set items/entreis
-    CO_KIND_NIL = 1,
+    CO_KIND_NONE = 1,
     CO_KIND_BOOL,
     CO_KIND_I8,
     CO_KIND_U8,
@@ -185,7 +195,7 @@ typedef enum co_kind_t {
     CO_KIND_MUT_MAP,
     CO_KIND_MAP,
     CO_KIND_CODE,
-    CO_KIND_FUNC,
+    CO_KIND_FN,
     CO_KIND_FRAME,
     CO_KIND_MUT_TYPE,
     CO_KIND_TYPE,
@@ -215,7 +225,7 @@ typedef union co_value_t {
     struct co_mut_map_t* mut_map;
     struct co_map_t* map;
     struct co_code_t* code;
-    struct co_func_t* func;
+    struct co_fn_t* func;
     struct co_frame_t* frame;
     struct co_mut_type_t* mut_type;
     struct co_type_t* type;

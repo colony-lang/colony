@@ -5,7 +5,6 @@
 
 #include "colony.h"
 
-
 int main(int argc, char** argv, char** env_var_ptr) {
     int exit_code = EXIT_SUCCESS;
 
