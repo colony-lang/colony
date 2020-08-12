@@ -348,7 +348,7 @@ void co_mut_map_free(struct co_vm_t* vm, co_object_t* self) {
  */
 
 /*
- * func
+ * fn
  */
 
 /*

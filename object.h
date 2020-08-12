@@ -32,6 +32,7 @@ struct co_mut_type_t;
 struct co_type_t;
 struct co_mut_instance_t;
 struct co_instance_t;
+struct co_mut_module_t;
 struct co_module_t;
 
 enum co_kind_t;
@@ -130,41 +131,41 @@ typedef struct co_frame_t {
 } co_frame_t;
 
 typedef struct co_mut_type_t {
-    struct co_object_t* name;               // str, type name, can be NULL if anonymous
-    struct co_object_t* type_param_names;   // mut_map, used for generics, `type Some<T, U, V, W> { ... }`
-    struct co_object_t* interfaces;         // mut_array, interfaces, `type A: B, C {}`, where [B, C] are interfaces
-    struct co_object_t* fields;             // mut_map, struct-like fields
-    struct co_object_t* funcs;              // mut_map, methods-like
+    struct co_object_t* name;               // Str, type name, can be NULL if anonymous
+    struct co_object_t* type_param_names;   // MutMap, used for generics, `type Some<T, U, V, W> { ... }`
+    struct co_object_t* interfaces;         // MutArray, interfaces, `type A: B, C {}`, where [B, C] are interfaces
+    struct co_object_t* fields;             // MutMap, struct-like fields
+    struct co_object_t* funcs;              // MutMap, methods-like
 } co_mut_type_t;
 
 typedef struct co_type_t {
-    struct co_object_t* name;           // str, type name, can be NULL if anonymous
-    struct co_object_t* typeparams;     // map, used for generics, `type Some<T, U, V, W> { ... }`
-    struct co_object_t* interfaces;     // array, interfaces, `type A: B, C {}`, where [B, C] are interfaces
-    struct co_object_t* fields;         // map, struct-like fields
-    struct co_object_t* funcs;          // map, methods-like
+    struct co_object_t* name;               // Str, type name, can be NULL if anonymous
+    struct co_object_t* type_param_names;   // Map, used for generics, `type Some<T, U, V, W> { ... }`
+    struct co_object_t* interfaces;         // Array, interfaces, `type A: B, C {}`, where [B, C] are interfaces
+    struct co_object_t* fields;             // Map, struct-like fields
+    struct co_object_t* funcs;              // Map, methods-like
 } co_type_t;
 
 typedef struct co_mut_instance_t {
-    struct co_object_t* type;           // type, instance-of
-    struct co_object_t* fields;         // mut_map, struct-like fields
+    struct co_object_t* type;           // Type, instance-of
+    struct co_object_t* fields;         // MutMap, struct-like fields
 } co_mut_instance_t;
 
 typedef struct co_instance_t {
-    struct co_object_t* type;           // type, instance-of
-    struct co_object_t* fields;         // map, struct-like fields
+    struct co_object_t* type;           // Type, instance-of
+    struct co_object_t* fields;         // Map, struct-like fields
 } co_instance_t;
 
 typedef struct co_mut_module_t {
-    struct co_object_t* path;           // str, path to module such as "/home/user/proj/a.co"
-    struct co_object_t* name;           // str, name of module such as "a"
-    struct co_object_t* ns;             // mut_map, namespace containing module's types/functions/objects
+    struct co_object_t* path;           // Str, path to module such as "/home/user/proj/a.co"
+    struct co_object_t* name;           // Str, name of module such as "a"
+    struct co_object_t* ns;             // MutMap, namespace containing module's types/functions/objects
 } co_mut_module_t;
 
 typedef struct co_module_t {
-    struct co_object_t* path;           // str, path to module such as "/home/user/proj/a.co"
-    struct co_object_t* name;           // str, name of module such as "a"
-    struct co_object_t* ns;             // map, namespace containing module's types/functions/objects
+    struct co_object_t* path;           // Str, path to module such as "/home/user/proj/a.co"
+    struct co_object_t* name;           // Str, name of module such as "a"
+    struct co_object_t* ns;             // Map, namespace containing module's types/functions/objects
 } co_module_t;
 
 typedef struct co_pointer_t {
@@ -209,12 +210,12 @@ typedef enum co_kind_t {
 typedef union co_value_t {
     co_bool_t b;
     co_i8_t i8;
-    co_u8_t u8;
     co_i16_t i16;
-    co_u16_t u16;
     co_i32_t i32;
-    co_u32_t u32;
     co_i64_t i64;
+    co_u8_t u8;
+    co_u16_t u16;
+    co_u32_t u32;
     co_u64_t u64;
     co_f32_t f32;
     co_f64_t f64;
@@ -225,12 +226,13 @@ typedef union co_value_t {
     struct co_mut_map_t* mut_map;
     struct co_map_t* map;
     struct co_code_t* code;
-    struct co_fn_t* func;
+    struct co_fn_t* fn;
     struct co_frame_t* frame;
     struct co_mut_type_t* mut_type;
     struct co_type_t* type;
     struct co_mut_instance_t* mut_instance;
     struct co_instance_t* instance;
+    struct co_mut_module_t* mut_module;
     struct co_module_t* module;
     struct co_pointer_t* pointer;
 } co_value_t;
@@ -356,22 +358,32 @@ void co_map_free(struct co_vm_t* vm, co_object_t* self);
 /*
  * code
  */
+co_object_t* co_code_new(struct co_vm_t* vm, size_t len, struct co_inst_t* insts);
+void co_code_free(struct co_vm_t* vm, co_object_t* self);
 
 /*
- * func
+ * fn
  */
+co_object_t* co_fn_new(struct co_vm_t* vm, co_object_t* name, co_object_t* type_param_names, co_object_t* params, co_object_t* code);
+void co_fn_free(struct co_vm_t* vm, co_object_t* self);
 
 /*
  * frame
  */
+co_object_t* co_frame_new(struct co_vm_t* vm, co_object_t* prev_frame, co_object_t* regs, co_object_t* func, co_object_t* code);
+void co_frame_free(struct co_vm_t* vm, co_object_t* self);
 
 /*
  * mut_type
  */
+co_object_t* co_mut_type_new(struct co_vm_t* vm, co_object_t* name, co_object_t* type_param_names, co_object_t* interfaces, co_object_t* fields, co_object_t* funcs);
+void co_mut_type_free(struct co_vm_t* vm, co_object_t* self);
 
 /*
  * type
  */
+co_object_t* co_type_new(struct co_vm_t* vm, co_object_t* name, co_object_t* type_param_names, co_object_t* interfaces, co_object_t* fields, co_object_t* funcs);
+void co_type_free(struct co_vm_t* vm, co_object_t* self);
 
 /*
  * mut_instance
