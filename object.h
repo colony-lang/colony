@@ -388,18 +388,26 @@ void co_type_free(struct co_vm_t* vm, co_object_t* self);
 /*
  * mut_instance
  */
+co_object_t* co_mut_instance_new(struct co_vm_t* vm, co_object_t* type, co_object_t* fields);
+void co_mut_instance_free(struct co_vm_t* vm, co_object_t* self);
 
 /*
  * instance
  */
+co_object_t* co_instance_new(struct co_vm_t* vm, co_object_t* type, co_object_t* fields);
+void co_instance_free(struct co_vm_t* vm, co_object_t* self);
 
 /*
  * mut_module
  */
+co_object_t* co_mut_module_new(struct co_vm_t* vm, co_object_t* path, co_object_t* name, co_object_t* ns);
+void co_mut_module_free(struct co_vm_t* vm, co_object_t* self);
 
 /*
  * module
  */
+co_object_t* co_module_new(struct co_vm_t* vm, co_object_t* path, co_object_t* name, co_object_t* ns);
+void co_module_free(struct co_vm_t* vm, co_object_t* self);
 
 /*
  * object
