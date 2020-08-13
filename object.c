@@ -27,6 +27,41 @@ void co_i8_free(struct co_vm_t* vm, co_object_t* self) {
 }
 
 /*
+ * i16
+ */
+co_object_t* co_i16_alloc(struct co_vm_t* vm, co_i16_t i16) {
+    co_value_t value = {.i16 = i16};
+    co_object_t* self = co_object_alloc(vm, CO_KIND_I16, value);
+    return self;
+}
+
+/*
+ * i32
+ */
+co_object_t* co_i32_alloc(struct co_vm_t* vm, co_i32_t i32) {
+    co_value_t value = {.i32 = i32};
+    co_object_t* self = co_object_alloc(vm, CO_KIND_I32, value);
+    return self;
+}
+
+void co_i32_free(struct co_vm_t* vm, co_object_t* self) {
+    free(self);
+}
+
+/*
+ * i64
+ */
+co_object_t* co_i64_alloc(struct co_vm_t* vm, co_i64_t i64) {
+    co_value_t value = {.i64 = i64};
+    co_object_t* self = co_object_alloc(vm, CO_KIND_I64, value);
+    return self;
+}
+
+void co_i64_free(struct co_vm_t* vm, co_object_t* self) {
+    free(self);
+}
+
+/*
  * u8
  */
 co_object_t* co_u8_alloc(struct co_vm_t* vm, co_u8_t u8) {
@@ -37,15 +72,6 @@ co_object_t* co_u8_alloc(struct co_vm_t* vm, co_u8_t u8) {
 
 void co_u8_free(struct co_vm_t* vm, co_object_t* self) {
     free(self);
-}
-
-/*
- * i16
- */
-co_object_t* co_i16_alloc(struct co_vm_t* vm, co_i16_t i16) {
-    co_value_t value = {.i16 = i16};
-    co_object_t* self = co_object_alloc(vm, CO_KIND_I16, value);
-    return self;
 }
 
 void co_i16_free(struct co_vm_t* vm, co_object_t* self){
@@ -66,19 +92,6 @@ void co_u16_free(struct co_vm_t* vm, co_object_t* self) {
 }
 
 /*
- * i32
- */
-co_object_t* co_i32_alloc(struct co_vm_t* vm, co_i32_t i32) {
-    co_value_t value = {.i32 = i32};
-    co_object_t* self = co_object_alloc(vm, CO_KIND_I32, value);
-    return self;
-}
-
-void co_i32_free(struct co_vm_t* vm, co_object_t* self) {
-    free(self);
-}
-
-/*
  * u32
  */
 co_object_t* co_u32_alloc(struct co_vm_t* vm, co_u32_t u32) {
@@ -88,19 +101,6 @@ co_object_t* co_u32_alloc(struct co_vm_t* vm, co_u32_t u32) {
 }
 
 void co_u32_free(struct co_vm_t* vm, co_object_t* self) {
-    free(self);
-}
-
-/*
- * i64
- */
-co_object_t* co_i64_alloc(struct co_vm_t* vm, co_i64_t i64) {
-    co_value_t value = {.i64 = i64};
-    co_object_t* self = co_object_alloc(vm, CO_KIND_I64, value);
-    return self;
-}
-
-void co_i64_free(struct co_vm_t* vm, co_object_t* self) {
     free(self);
 }
 
