@@ -58,6 +58,7 @@ typedef enum co_own_t {
 } co_own_t;
 
 // typedef struct co_object_t* (*co_cfunc_t)(struct co_vm_t* vm, struct co_object_t* args, struct co_object_t* kwargs);
+typedef void (*co_pointer_free_func)(struct co_object_t* self);
 
 typedef struct co_bytes_t {
     size_t len;
@@ -81,6 +82,7 @@ typedef struct co_mut_array_t {
 
 typedef struct co_array_t {
     struct co_object_t* item_type;      // Object, default
+    size_t cap;
     size_t len;
     struct co_object_t* items;
     enum co_own_t own;
@@ -102,6 +104,7 @@ typedef struct co_map_t {
     struct co_object_t* key_type;       // Object, default
     struct co_object_t* value_type;     // Object, default
     size_t cap;
+    size_t fill;
     size_t used;
     struct co_map_entry_t* entries;
     enum co_own_t own;
@@ -112,12 +115,14 @@ typedef struct co_map_t {
 typedef struct co_code_t {
     size_t len;
     struct co_inst_t* insts;
+    enum co_own_t own;
 } co_code_t;
 
 typedef struct co_fn_t {
     struct co_object_t* name;               // Optional<Str>, function name
     struct co_object_t* type_param_names;   // Array<Str>, example: ['T', 'U', 'V', 'W'], used for generics, `fn f1<T, U, V, W>(x: T, y: U, z: V) -> W { ... }`
     struct co_object_t* params;             // Array<Param(name: Str, type: Type, default_value: Optional<Object>)>, `name [: type] [= default_value]`
+    struct co_object_t* closure;            // Map<str, Object>, closure, function non-local variables/constanst
     struct co_object_t* code;               // Optional<Code>
     struct co_object_t* ic_code;            // Optional<Code>, inline cache code, by default always None
     // co_cfunc_t cfunc;                    // can be NULL if code and/or ic_code is set
@@ -170,9 +175,11 @@ typedef struct co_module_t {
 
 typedef struct co_pointer_t {
     void* data;
+    enum co_own_t data_own;
     void* extra;
-    void (*free_func)(struct co_object_t* self);
-    enum co_own_t own;
+    enum co_own_t extra_own;
+    // void (*free_func)(struct co_object_t* self);
+    co_pointer_free_func free_func;
 } co_pointer_t;
 
 typedef enum co_kind_t {
@@ -256,158 +263,164 @@ typedef struct co_map_entry_t {
 /*
  * bool
  */
-co_object_t* co_bool_new(struct co_vm_t* vm, co_bool_t b);
+co_object_t* co_bool_alloc(struct co_vm_t* vm, co_bool_t b);
 void co_bool_free(struct co_vm_t* vm, co_object_t* self);
 
 /*
  * i8
  */
-co_object_t* co_i8_new(struct co_vm_t* vm, co_i8_t i8);
+co_object_t* co_i8_alloc(struct co_vm_t* vm, co_i8_t i8);
 void co_i8_free(struct co_vm_t* vm, co_object_t* self);
 
 /*
  * u8
  */
-co_object_t* co_u8_new(struct co_vm_t* vm, co_u8_t u8);
+co_object_t* co_u8_alloc(struct co_vm_t* vm, co_u8_t u8);
 void co_u8_free(struct co_vm_t* vm, co_object_t* self);
 
 /*
  * i16
  */
-co_object_t* co_i16_new(struct co_vm_t* vm, co_i16_t i16);
+co_object_t* co_i16_alloc(struct co_vm_t* vm, co_i16_t i16);
 void co_i16_free(struct co_vm_t* vm, co_object_t* self);
 
 /*
  * u16
  */
-co_object_t* co_u16_new(struct co_vm_t* vm, co_u16_t u16);
+co_object_t* co_u16_alloc(struct co_vm_t* vm, co_u16_t u16);
 void co_u16_free(struct co_vm_t* vm, co_object_t* self);
 
 /*
  * i32
  */
-co_object_t* co_i32_new(struct co_vm_t* vm, co_i32_t i32);
+co_object_t* co_i32_alloc(struct co_vm_t* vm, co_i32_t i32);
 void co_i32_free(struct co_vm_t* vm, co_object_t* self);
 
 /*
  * u32
  */
-co_object_t* co_u32_new(struct co_vm_t* vm, co_u32_t u32);
+co_object_t* co_u32_alloc(struct co_vm_t* vm, co_u32_t u32);
 void co_u32_free(struct co_vm_t* vm, co_object_t* self);
 
 /*
  * i64
  */
-co_object_t* co_i64_new(struct co_vm_t* vm, co_i64_t i64);
+co_object_t* co_i64_alloc(struct co_vm_t* vm, co_i64_t i64);
 void co_i64_free(struct co_vm_t* vm, co_object_t* self);
 
 /*
  * u64
  */
-co_object_t* co_u64_new(struct co_vm_t* vm, co_u64_t u64);
+co_object_t* co_u64_alloc(struct co_vm_t* vm, co_u64_t u64);
 void co_u64_free(struct co_vm_t* vm, co_object_t* self);
 
 /*
  * f32
  */
-co_object_t* co_f32_new(struct co_vm_t* vm, co_f32_t f32);
+co_object_t* co_f32_alloc(struct co_vm_t* vm, co_f32_t f32);
 void co_f32_free(struct co_vm_t* vm, co_object_t* self);
 
 /*
  * f64
  */
-co_object_t* co_f64_new(struct co_vm_t* vm, co_f64_t f64);
+co_object_t* co_f64_alloc(struct co_vm_t* vm, co_f64_t f64);
 void co_f64_free(struct co_vm_t* vm, co_object_t* self);
 
 /*
  * bytes
  */
-co_object_t* co_bytes_new(struct co_vm_t* vm, size_t len, char* data, co_own_t own);
+co_object_t* co_bytes_alloc(struct co_vm_t* vm, size_t len, char* data, co_own_t own);
 void co_bytes_free(struct co_vm_t* vm, co_object_t* self);
 
 /*
  * str
  */
-co_object_t* co_str_new(struct co_vm_t* vm, size_t len, char* data, co_own_t own);
+co_object_t* co_str_alloc(struct co_vm_t* vm, size_t len, char* data, co_own_t own);
 void co_str_free(struct co_vm_t* vm, co_object_t* self);
 
 /*
  * mut_array
  */
-co_object_t* co_mut_array_new(struct co_vm_t* vm, size_t cap, size_t len, co_object_t* items, co_own_t own);
+co_object_t* co_mut_array_alloc(struct co_vm_t* vm, co_object_t* item_type, size_t cap, size_t len, co_object_t* items, co_own_t own);
 void co_mut_array_free(struct co_vm_t* vm, co_object_t* self);
 
 /*
  * array
  */
-co_object_t* co_array_new(struct co_vm_t* vm, size_t cap, size_t len, co_object_t* items, co_own_t own);
+co_object_t* co_array_alloc(struct co_vm_t* vm, co_object_t* item_type, size_t cap, size_t len, co_object_t* items, co_own_t own);
 void co_array_free(struct co_vm_t* vm, co_object_t* self);
 
 /*
  * mut_map
  */
-co_object_t* co_mut_map_new(struct co_vm_t* vm, size_t cap, size_t used, size_t fill, co_map_entry_t* entries, co_own_t own);
+co_object_t* co_mut_map_alloc(struct co_vm_t* vm, co_object_t* key_type, co_object_t* value_type, size_t cap, size_t used, size_t fill, co_map_entry_t* entries, co_own_t own);
 void co_mut_map_free(struct co_vm_t* vm, co_object_t* self);
 
 /*
  * map
  */
-co_object_t* co_map_new(struct co_vm_t* vm, size_t cap, size_t used, size_t fill, co_map_entry_t* entries, co_own_t own);
+co_object_t* co_map_alloc(struct co_vm_t* vm, co_object_t* key_type, co_object_t* value_type, size_t cap, size_t used, size_t fill, co_map_entry_t* entries, co_own_t own);
 void co_map_free(struct co_vm_t* vm, co_object_t* self);
 
 /*
  * code
  */
-co_object_t* co_code_new(struct co_vm_t* vm, size_t len, struct co_inst_t* insts);
+co_object_t* co_code_alloc(struct co_vm_t* vm, size_t len, struct co_inst_t* insts, co_own_t own);
 void co_code_free(struct co_vm_t* vm, co_object_t* self);
 
 /*
  * fn
  */
-co_object_t* co_fn_new(struct co_vm_t* vm, co_object_t* name, co_object_t* type_param_names, co_object_t* params, co_object_t* code);
+co_object_t* co_fn_alloc(struct co_vm_t* vm, co_object_t* name, co_object_t* type_param_names, co_object_t* params, co_object_t* closure, co_object_t* code);
 void co_fn_free(struct co_vm_t* vm, co_object_t* self);
 
 /*
  * frame
  */
-co_object_t* co_frame_new(struct co_vm_t* vm, co_object_t* prev_frame, co_object_t* regs, co_object_t* func, co_object_t* code);
+co_object_t* co_frame_alloc(struct co_vm_t* vm, co_object_t* prev_frame, co_object_t* regs, co_object_t* func, co_object_t* code);
 void co_frame_free(struct co_vm_t* vm, co_object_t* self);
 
 /*
  * mut_type
  */
-co_object_t* co_mut_type_new(struct co_vm_t* vm, co_object_t* name, co_object_t* type_param_names, co_object_t* interfaces, co_object_t* fields, co_object_t* funcs);
+co_object_t* co_mut_type_alloc(struct co_vm_t* vm, co_object_t* name, co_object_t* type_param_names, co_object_t* interfaces, co_object_t* fields, co_object_t* funcs);
 void co_mut_type_free(struct co_vm_t* vm, co_object_t* self);
 
 /*
  * type
  */
-co_object_t* co_type_new(struct co_vm_t* vm, co_object_t* name, co_object_t* type_param_names, co_object_t* interfaces, co_object_t* fields, co_object_t* funcs);
+co_object_t* co_type_alloc(struct co_vm_t* vm, co_object_t* name, co_object_t* type_param_names, co_object_t* interfaces, co_object_t* fields, co_object_t* funcs);
 void co_type_free(struct co_vm_t* vm, co_object_t* self);
 
 /*
  * mut_instance
  */
-co_object_t* co_mut_instance_new(struct co_vm_t* vm, co_object_t* type, co_object_t* fields);
+co_object_t* co_mut_instance_alloc(struct co_vm_t* vm, co_object_t* type, co_object_t* fields);
 void co_mut_instance_free(struct co_vm_t* vm, co_object_t* self);
 
 /*
  * instance
  */
-co_object_t* co_instance_new(struct co_vm_t* vm, co_object_t* type, co_object_t* fields);
+co_object_t* co_instance_alloc(struct co_vm_t* vm, co_object_t* type, co_object_t* fields);
 void co_instance_free(struct co_vm_t* vm, co_object_t* self);
 
 /*
  * mut_module
  */
-co_object_t* co_mut_module_new(struct co_vm_t* vm, co_object_t* path, co_object_t* name, co_object_t* ns);
+co_object_t* co_mut_module_alloc(struct co_vm_t* vm, co_object_t* path, co_object_t* name, co_object_t* ns);
 void co_mut_module_free(struct co_vm_t* vm, co_object_t* self);
 
 /*
  * module
  */
-co_object_t* co_module_new(struct co_vm_t* vm, co_object_t* path, co_object_t* name, co_object_t* ns);
+co_object_t* co_module_alloc(struct co_vm_t* vm, co_object_t* path, co_object_t* name, co_object_t* ns);
 void co_module_free(struct co_vm_t* vm, co_object_t* self);
+
+/*
+ * pointer
+ */
+co_object_t* co_pointer_alloc(struct co_vm_t* vm, void* data, co_own_t data_own, void* extra, co_own_t extra_own, co_pointer_free_func free_func);
+void co_pointer_free(struct co_vm_t* vm, co_object_t* self);
 
 /*
  * object
@@ -417,7 +430,7 @@ void co_module_free(struct co_vm_t* vm, co_object_t* self);
     (self)->rc--; \
     if ((self)->rc == 0) co_object_free(vm, self)
 
-co_object_t* co_object_new(struct co_vm_t* vm, co_kind_t kind, co_value_t value);
+co_object_t* co_object_alloc(struct co_vm_t* vm, co_kind_t kind, co_value_t value);
 void co_object_free(struct co_vm_t* vm, co_object_t* self);
 void co_object_ref(struct co_vm_t* vm, co_object_t* self);
 void co_object_unref(struct co_vm_t* vm, co_object_t* self);

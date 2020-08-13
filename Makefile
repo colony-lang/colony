@@ -1,5 +1,7 @@
 CC=clang
+# CC=musl-clang
 CFLAGS=-c -Wall -O0 -g
+# CFLAGS=-c -Wall -O3
 LDFLAGS=-lm -lpthread
 SOURCES=main.c colony.c vm.c compiler.c object.c
 OBJECTS=$(SOURCES:.c=.o)
