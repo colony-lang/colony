@@ -826,6 +826,7 @@ void co_pointer_free(struct co_vm_t* vm, co_object_t* self) {
     co_pointer_t* pointer = value.pointer;
 
     if (pointer->free_func != NULL) {
+        // it is up to `free_func` to free `data` and `extra` if required
         pointer->free_func(self);
     } else {
         if (pointer->data_own == CO_OWN_FULL) {
@@ -933,6 +934,7 @@ void co_object_free(struct co_vm_t* vm, co_object_t* self) {
             co_module_free(vm, self);
             break;
         case CO_KIND_POINTER:
+            co_pointer_free(vm, self);
             break;
         default:
             free(self);
