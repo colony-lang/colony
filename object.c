@@ -571,18 +571,46 @@ void co_fn_free(struct co_vm_t* vm, co_object_t* self) {
 }
 
 /*
+ * bound_fn
+ */
+co_object_t* co_bound_fn_alloc(struct co_vm_t* vm, co_object_t* fn, co_object_t* obj) {
+    co_object_ref(vm, fn);
+    co_object_ref(vm, obj);
+
+    co_bound_fn_t* bound_fn = malloc(sizeof(co_bound_fn_t));
+    bound_fn->fn = fn;
+    bound_fn->obj = obj;
+    co_value_t value = {.bound_fn = bound_fn};
+    co_object_t* self = co_object_alloc(vm, CO_KIND_BOUND_FN, value);
+    return self;
+}
+
+void co_bound_fn_free(struct co_vm_t* vm, co_object_t* self) {
+    co_value_t value = self->value;
+    co_bound_fn_t* bound_fn = value.bound_fn;
+    co_object_t* fn = bound_fn->fn;
+    co_object_t* obj = bound_fn->obj;
+
+    co_object_unref(vm, fn);
+    co_object_unref(vm, obj);
+
+    free(bound_fn);
+    free(self);
+}
+
+/*
  * frame
  */
-co_object_t* co_frame_alloc(struct co_vm_t* vm, co_object_t* prev_frame, co_object_t* regs, co_object_t* func, co_object_t* code) {
+co_object_t* co_frame_alloc(struct co_vm_t* vm, co_object_t* prev_frame, co_object_t* regs, co_object_t* fn, co_object_t* code) {
     co_object_ref(vm, prev_frame);
     co_object_ref(vm, regs);
-    co_object_ref(vm, func);
+    co_object_ref(vm, fn);
     co_object_ref(vm, code);
 
     co_frame_t* frame = malloc(sizeof(co_frame_t));
     frame->prev_frame = prev_frame;
     frame->regs = regs;
-    frame->func = func;
+    frame->fn = fn;
     frame->code = code;
     co_value_t value = {.frame = frame};
     co_object_t* self = co_object_alloc(vm, CO_KIND_FRAME, value);
@@ -594,12 +622,12 @@ void co_frame_free(struct co_vm_t* vm, co_object_t* self) {
     co_frame_t* frame = value.frame;
     co_object_t* prev_frame = frame->prev_frame;
     co_object_t* regs = frame->regs;
-    co_object_t* func = frame->func;
+    co_object_t* fn = frame->fn;
     co_object_t* code = frame->code;
 
     co_object_unref(vm, prev_frame);
     co_object_unref(vm, regs);
-    co_object_unref(vm, func);
+    co_object_unref(vm, fn);
     co_object_unref(vm, code);
 
     free(frame);
