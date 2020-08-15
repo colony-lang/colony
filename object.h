@@ -304,8 +304,12 @@ void co_bool_free(struct co_vm_t* vm, co_object_t* self);
 // bool, [Option<bool | i8 ... i64 | u8 ... u64 | f32 | f64 | bytes | str | MutArray | Array | MutMap | Map>], {} -> bool
 co_object_t* co_bool_init(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
+// bool, [], {} -> u64
+co_object_t* co_bool_hash(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
+
 // bool, [bool], {} -> bool
 co_object_t* co_bool_eq(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
+
 
 /*
  * i8
@@ -315,6 +319,9 @@ void co_i8_free(struct co_vm_t* vm, co_object_t* self);
 
 // i8, [Option<bool | i8 ... i64 | u8 ... u64 | f32 | f64>], {} -> i8
 co_object_t* co_i8_init(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
+
+// i8, [], {} -> u64
+co_object_t* co_i8_hash(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
 // i8, [], {} -> i8
 co_object_t* co_i8_pos(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
@@ -367,6 +374,9 @@ void co_i16_free(struct co_vm_t* vm, co_object_t* self);
 // i16, [Option<bool | i8 ... i64 | u8 ... u64 | f32 | f64>], {} -> i16
 co_object_t* co_i16_init(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
+// i16, [], {} -> u64
+co_object_t* co_i16_hash(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
+
 // i16, [], {} -> i16
 co_object_t* co_i16_pos(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
@@ -417,6 +427,9 @@ void co_i32_free(struct co_vm_t* vm, co_object_t* self);
 
 // i32, [Option<bool | i8 ... i64 | u8 ... u64 | f32 | f64>], {} -> i32
 co_object_t* co_i32_init(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
+
+// i32, [], {} -> u64
+co_object_t* co_i32_hash(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
 // i32, [], {} -> i32
 co_object_t* co_i32_pos(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
@@ -469,6 +482,9 @@ void co_i64_free(struct co_vm_t* vm, co_object_t* self);
 // i64, [Option<bool | i8 ... i64 | u8 ... u64 | f32 | f64>], {} -> i64
 co_object_t* co_i64_init(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
+// i64, [], {} -> u64
+co_object_t* co_i64_hash(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
+
 // i64, [], {} -> i64
 co_object_t* co_i64_pos(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
@@ -520,6 +536,9 @@ void co_u8_free(struct co_vm_t* vm, co_object_t* self);
 // u8, [Option<bool | i8 ... i64 | u8 ... u64 | f32 | f64>], {} -> u8
 co_object_t* co_u8_init(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
+// u8, [], {} -> u64
+co_object_t* co_u8_hash(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
+
 // u8, [], {} -> u8
 co_object_t* co_u8_pos(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
@@ -568,6 +587,9 @@ void co_u16_free(struct co_vm_t* vm, co_object_t* self);
 // u16, [Option<bool | i8 ... i64 | u8 ... u64 | f32 | f64>], {} -> u16
 co_object_t* co_u16_init(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
+// u16, [], {} -> u64
+co_object_t* co_u16_hash(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
+
 // u16, [], {} -> u16
 co_object_t* co_u16_pos(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
@@ -615,6 +637,9 @@ void co_u32_free(struct co_vm_t* vm, co_object_t* self);
 
 // u32, [Option<bool | i8 ... i64 | u8 ... u64 | f32 | f64>], {} -> u32
 co_object_t* co_u32_init(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
+
+// u32, [], {} -> u64
+co_object_t* co_u32_hash(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
 // u32, [], {} -> u32
 co_object_t* co_u32_pos(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
@@ -665,6 +690,9 @@ void co_u64_free(struct co_vm_t* vm, co_object_t* self);
 co_object_t* co_u64_init(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
 // u64, [], {} -> u64
+co_object_t* co_u64_hash(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
+
+// u64, [], {} -> u64
 co_object_t* co_u64_pos(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
 // u64, [], {} -> u64
@@ -712,6 +740,9 @@ void co_f32_free(struct co_vm_t* vm, co_object_t* self);
 // f32, [Option<bool | i8 ... i64 | u8 ... u64 | f32 | f64>], {} -> f32
 co_object_t* co_f32_init(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
+// f32, [], {} -> u64
+co_object_t* co_f32_hash(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
+
 // f32, [], {} -> f32
 co_object_t* co_f32_pos(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
@@ -751,6 +782,9 @@ void co_f64_free(struct co_vm_t* vm, co_object_t* self);
 // f64, [Option<bool | i8 ... i64 | u8 ... u64 | f32 | f64>], {} -> f64
 co_object_t* co_f64_init(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
+// f64, [], {} -> u64
+co_object_t* co_f64_hash(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
+
 // f64, [], {} -> f64
 co_object_t* co_f64_pos(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
@@ -789,6 +823,9 @@ void co_bytes_free(struct co_vm_t* vm, co_object_t* self);
 
 // bytes, [Option<bytes>], {} -> bytes
 co_object_t* co_bytes_init(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
+
+// bytes, [], {} -> u64
+co_object_t* co_bytes_hash(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
 // bytes, [bytes], {} -> bytes
 co_object_t* co_bytes_add(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
@@ -846,6 +883,9 @@ void co_str_free(struct co_vm_t* vm, co_object_t* self);
 
 // str, [Option<str>], {} -> str
 co_object_t* co_str_init(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
+
+// str, [], {} -> u64
+co_object_t* co_str_hash(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
 // str, [str], {} -> str
 co_object_t* co_str_add(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
@@ -955,6 +995,9 @@ void co_array_free(struct co_vm_t* vm, co_object_t* self);
 // Array, [MutArray | Array | MutMap | Map], {} -> Array
 co_object_t* co_array_init(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
+// Array, [], {} -> u64
+co_object_t* co_array_hash(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
+
 // Array, [Array], {} -> Array
 co_object_t* co_array_add(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
@@ -1045,6 +1088,9 @@ void co_map_free(struct co_vm_t* vm, co_object_t* self);
 // Map, [MutArray | Array | MutMap | Map], {} -> Map
 co_object_t* co_map_init(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
+// Map, [], {} -> u64
+co_object_t* co_map_hash(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
+
 // Map, [Map], {} -> Map
 co_object_t* co_map_add(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
@@ -1084,6 +1130,9 @@ void co_code_free(struct co_vm_t* vm, co_object_t* self);
 // Code, [Option<Code>], {} -> Code
 co_object_t* co_code_init(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
+// Code, [], {} -> u64
+co_object_t* co_code_hash(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
+
 // Code, [Code], {} -> Code
 co_object_t* co_code_eq(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
@@ -1095,6 +1144,9 @@ void co_fn_free(struct co_vm_t* vm, co_object_t* self);
 
 // Fn, [Option<Fn>], {} -> Fn
 co_object_t* co_fn_init(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
+
+// Fn, [], {} -> u64
+co_object_t* co_fn_hash(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
 // Fn, [Fn], {} -> bool
 co_object_t* co_fn_eq(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
@@ -1111,6 +1163,9 @@ void co_method_free(struct co_vm_t* vm, co_object_t* self);
 // Method, [Fn, Object], {} -> Method
 co_object_t* co_method_init(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
+// Method, [], {} -> u64
+co_object_t* co_method_hash(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
+
 // Method, [Method], {} -> bool
 co_object_t* co_method_eq(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
@@ -1125,6 +1180,9 @@ void co_frame_free(struct co_vm_t* vm, co_object_t* self);
 
 // Frame, [Frame, MutArray, Fn, Code], {} -> Frame
 co_object_t* co_frame_init(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
+
+// Frame, [], {} -> u64
+co_object_t* co_frame_hash(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
 // Frame, [Frame], {} -> bool
 co_object_t* co_frame_eq(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
@@ -1170,6 +1228,9 @@ void co_type_free(struct co_vm_t* vm, co_object_t* self);
 
 // Type, [Str, Map, Array, Map, Map], {} -> Type
 co_object_t* co_type_init(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
+
+// Type, [], {} -> u64
+co_object_t* co_type_hash(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
 // Type, [Type], {} -> bool
 co_object_t* co_type_eq(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
@@ -1222,6 +1283,9 @@ void co_instance_free(struct co_vm_t* vm, co_object_t* self);
 // Instance, [Type, Map], {} -> Instance
 co_object_t* co_instance_init(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
+// Instance, [], {} -> u64
+co_object_t* co_instance_hash(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
+
 // Instance, [Object], {} -> Object
 co_object_t* co_instance_get(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
@@ -1258,6 +1322,9 @@ void co_module_free(struct co_vm_t* vm, co_object_t* self);
 // Module, [str, str, Map], {} -> Module
 co_object_t* co_module_init(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
+// Module, [], {} -> u64
+co_object_t* co_module_hash(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
+
 // Module, [Object], {} -> Object
 co_object_t* co_module_get(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
@@ -1275,6 +1342,9 @@ void co_pointer_free(struct co_vm_t* vm, co_object_t* self);
 
 // Pointer, [], {} -> Pointer
 co_object_t* co_pointer_init(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
+
+// Pointer, [], {} -> u64
+co_object_t* co_pointer_hash(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
 /*
  * object
