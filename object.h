@@ -1159,6 +1159,9 @@ co_object_t* co_mut_type_specialize(struct co_vm_t* vm, co_object_t* self, co_ob
 // MutType, Array<Object>, Map<Object, Object> -> MutInstance
 co_object_t* co_mut_type_call(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
+// MutType, [], {} -> Type
+co_object_t* co_mut_type_imut(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
+
 /*
  * type
  */
@@ -1189,6 +1192,9 @@ co_object_t* co_type_specialize(struct co_vm_t* vm, co_object_t* self, co_object
 // Type, Array<Object>, Map<Object, Object> -> Instance
 co_object_t* co_type_call(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
+// Type, [], {} -> MutType
+co_object_t* co_type_mut(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
+
 /*
  * mut_instance
  */
@@ -1203,6 +1209,9 @@ co_object_t* co_mut_instance_get(struct co_vm_t* vm, co_object_t* self, co_objec
 
 // MutInstance, [Object, Object] -> MutInstance
 co_object_t* co_mut_instance_set(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
+
+// MutInstance, [], {} -> Instance
+co_object_t* co_mut_instance_imut(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
 /*
  * instance
@@ -1219,6 +1228,9 @@ co_object_t* co_instance_get(struct co_vm_t* vm, co_object_t* self, co_object_t*
 // Instance, [Object, Object] -> Instance
 co_object_t* co_instance_set(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
+// Instance, [], {}, -> MutInstance
+co_object_t* co_instance_mut(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
+
 /*
  * mut_module
  */
@@ -1234,6 +1246,9 @@ co_object_t* co_mut_module_get(struct co_vm_t* vm, co_object_t* self, co_object_
 // MutModule, [Object, Object], {} -> MutModule
 co_object_t* co_mut_module_set(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
+// MutModule, [], {} -> Module
+co_object_t* co_mut_module_imut(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
+
 /*
  * module
  */
@@ -1248,6 +1263,9 @@ co_object_t* co_module_get(struct co_vm_t* vm, co_object_t* self, co_object_t* a
 
 // Module, [Object, Object], {} -> Module
 co_object_t* co_module_set(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
+
+// Module, [], {} -> MutModule
+co_object_t* co_module_mut(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
 /*
  * pointer
