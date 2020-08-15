@@ -27,7 +27,7 @@ struct co_mut_map_t;
 struct co_map_t;
 struct co_code_t;
 struct co_fn_t;
-struct co_bound_fn_t;
+struct co_method_t;
 struct co_frame_t;
 struct co_mut_type_t;
 struct co_type_t;
@@ -126,10 +126,10 @@ typedef struct co_fn_t {
     struct co_object_t* code;               // Code
 } co_fn_t;
 
-typedef struct co_bound_fn_t {
+typedef struct co_method_t {
     struct co_object_t* fn;                 // Fn
     struct co_object_t* obj;                // Object
-} co_bound_fn_t;
+} co_method_t;
 
 typedef struct co_frame_t {
     struct co_object_t* prev_frame;         // Optional<Frame>
@@ -206,7 +206,7 @@ typedef enum co_kind_t {
     CO_KIND_MAP,
     CO_KIND_CODE,
     CO_KIND_FN,
-    CO_KIND_BOUND_FN,
+    CO_KIND_METHOD,
     CO_KIND_FRAME,
     CO_KIND_MUT_TYPE,
     CO_KIND_TYPE,
@@ -237,7 +237,7 @@ typedef union co_value_t {
     struct co_map_t* map;
     struct co_code_t* code;
     struct co_fn_t* fn;
-    struct co_bound_fn_t* bound_fn;
+    struct co_method_t* method;
     struct co_frame_t* frame;
     struct co_mut_type_t* mut_type;
     struct co_type_t* type;
@@ -616,13 +616,13 @@ co_object_t* co_fn_eq(struct co_vm_t* vm, co_object_t* self, co_object_t* args, 
 co_object_t* co_fn_call(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
 /*
- * bound_fn
+ * method
  */
-co_object_t* co_bound_fn_alloc(struct co_vm_t* vm, co_object_t* fn, co_object_t* obj);
-void co_bound_fn_free(struct co_vm_t* vm, co_object_t* self);
-co_object_t* co_bound_fn_init(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
-co_object_t* co_bound_fn_eq(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
-co_object_t* co_bound_fn_call(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
+co_object_t* co_method_alloc(struct co_vm_t* vm, co_object_t* fn, co_object_t* obj);
+void co_method_free(struct co_vm_t* vm, co_object_t* self);
+co_object_t* co_method_init(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
+co_object_t* co_method_eq(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
+co_object_t* co_method_call(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
 /*
  * frame

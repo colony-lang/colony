@@ -571,30 +571,30 @@ void co_fn_free(struct co_vm_t* vm, co_object_t* self) {
 }
 
 /*
- * bound_fn
+ * method
  */
-co_object_t* co_bound_fn_alloc(struct co_vm_t* vm, co_object_t* fn, co_object_t* obj) {
+co_object_t* co_method_alloc(struct co_vm_t* vm, co_object_t* fn, co_object_t* obj) {
     co_object_ref(vm, fn);
     co_object_ref(vm, obj);
 
-    co_bound_fn_t* bound_fn = malloc(sizeof(co_bound_fn_t));
-    bound_fn->fn = fn;
-    bound_fn->obj = obj;
-    co_value_t value = {.bound_fn = bound_fn};
-    co_object_t* self = co_object_alloc(vm, CO_KIND_BOUND_FN, value);
+    co_method_t* method = malloc(sizeof(co_method_t));
+    method->fn = fn;
+    method->obj = obj;
+    co_value_t value = {.method = method};
+    co_object_t* self = co_object_alloc(vm, CO_KIND_METHOD, value);
     return self;
 }
 
-void co_bound_fn_free(struct co_vm_t* vm, co_object_t* self) {
+void co_method_free(struct co_vm_t* vm, co_object_t* self) {
     co_value_t value = self->value;
-    co_bound_fn_t* bound_fn = value.bound_fn;
-    co_object_t* fn = bound_fn->fn;
-    co_object_t* obj = bound_fn->obj;
+    co_method_t* method = value.method;
+    co_object_t* fn = method->fn;
+    co_object_t* obj = method->obj;
 
     co_object_unref(vm, fn);
     co_object_unref(vm, obj);
 
-    free(bound_fn);
+    free(method);
     free(self);
 }
 
