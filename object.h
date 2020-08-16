@@ -310,7 +310,6 @@ co_object_t* co_bool_hash(struct co_vm_t* vm, co_object_t* self, co_object_t* ar
 // bool, [bool], {} -> bool
 co_object_t* co_bool_eq(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs);
 
-
 /*
  * i8
  */

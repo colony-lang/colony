@@ -54,6 +54,7 @@ typedef enum co_opcode_name_t {
     CO_OPCODE_POW,              // UUU; R[a] = R[b] ** R[c]
     
     CO_OPCODE_NOT,              // UU; R[a] = !R[b]
+    
     CO_OPCODE_AND,              // UUU; R[a] = R[b] & R[c]
     CO_OPCODE_OR,               // UUU; R[a] = R[b] | R[c]
     CO_OPCODE_XOR,              // UUU; R[a] = R[b] ^ R[c]

@@ -13,6 +13,25 @@ void co_bool_free(struct co_vm_t* vm, co_object_t* self) {
     free(self);
 }
 
+co_object_t* co_bool_init(struct co_vm_t* vm, co_object_t* self, co_object_t* args, co_object_t* kwargs) {
+    co_object_t* res = NULL;
+
+    /*
+    co_object_t* value = NULL;
+
+    switch (args->kind) {
+        case CO_KIND_MUT_ARRAY:
+            break;
+        case CO_KIND_ARRAY:
+            break;
+        default:
+            // error, unsupported args type/kind
+    }
+    */
+
+    return res;
+}
+
 /*
  * i8
  */
