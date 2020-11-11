@@ -1,0 +1,28 @@
+
+if: Fn = (test, &{if_block}, &{else}=None) -> Object {
+
+}
+
+else: Fn = (&{if}=None, &{}=None) -> Object {
+
+}
+
+//
+// examples
+//
+if (a == b) {
+
+}
+
+if (a == b) {
+
+} else if (a == b) {
+
+}
+
+// ------------------
+if = (test) (&{if_block})* ('else' )* -> Object {
+
+}
+
+else = 
