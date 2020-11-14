@@ -1,0 +1,63 @@
+// int
+a = 10
+a: int = 10
+
+// bytes
+a = b'123'
+a: bytes = b''
+
+// str - utf8 string 
+a = 'abc123'
+a: str = 'abc123'
+
+// list
+a = [0, 1, 'a']
+a: list = [0, 1, 'a']
+a: list[int] = [0, 1, 2]
+
+// dict
+d = {.x: 10, .y: -0.1, 'z': 20}
+d: dict = {.x: 10, .y: -0.1, 'z': 20}
+d: dict[x: int, y: float, z: int] = {.x: 10, .y: -0.1, 'z': 20}
+d: dict[str][x: int, y: float, z: int] = {.x: 10, .y: -0.1, 'z': 20}
+
+// blocks
+b: block = -> { 0 }
+b: block = -> int { 0 }
+b: block[int] = -> int { 0 }
+b = -> int { -> int { 0 } }
+b: block = -> int { -> int { 0 } }
+b: block[int] = -> int { -> int { 0 } }
+b: block[int][int] = -> int { -> int { 0 } }
+
+// params
+p: params = (x, y)
+p: params = (x, y=20)
+p: params = (x: int, y: int=20)
+p: params[int, int] = (x: int, y: int=20)
+p: params = (x: int, y: int=20, *args, **kwargs)
+p: params[int, int, *list, **dict] = (x: int, y: int=20, *args, **kwargs)
+
+// forming functions out of params and blocks
+f0: fn[[int, int], int] = p -> b
+f0: fn[[int, int], int] = p -> int { x + y }
+f0: fn[[int, int], int] = (x: int, y: int=20) -> b
+f0: fn[[int, int], int] = (x: int, y: int=20) -> int { x + y }
+
+b = -> {}
+p = ()
+f1 = () -> {}
+f1 = () -> b
+f1 = p -> b
+f1 = p -> {}
+
+// function calls
+r0: int = f0(10, 20)
+r0: int = f0(10, y=20)
+r0: int = f0(10, *[20])
+r0: int = f0(10, **{.y: 20})
+r0: int = f0(*[10, 20])
+r0: int = f0(*[10, 20], **{})
+r0: int = f0(*[10], **{.y: 20})
+r0: int = f0(*[], **{.x: 10, .y: 20})
+r0: int = f0(**{.x: 10, .y: 20})

@@ -1,0 +1,150 @@
+// bool
+a = true
+b: bool = false
+
+// int
+a = 10
+a: int = 10
+
+// float
+a = 1.1
+a: float = 1.1
+
+// bytes
+a = b'123'
+a = b"123"
+a: bytes = b''
+
+// str - utf8 string 
+a = 'abc123'
+a = "abc123"
+a: str = 'abc123'
+
+// list / positional objects
+a = [0, 1, 'a']
+a: list = [0, 1, 'a']
+a: list[int] = [0, 1, 2]
+
+a[0]
+a.0
+
+// dict / named object
+d = {.x: 10, .y: -0.1, 'z': 20}
+d: dict = {.x: 10, .y: -0.1, 'z': 20}
+d: dict[x: int, y: float, z: int] = {.x: 10, .y: -0.1, 'z': 20}         // ?
+d: dict[str][x: int, y: float, z: int] = {.x: 10, .y: -0.1, 'z': 20}    // ?
+
+d['x']
+d.x
+
+// Result
+a: Result[int] = Ok(0)
+b: Result[int] = 0
+c: Result[int] = Err("there was an error")
+d: int! = Ok(0)
+e: int! = 0
+r: int! = Err("there was an error")
+
+// Option
+a: Option[int] = Some(0)
+b: Option[int] = 0
+c: Option[int] = None
+d: int? = Some(1)
+e: int? = 1
+f: int? = None
+
+// Union
+a: Union[int, float] = 0
+b: Union[int, float] = 0.0
+c: int | float = 0
+c: int | float = 0.0
+
+// positional Product
+a: Product[int, float] = [1, 1.0]
+a: int & float = [1, 1.0]
+a: [int, float] = [1, 1.0]
+
+T = Product[int, float]
+b: T = [1]
+
+// named Product
+a: Product { x: int, b: float=0.0 } = {.x: 10, .y: 1.0}
+a: Product { x: int, b: float=0.0 } = {.x: 10}
+a: { x: int, b: float=0.0 } = {.x: 10, .y: 1.0}
+a: { x: int, b: float=0.0 } = {.x: 10}
+
+T = Product { x: int, b: float=0.0 }
+b: T = {.x: 10}
+
+// blocks
+// IN_TYPE '->' OUT_TYPE '{' EXPR '}'
+b = /* object */ -> /* object */ { 0 }
+b = /* object */ -> int { 0 }
+b = -> { 0 }
+b = -> int { 0 }
+b = int -> int { 0 }
+b = int -> { -> int { 0 }}
+
+b                      = -> { _ + 0 }
+b: int -> int          = -> { _ + 0 }
+b: int -> int          = int -> int { _ + 0 }
+b: (int -> int)        = int -> int { _ + 0 }
+b                      = -> { _ + 0 } -> { _ + 1 }
+b: int -> int -> int   = -> { _ + 0 } -> { _ + 1 }
+b: int -> int -> int   = int -> int { _ + 0 } -> int { _ + 1 }
+b: (int -> int -> int) = int -> int { _ + 0 } -> int { _ + 1 }
+
+b                                          = -> { -> { -> { 0 }}}
+b                                          = int -> { -> int { -> int { 0 }}}
+b: Block                                   = int -> { -> int { -> int { 0 }}}
+b: Block[int, Block]                       = int -> { -> int { -> int { 0 }}}
+b: int -> (int -> int)                     = int -> { -> int { -> int { 0 }}} // ??
+b: (int -> (int -> int))                   = int -> { -> int { -> int { 0 }}} // ??
+
+b0 = -> { _ + 0 }
+b1 = -> { _ + 1 }
+b2 = -> { _ + 2 }
+b3 = b0 -> b1 -> b2
+
+b3 = -> { _ + 0 } -> { _ + 1 } -> { _ + 2 }
+b3 = -> int { _ + 0 } -> int { _ + 1 } -> int { _ + 2 }
+b3 = -> int { _ + 0 } -> int { _ + 1 } -> int { _ + 2 }
+
+// block invocation
+b = -> { _ + 0 } -> { _ + 1 }
+r = 0 |> b
+
+b = -> { -> { -> { 0 }}}
+r = None |> (None |> (None |> b))
+
+b = int? -> int! { Some(0) }
+r: int! = 0 |> b
+
+b = int? -> int! { Err("Some error") }
+r: int! = None |> b
+
+// down \/ ????
+
+// forming functions out of products and blocks
+f0: Fn[[int, int], int] = p -> b
+f0: Fn[[int, int], int] = p -> int { x + y }
+f0: Fn[[int, int], int] = (x: int, y: int=20) -> b
+f0: Fn[[int, int], int] = (x: int, y: int=20) -> int { x + y }
+
+b = -> {}
+p = ()
+f1 = () -> {}
+f1 = () -> b
+f1 = p -> b
+f1 = p -> {}
+
+// function calls
+r0: int = f0(10, 20)
+r0: int = f0(10, y=20)
+r0: int = f0(10, *[20])
+r0: int = f0(10, **{.y: 20})
+r0: int = f0(*[10, 20])
+r0: int = f0(*[10, 20], **{})
+r0: int = f0(*[10], **{.y: 20})
+r0: int = f0(*[], **{.x: 10, .y: 20})
+r0: int = f0(**{.x: 10, .y: 20})
