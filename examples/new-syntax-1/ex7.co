@@ -1,0 +1,172 @@
+// bool
+a = true
+b: bool = false
+
+// int
+a = 10
+a: int = 10
+
+// float
+a = 1.1
+a: float = 1.1
+
+// bytes
+a = b'123'
+a = b"123"
+a: bytes = b''
+
+// str - utf8 string 
+a = 'abc123'
+a = "abc123"
+a: str = 'abc123'
+
+// list / positional objects
+a = [0, 1, 'a']
+a: List = [0, 1, 'a']
+a: List[int] = [0, 1, 2]
+
+a[0]
+a.0
+
+// dict / named object
+d = {.x: 10, .y: -0.1, 'z': 20}
+d: Dict = {.x: 10, .y: -0.1, 'z': 20}
+d: Dict[x: int, y: float, z: int] = {.x: 10, .y: -0.1, 'z': 20}         // ?
+d: Dict[str][x: int, y: float, z: int] = {.x: 10, .y: -0.1, 'z': 20}    // ?
+
+d['x']
+d.x
+
+// Result
+a: Result[int] = Ok(0)
+b: Result[int] = 0
+c: Result[int] = Err("there was an error")
+d: int! = Ok(0)
+e: int! = 0
+r: int! = Err("there was an error")
+
+// Option
+a: Option[int] = Some(0)
+b: Option[int] = 0
+c: Option[int] = None
+d: int? = Some(1)
+e: int? = 1
+f: int? = None
+
+// Union
+a: Union[int, float] = 0
+b: Union[int, float] = 0.0
+c: int | float = 0
+c: int | float = 0.0
+
+// positional Product - typed List
+a: Product { int, float } = [1, 1.0]
+a: Product { int, float=0.0 } = [1, 1.0]
+a: Product { int, float=0.0 } = [1]
+a: {int, float=0.0} = [1, 1.0]
+a: {int, float=0.0} = [1]
+a == [1, 0.0]
+
+T = Product[int, float]
+b: T = [1]
+
+// named Product - typed Dict
+a: Product { .x: int, .y: float=0.0 } = {.x: 10, .y: 1.0}
+a: Product { .x: int, .y: float=0.0 } = {.x: 10}
+a: {.x: int, .y: float=0.0} = {.x: 10, .y: 1.0}
+a: {.x: int, .y: float=0.0} = {.x: 10}
+
+T = Product { .x: int, .y: float=0.0 }
+b: T = {.x: 10}
+b == {.x: 10, .y: 0.0}
+
+// Fn - function
+// IN_TYPE -> OUT_TYPE { EXPRS+ }
+
+// example 1
+f0: Fn = Product { .x: int, .y: flaot=0.0 } -> float {
+    z: float = _.x * _.y
+}
+
+f0: Fn = Product { .x: int, .y: flaot=0.0 } -> float {
+    z: float = x * y
+}
+
+// example 2
+f0: Fn = {.x: int, .y: flaot=0.0} -> float {
+    z: float = _.x * _.y
+}
+
+f0: Fn = {.x: int, .y: flaot=0.0} -> float {
+    z: float = x * y
+}
+
+// example 3
+r: float! = {.x: 1, .y: 1.1} |>
+    {.x: int, .y: flaot=0.0} -> float {
+        z: float = x * y
+    } |>
+    float -> float! {
+        _ / 0
+    }
+
+match r {
+    ZeroDivisionError(_) -> Result {
+        None
+    }
+}
+
+// example 4
+f0: Fn = {.x: int, .y: flaot=0.0} -> float {
+    z: float = x * y
+}
+
+f1: Fn = float -> float! { _ / 0 }
+
+r: float! = {.x: 1, .y: 1.1} |> f0 |> f1
+
+match r -> Result {
+    ZeroDivisionError(_) -> Result {
+        None
+    }
+}
+
+// example 5
+f0 = {.x: int, .y: float} | {int, float} -> float {
+    z: float = match _ -> Result {
+        {.x: int, .y: float} -> float {
+            x * y
+        }
+        {int, float} -> float {
+            _[0] * _[1]
+        }
+    }
+}
+
+r = f0({.x: 1, .y: 1.1})
+r = f0([1, 1.1])
+
+// example 6
+f0: Fn = fn (x: int, .y: float) -> float {
+    z: float = x * y
+}
+
+r = f0(x=1, y=1.1)
+r = f0(1, 1.1)
+
+//
+// match, if
+//
+a: int = 0
+b: float = 0.0
+
+match {.a: a, .b: b} -> int | float {
+    {.a: int, .b: float} -> int | float {
+        if a == 0 -> int {
+            a
+        } else b == 0.0 -> float {
+            b
+        }
+    }
+    {int, float} -> Result { Ok(_) }
+}
