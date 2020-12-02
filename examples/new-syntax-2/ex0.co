@@ -174,3 +174,14 @@ A: type = type {
 a0: A = A(1, 2)
 a1: A = A(2, 3)
 a2: A = a0 + a1
+
+// Method functions starting and ending with '__' do not pass
+// caller as first argument of it.
+//
+// therefor, we have power to push whatever we want.
+//
+// therefor, there is no need to special attribute access rules
+a0: A = A.__init__(A.__new__(A), 1, 2)
+a1: A = a0.__init__(a0.__new__(a0.__type__), 2, 3)
+a2: A = a0.__init__(a0, a1)
+a3: A = A.__init__(a0, a1)
