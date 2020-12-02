@@ -1,0 +1,176 @@
+//
+// Variables
+//
+//  VAR0: T0
+//  VAR0: T0 = VALUE0
+//
+v0: int
+v1: int = 0
+
+//
+// Function
+//
+//  T0 -> T1 { ... }
+//
+f0: fn[int, int] = int -> int { _ + 1 }
+r0: int = f0 0
+r0 == 1
+
+//
+// Product type
+//
+//  (F0: T0, F1: T1, ...)
+//
+T: type = (x: float, y: float)
+v0: T = (x=1.0, y=2.0)
+v1: T = (x=2.0, y=3.0)
+v2: T = (
+    v0.x + v1[0],
+    v0[0] + v1.y,
+)
+
+//
+// Sum type
+//
+//  T0 | T1 | ...
+//
+T: type = int | float
+v0: T = 1
+v1: T = 2.0
+v2: T = v0 + v1
+
+//
+T: type = (int | float) // ?
+
+//
+T: type = (x: int | y: float) // ?
+
+//
+// Generics
+//
+//  TYPE0[TYPE1, TYPE2, ...]
+//
+T: type = array[int]
+v0: T = [0, 2, 4, 6, 8]
+v1: T = [1, 3, 5, 7, 9]
+v2: T = v0 + v1
+
+T: type = dict[str, int]
+v0: T = {.x: 10, .y: 20}
+v1: T = {'x': 20, 'y': 30}
+v2: T = {
+    .x: v0.x + v1.x,
+    .y: v0.y + v1.y,
+}
+
+//
+T: type = (x: int, y: int)
+f0: Fn[T, T] = T -> T {
+    (
+        x = _.x * 2,
+        y = _.y * 2,
+    )
+}
+
+//
+T: type = (x: int, y: int)
+f0: Fn[T, T] = T -> T {
+    (
+        x = x * 2,
+        y = y * 2,
+    )
+}
+
+//
+f0: Fn[tuple, tuple] = (x: int, y: int) -> (x: int, y: int) {
+    (
+        x = x * 2,
+        y = y * 2,
+    )
+}
+
+//
+// Object model
+//
+// object: mut_dict[str, object] = mut_dict[str, object]()
+// type: mut_dict[str, object] = mut_dict[str, object]()
+object: mut_dict[str, object] = {}.mut()
+type: mut_dict[str, object] = {}.mut()
+
+object += {
+    .__type__: type,
+    .__name__: "object",
+    .__bases__: [],
+    .__new__: (cls: type, [args], {kwargs}) -> type {
+        self: type = {
+            .__type__: cls,
+        }
+
+        self
+    },
+    .__init__: (self: type, [args], {kwargs}) -> type {
+        self
+    },
+}
+
+type += {
+    .__type__: type,
+    .__name__: "type",
+    .__bases__: [object],
+    .__new__: (mcs: type, [args], {kwargs}) -> type {
+        cls: type = {
+            .__type__: mcs,
+        }
+
+        cls
+    },
+    .__init__: (cls: type, [args], {kwargs}) -> type {
+        name: str = __type_get_name(mcs, args, kwargs)
+        bases: array[type] = __type_get_bases(mcs, args, kwargs)
+        body: dict[str, object] = __type_get_body(mcs, args, kwargs)
+
+        cls += {
+            .__name__: name,
+            .__bases__: bases,
+            ...body
+        }
+
+        cls
+    },
+    .__call__: (cls: type, [args], {kwargs}) -> object {
+        obj: (type | cls) =
+            if cls == type {
+                mcs: type = cls
+                cls: type = mcs.__new__(mcs, ...args, ...kwargs)
+                cls = mcs.__init__(cls, ...args, ...kwargs)
+                cls
+            } else {
+                self: cls = cls.__new__(cls, ...args, ...kwargs)
+                self = cls.__init__(self, ...args, ...kwargs)
+            }
+
+        obj
+    }
+}
+
+object: dict[str, object] = object.imut()
+type: dict[str, object] = type.imut()
+
+//
+A: type = type {
+    .x: int(0),
+    .y: int(1),
+    .__init__: (self: A, x: int, y: int) -> A {
+        self = (self.x = x)
+        self = (self.y = y)
+        self
+    },
+    .__add__: (self: A, other: A) -> A {
+        r: A = (self.x + other.x, self.y + other.y)
+        r
+    },
+}
+
+a0: A = A(1, 2)
+a1: A = A(2, 3)
+a2: A = a0 + a1
