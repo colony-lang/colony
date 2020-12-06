@@ -1,0 +1,58 @@
+//
+// auto initialization
+//
+v0: int
+v0 == 0
+
+//
+// manual initialization
+//
+v1: int = 0
+v1 == 0
+
+//
+// single param function only
+//
+f0 = int -> int {
+    _ + 2
+}
+
+r0: int = f0 1
+r0 == 3
+
+//
+// tuple - anonymous product type
+//
+T: (int, int)
+v: T = (1, 2)
+
+// assignment by destruction
+a: int, b: int = v
+a: int, b: int = v[0], v[1]
+
+//
+// tuple - product type
+//
+T: (x: int, y: int)
+v: T = (x=1, y=2)
+
+// assignment by destruction
+x: int, y: int = v
+x: int, y: int = v.x, v.y
+x: int, y: int = v[0], v[1]
+
+//
+// union - anonymous sum type
+// types should not repeat, last overwrites last prop with same type
+//
+T: (int | float)
+v0: T = 10
+v1: T = -2.0
+
+//
+// union - sum type
+// types should not repeat, last overwrites last prop with same type
+//
+T: (x: int | y: float)
+v0: T = 10
+v1: T = -2.0
