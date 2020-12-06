@@ -1,176 +1,211 @@
 //
-// auto initialization
-//
-v0: int
-v0 == 0
-
-//
-// manual initialization
-//
-v1: int = 0
-v1 == 0
-
-//
-// single param function only
-//
-f0 = int -> int {
-    _ + 2
-}
-
-r0: int = f0 1
-r0 == 3
-
-//
-// tuple - anonymous product type
-//
-T: (int, int)
-v: T = (1, 2)
-
-// assignment by destruction
-a: int, b: int = v
-a: int, b: int = v[0], v[1]
-
-//
-// tuple - product type
-//
-T: (x: int, y: int)
-v: T = (x=1, y=2)
-
-// assignment by destruction
-x: int, y: int = v
-x: int, y: int = v.x, v.y
-x: int, y: int = v[0], v[1]
-
-//
-// union - anonymous sum type
-// types should not repeat, last overwrites last prop with same type
-//
-T: (int | float)
-v0: T = 10
-v1: T = -2.0
-
-//
-// union - sum type
-// types should not repeat, last overwrites last prop with same type
-//
-T: (x: int | y: float)
-v0: T = 10
-v1: T = -2.0
-
-//
-// match - structural pattern matching
-//
-T: type = (int, int)
-U: type = (x: int, y: int)
-V: type = (int | float)
-W: type = (x: int | y: float)
-P: type = T | U | V | W
-
-a: T = (1, 2)
-b: U = (2, y=3)
-c: V = (1, 2.0)
-d: W = (2, 3.0)
-e: P + random.choice([a, b, c, d])
-
-Q: type = (x: int | float, y: int | float)
-
-r: Q = type(e) == T ? {
-        x: int, y: int = e
-    } : type(e) == U ? {
-        x: int, y: int = e
-    } : type(e) == V ? (
-        type(e) == V[0] ? {
-            x: int = e
-            y: float = 0
-        } : type(e) == V[1] ? {
-            x: int = 0
-            y: float = e
-        }
-    ) : type(e) == W ? {
-        type(e) == W.x ? {
-            x: int = e
-            y: float = 0
-        } : {
-            x: int = 0
-            y: float = e
-        }
-    }
-
-r: Q = match(
-    e,
-    T -> Q { x: int, y: int = e },
-    U -> Q { x: int, y: int = e },
-    V -> Q { x: int, y: float = e, 0 },
-    W -> Q { x: int, y: float = 0, e },
-)
-
-//
-// tuple as param type of function
-//
-f0 = (int, int) -> int {
-    _[0] + _[1]
-}
-
-a0: (int, int) = (1, 2)
-r0: int = f0 a0
-r0 == 3
-
-r1: int = f0(1, 2)
-r1 == 3
-
-//
-T: type = (int, int)
-
-f0 = T -> int {
-    _[0] + _[1]
-}
-
-a0: T = (1, 2)
-r0: int = f0 a0
-r0 == 3
-
-//
 // object based
 //
-object: dict = {}.mut()
-type: dict[str, object] = {}.mut()
+object: object = _mut_dict()
+object: _mut_dict[str, object] = object
+type: _mut_dict[str, object] = _mut_dict()
 
-object += {
-    .__type__: type,
-    // .__name__: "object-%s".format(uuid4()),
-    .__name__: "object",
-    .__bases__: [],
-    .__new__: (cls: type, [args], {kwargs}) -> Self {
-        self: cls = {
-            .__type__: cls,
-            ...{cls.filter((k, v) -> { !k.isdunder() })}
-        }
-    },
-    .__init__: (self: Self, [args], {kwargs}) -> Self {
-        self
-    },
+//
+// object
+//
+object.__type__ = type
+object.__name__ = 'object'
+
+object.__new__ = (cls: type, [args], {kwargs}) -> object {
+    fields: dict[str, object] = cls.filter((k: str, v: object) -> {
+        !k.ismeta() && !callable(v)
+    })
+
+    self: cls = {
+        .__type__: cls,
+        ...fields
+    }
 }
 
-type += {
-    .__type__: type,
-    .__name__: "type",
-    .__bases__: [object],
+object.__init__ = (self: object, [args], {kwargs}) -> object {
+    fields: dict[str, object] = self.filter((k: str, v: object) -> {
+        !k.ismeta() && !callable(v)
+    })
+
+    args_attrs: list[str] = fields.keys().getslice(0, args.len())
+    args_fields: dict[str, object] = dict(zip(args_attrs, args))
+    self += args_attrs + kwargs
+}
+
+object.__repr__ = (self: object) -> str {
+    "<%s at %x>".format(self.__type__.__name__, self.__type__.__addr__(self))
+}
+
+object.__addr__ = (self: object) -> ptr {
+    // native code that gets address of obj
+}
+
+//
+// type
+//
+type.__type__ = type
+type.__name__ = 'type'
+
+type.__call__ = dict[str, object] | (cls: type, [args], {kwargs}) -> type | object {
+    match(_,
+        dict[str, object] -> type {
+            // create class
+            mcs: type = _
+            mcs, type_: type = mcs.pop("__type__", type)
+            mcs, name: str = mcs.pop("__name__", "type-{}".format(uuid4()))
+
+            cls: mcs = {
+                .__type__: type_,
+                .__name__: name,
+                ...mcs
+            }
+        },
+        (cls: type, [args], {kwargs}) -> object {
+            // create instance
+            self: cls = cls.__new__(cls, ...args, ...kwargs)
+            self = cls.__init__(self, ...args, ...kwargs)
+        },
+    )
 }
 
 type = type.inplace_imut()
 type: type = type
 object: type = object.inplace_imut()
 
-A = type {
-    .x: int(0),
-    .y: int(0),
-    .__init__: (self: Self, x: int, y: int) -> Self {
-        // self = ((self.x = x).y = y)
-        // self = self + {.x: x, .y: y}
-        // self += {.x: x, .y: y}
-        // self = (self.x = x) + (self.y = y)
-        self = (self.x = x)
-        self = (self.y = y)
+//
+// getattr / setattr
+//
+getattr: Fn = (obj: object, attr: str) -> Result {
+    value: Result = obj.get(attr)
+
+    match(
+        value,
+        Ok -> Result {
+            _.unwrap()
+        },
+        Err -> Result {
+            value: Result = obj.get("__type__")
+
+            match(
+                value,
+                Ok -> Result {
+                    cls: type = _.unwrap()
+                    value: Result = cls.get(attr)
+
+                    match(
+                        value,
+                        Ok -> Result {
+                            value: object = _.unwrap()
+                            
+                            callable(value) ? (
+                                ([args], {kwargs}) -> object {
+                                    value(obj, ...args, ...kwargs)
+                                }
+                            ) : (
+                                value
+                            )
+                        },
+                        Err -> Result {
+                            Err("Attribute {} not found").format(repr(attr))
+                        }
+                    )
+                },
+                Err -> Result {
+                    Err("Attribute {} not found").format(repr(attr))
+                }
+            )
+        }
+    )
+}
+
+setattr: Fn = (obj: object, attr: str, value: object) -> object {
+    obj.set(attr, value)
+}
+
+//
+// Result
+//
+Result = type {
+
+}
+
+Ok = type {
+    .__init__: (self: Self, v: object) -> Ok {
+
     }
 }
 
+Err = type {
+    .__init__: (self: Self, e: object) -> Err {
+        
+    }
+}
+
+
+//
+// user-defined types
+//
+A = type {
+    .x: int(0),
+    .y: int(0),
+    .z: int(0),
+
+    .__init__: (self: Self, x: int, y: int) -> Self {
+        // self = (((self.x = x).y = y).z = x + y)
+        // self = self + {.x: x, .y: y, .z: x + y}
+        // self += {.x: x, .y: y, .z: x + y}
+        // self = (self.x = x) + (self.y = y) + (self.z = x + y)
+        self = (self.x = x)
+        self = (self.y = y)
+        self = (self.z = x + y)
+    },
+
+    .__add__: (self: Self, other: Self) -> Self {
+        Self(self.x + other.x, self.y + other.y)
+    },
+
+    sub: (self: Self, other: Self) -> Self {
+        Self(self.x - other.x, self.y - other.y)
+    },
+}
+
+a0: A = A(1, 2, 3)
+a0: A = getattr(A, "__call__")(1, 2, 3)
+a0: A = A.__type__.__call__(A, ...[1, 2, 3])
+
+a1: A = A(2, 3, 4)
+a1: A = getattr(A, "__call__")(2, 3, 4)
+a1: A = A.__type__.__call__(A, ...[2, 3, 4])
+
+a2: A = a0 + a1
+a2: A = getattr(a0, "__add__")(a1)
+a2: A = a0.__type__.__add__(a0, a1)
+
+a3: A = a0.sub(a1)
+a2: A = getattr(a0, "sub")(a1)
+a3: A = a0.__type__.sub(a0, a1)
+
+//
+A = type {
+    .x: int(0),
+}
+
+B = type {
+    .y: int(0),
+}
+
+C = type {
+    ...A,
+    ...B,
+    .z: int(0),
+
+    .__init__: (self: Self, x: int, y: int) -> Self {
+        // self = (((self.x = x).y = y).z = x + y)
+        // self = self + {.x: x, .y: y, .z: x + y}
+        // self += {.x: x, .y: y, .z: x + y}
+        // self = (self.x = x) + (self.y = y) + (self.z = x + y)
+        self = (self.x = x)
+        self = (self.y = y)
+        self = (self.z = x + y)
+    },
+}
