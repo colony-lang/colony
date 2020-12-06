@@ -1,81 +1,51 @@
+//
+// Ok = type<T> { .v: field[T] }
+// Err = type<E> { .e: field[E] }
+// Result = enum<T, E> (Ok<T> | Err<E>)
+//
+Ok = type {
+    .__name__: "Ok",
+    .__gentypeparams__: [object],
 
-/*
-type Object {
-
-}
-
-type Type: Object {
-
-}
-*/
-
-type Add {
-    fn add(self: Self, other: Add) -> Add {
-        let res: Self = Self(self.x + other.x, self.y + other.y)
-        return res
-    }
-
-
-    fn __add__(self: Self, other: Add) -> Add {
-        let res: Self = Self(self.x + other.x, self.y + other.y)
-        return res
+    .__getitem__: (self, obj: object) -> Ok {
+        match(
+            obj,
+            type -> Ok {
+                
+            },
+            -> TypeError[str] {
+                TypeError[str]("Generic type parameters are expected to be types")
+            }
+        )
     }
 }
 
-
-type A: Add {
-    x: f32 = 0_f32 // = f32.default_value()
-    y: f32 = 0_f32
+Err = type {
+    .__name__: "Err",
+    .__gentypeparams__: [object],
 }
 
+TypeError = Err + {
+    .__name__: "TypeError",
+}
 
-type B: Add {
-    x: f64
-    y: f64
+Result: type = type {
+    .__name__: "Result",
+    .__gentypeparams__: [object, object],
+    .__typevariants__: [Ok, Err],
 
+    .__getitem__: (self, obj: object) -> Result {
+        match(
+            obj,
+            type -> Result {
 
-    fn __init__(self: Self, x: f64, y: f64) -> Self {
-        // self = setattr(self, 'x', x)
-        self.x = x
-        // self = setattr(self, 'y', y)
-        self.y = y
-        return self
+            },
+            -> TypeError[str] {
+                TypeError[str]("Generic type parameters are expected to be types")
+            }
+        )
     }
 }
 
-
-type C<T>: Add {
-    x: T
-    y: T
-
-
-    fn __init__(self: Self, x: T, y: T) -> Self {
-        self.x = x
-        self.y = y
-        return self
-    }
-}
-
-
-// A
-let a0: A = A(0.0_f32, 1.0_f32)
-let a1: A = A(1.0_f32, 2.0_f32)
-let a2: A = a0.add(a1)
-let a3: A = a0 + a1
-a2 == a3 // true
-
-
-// B
-let b0: B = B(10_f64, 11_f64)
-let b1: B = B(11_f64, 12_f64)
-let b2: B = b0.add(b1)
-let b3: B = b0 + b1
-b2 == b3 // true
-
-
-// C
-let c0: C<i32> = C<i32>(0_i32, 1_i32)
-let c1: C<i32> = C<i32>(1_i32, 2_i32)
-let c2: C<i32> = c0.add(c1)
-let c3: C<i32> = c0 + c1
-c2 == c3 // true
+r0: Result = Ok[int](0)
+r1: Result = Err[str]("Some error")
