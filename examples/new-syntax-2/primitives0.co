@@ -122,7 +122,7 @@ r0: int = f0 1 2
 r0 == 4
 
 //
-f0: Fn = int -> Fn {
+f0: fn = int -> fn {
     a: int = _
 
     int -> int {
@@ -132,8 +132,18 @@ f0: Fn = int -> Fn {
 }
 
 r0: int = f0 1 2
-r0 == 4
+r1: int = (f0 1 2)
+r2: int = (f0 1) 2
+r3: int = ((f0 1) 2)
 
+//
+// named function params without tuple usage
+//
+f0: fn = a: int -> b: int -> {
+    a + b
+}
+
+r0: int = f0 1 2
 r1: int = (f0 1 2)
 r2: int = (f0 1) 2
 r3: int = ((f0 1) 2)
