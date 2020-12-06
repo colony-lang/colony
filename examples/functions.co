@@ -1,0 +1,90 @@
+//
+// function - single param type, single return type 
+//
+f0: fn[int, int] = int -> int {
+    _ + 1
+}
+
+f1 = int -> int {
+    _ + 1
+}
+
+//
+// function - default param and return types
+//
+f0: fn[object, object] = object -> object {
+    _ + 1 // assume param type supports adding `1`
+}
+
+f1 = -> {
+    _ + 1 // assume param type supports adding `1`
+}
+
+//
+// tuple as param type of function
+//
+f0 = (int, int) -> int {
+    _[0] + _[1]
+}
+
+a0: (int, int) = (1, 2)
+r0: int = f0 a0
+r0 == 3
+
+r1: int = f0(1, 2)
+r1 == 3
+
+//
+T: type = (int, int)
+
+f0 = T -> int {
+    _[0] + _[1]
+}
+
+a0: T = (1, 2)
+r0: int = f0 a0
+r0 == 3
+
+//
+// functions returning functions
+//
+f0: fn[int, fn[int, int]] = int -> fn[int, int] {
+    a: int = _
+
+    g0: fn[int, int] = int -> int {
+        b: int = _
+        a + b
+    }
+
+    g0
+}
+
+r0: int = f0 1 2
+r0 == 4
+
+//
+f0: fn = int -> fn {
+    a: int = _
+
+    int -> int {
+        b: int = _
+        a + b
+    }
+}
+
+r0: int = f0 1 2
+r1: int = (f0 1 2)
+r2: int = (f0 1) 2
+r3: int = ((f0 1) 2)
+
+//
+// named function params without tuple usage
+//
+f0: fn = a: int -> b: int -> {
+    a + b
+}
+
+r0: int = f0 1 2
+r1: int = (f0 1 2)
+r2: int = (f0 1) 2
+r3: int = ((f0 1) 2)
