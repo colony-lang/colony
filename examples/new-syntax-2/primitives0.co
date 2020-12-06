@@ -58,51 +58,26 @@ v0: T = 10
 v1: T = -2.0
 
 //
-// match - structural pattern matching
+// function - single param type, single return type 
 //
-T: type = (int, int)
-U: type = (x: int, y: int)
-V: type = (int | float)
-W: type = (x: int | y: float)
-P: type = T | U | V | W
+f0: fn[int, int] = int -> int {
+    _ + 1
+}
 
-a: T = (1, 2)
-b: U = (2, y=3)
-c: V = (1, 2.0)
-d: W = (2, 3.0)
-e: P + random.choice([a, b, c, d])
+f1 = int -> int {
+    _ + 1
+}
 
-Q: type = (x: int | float, y: int | float)
+//
+// function - default param and return types
+//
+f0: fn[object, object] = object -> object {
+    _ + 1 // assume param type supports adding `1`
+}
 
-r: Q = type(e) == T ? {
-        x: int, y: int = e
-    } : type(e) == U ? {
-        x: int, y: int = e
-    } : type(e) == V ? (
-        type(e) == V[0] ? {
-            x: int = e
-            y: float = 0
-        } : type(e) == V[1] ? {
-            x: int = 0
-            y: float = e
-        }
-    ) : type(e) == W ? {
-        type(e) == W.x ? {
-            x: int = e
-            y: float = 0
-        } : {
-            x: int = 0
-            y: float = e
-        }
-    }
-
-r: Q = match(
-    e,
-    T -> Q { x: int, y: int = e },
-    U -> Q { x: int, y: int = e },
-    V -> Q { x: int, y: float = e, 0 },
-    W -> Q { x: int, y: float = 0, e },
-)
+f1 = -> {
+    _ + 1 // assume param type supports adding `1`
+}
 
 //
 // tuple as param type of function
@@ -128,3 +103,86 @@ f0 = T -> int {
 a0: T = (1, 2)
 r0: int = f0 a0
 r0 == 3
+
+//
+// functions returning functions
+//
+f0: fn[int, fn[int, int]] = int -> fn[int, int] {
+    a: int = _
+
+    g0: fn[int, int] = int -> int {
+        b: int = _
+        a + b
+    }
+
+    g0
+}
+
+r0: int = f0 1 2
+r0 == 4
+
+//
+f0: Fn = int -> Fn {
+    a: int = _
+
+    int -> int {
+        b: int = _
+        a + b
+    }
+}
+
+r0: int = f0 1 2
+r0 == 4
+
+r1: int = (f0 1 2)
+r2: int = (f0 1) 2
+r3: int = ((f0 1) 2)
+
+//
+// structural pattern matching - or just "match" 
+//
+T: type = (int, int)
+U: type = (x: int, y: int)
+V: type = (int | float)
+W: type = (x: int | y: float)
+P: type = T | U | V | W
+
+a: T = (1, 2)
+b: U = (2, y=3)
+c: V = (1, 2.0)
+d: W = (2, 3.0)
+e: P + random.choice([a, b, c, d])
+
+// manual match
+Q: type = (x: int | float, y: int | float)
+
+r: Q = type(e) == T ? {
+        x: int, y: int = e
+    } : type(e) == U ? {
+        x: int, y: int = e
+    } : type(e) == V ? (
+        type(e) == V[0] ? {
+            x: int = e
+            y: float = 0
+        } : type(e) == V[1] ? {
+            x: int = 0
+            y: float = e
+        }
+    ) : type(e) == W ? {
+        type(e) == W.x ? {
+            x: int = e
+            y: float = 0
+        } : {
+            x: int = 0
+            y: float = e
+        }
+    }
+
+// semi-manual match
+r: Q = match(
+    e,
+    T -> Q { x: int, y: int = e },
+    U -> Q { x: int, y: int = e },
+    V -> Q { x: int, y: float = e, 0 },
+    W -> Q { x: int, y: float = 0, e },
+)

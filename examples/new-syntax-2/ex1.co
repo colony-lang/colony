@@ -1,211 +1,51 @@
 //
-// object based
+// Ok = type<T> { .v: field[T] }
+// Err = type<E> { .e: field[E] }
+// Result = enum<T, E> (Ok<T> | Err<E>)
 //
-object: object = _mut_dict()
-object: _mut_dict[str, object] = object
-type: _mut_dict[str, object] = _mut_dict()
-
-//
-// object
-//
-object.__type__ = type
-object.__name__ = 'object'
-
-object.__new__ = (cls: type, [args], {kwargs}) -> object {
-    fields: dict[str, object] = cls.filter((k: str, v: object) -> {
-        !k.ismeta() && !callable(v)
-    })
-
-    self: cls = {
-        .__type__: cls,
-        ...fields
-    }
-}
-
-object.__init__ = (self: object, [args], {kwargs}) -> object {
-    fields: dict[str, object] = self.filter((k: str, v: object) -> {
-        !k.ismeta() && !callable(v)
-    })
-
-    args_attrs: list[str] = fields.keys().getslice(0, args.len())
-    args_fields: dict[str, object] = dict(zip(args_attrs, args))
-    self += args_attrs + kwargs
-}
-
-object.__repr__ = (self: object) -> str {
-    "<%s at %x>".format(self.__type__.__name__, self.__type__.__addr__(self))
-}
-
-object.__addr__ = (self: object) -> ptr {
-    // native code that gets address of obj
-}
-
-//
-// type
-//
-type.__type__ = type
-type.__name__ = 'type'
-
-type.__call__ = dict[str, object] | (cls: type, [args], {kwargs}) -> type | object {
-    match(_,
-        dict[str, object] -> type {
-            // create class
-            mcs: type = _
-            mcs, type_: type = mcs.pop("__type__", type)
-            mcs, name: str = mcs.pop("__name__", "type-{}".format(uuid4()))
-
-            cls: mcs = {
-                .__type__: type_,
-                .__name__: name,
-                ...mcs
-            }
-        },
-        (cls: type, [args], {kwargs}) -> object {
-            // create instance
-            self: cls = cls.__new__(cls, ...args, ...kwargs)
-            self = cls.__init__(self, ...args, ...kwargs)
-        },
-    )
-}
-
-type = type.inplace_imut()
-type: type = type
-object: type = object.inplace_imut()
-
-//
-// getattr / setattr
-//
-getattr: Fn = (obj: object, attr: str) -> Result {
-    value: Result = obj.get(attr)
-
-    match(
-        value,
-        Ok -> Result {
-            _.unwrap()
-        },
-        Err -> Result {
-            value: Result = obj.get("__type__")
-
-            match(
-                value,
-                Ok -> Result {
-                    cls: type = _.unwrap()
-                    value: Result = cls.get(attr)
-
-                    match(
-                        value,
-                        Ok -> Result {
-                            value: object = _.unwrap()
-                            
-                            callable(value) ? (
-                                ([args], {kwargs}) -> object {
-                                    value(obj, ...args, ...kwargs)
-                                }
-                            ) : (
-                                value
-                            )
-                        },
-                        Err -> Result {
-                            Err("Attribute {} not found").format(repr(attr))
-                        }
-                    )
-                },
-                Err -> Result {
-                    Err("Attribute {} not found").format(repr(attr))
-                }
-            )
-        }
-    )
-}
-
-setattr: Fn = (obj: object, attr: str, value: object) -> object {
-    obj.set(attr, value)
-}
-
-//
-// Result
-//
-Result = type {
-
-}
-
 Ok = type {
-    .__init__: (self: Self, v: object) -> Ok {
+    .__name__: "Ok",
+    .__gentypeparams__: [object],
 
+    .__getitem__: (self, obj: object) -> Ok {
+        match(
+            obj,
+            type -> Ok {
+                
+            },
+            -> TypeError[str] {
+                TypeError[str]("Generic type parameters are expected to be types")
+            }
+        )
     }
 }
 
 Err = type {
-    .__init__: (self: Self, e: object) -> Err {
-        
+    .__name__: "Err",
+    .__gentypeparams__: [object],
+}
+
+TypeError = Err + {
+    .__name__: "TypeError",
+}
+
+Result: type = type {
+    .__name__: "Result",
+    .__gentypeparams__: [object, object],
+    .__typevariants__: [Ok, Err],
+
+    .__getitem__: (self, obj: object) -> Result {
+        match(
+            obj,
+            type -> Result {
+
+            },
+            -> TypeError[str] {
+                TypeError[str]("Generic type parameters are expected to be types")
+            }
+        )
     }
 }
 
-
-//
-// user-defined types
-//
-A = type {
-    .x: int(0),
-    .y: int(0),
-    .z: int(0),
-
-    .__init__: (self: Self, x: int, y: int) -> Self {
-        // self = (((self.x = x).y = y).z = x + y)
-        // self = self + {.x: x, .y: y, .z: x + y}
-        // self += {.x: x, .y: y, .z: x + y}
-        // self = (self.x = x) + (self.y = y) + (self.z = x + y)
-        self = (self.x = x)
-        self = (self.y = y)
-        self = (self.z = x + y)
-    },
-
-    .__add__: (self: Self, other: Self) -> Self {
-        Self(self.x + other.x, self.y + other.y)
-    },
-
-    sub: (self: Self, other: Self) -> Self {
-        Self(self.x - other.x, self.y - other.y)
-    },
-}
-
-a0: A = A(1, 2, 3)
-a0: A = getattr(A, "__call__")(1, 2, 3)
-a0: A = A.__type__.__call__(A, ...[1, 2, 3])
-
-a1: A = A(2, 3, 4)
-a1: A = getattr(A, "__call__")(2, 3, 4)
-a1: A = A.__type__.__call__(A, ...[2, 3, 4])
-
-a2: A = a0 + a1
-a2: A = getattr(a0, "__add__")(a1)
-a2: A = a0.__type__.__add__(a0, a1)
-
-a3: A = a0.sub(a1)
-a2: A = getattr(a0, "sub")(a1)
-a3: A = a0.__type__.sub(a0, a1)
-
-//
-A = type {
-    .x: int(0),
-}
-
-B = type {
-    .y: int(0),
-}
-
-C = type {
-    ...A,
-    ...B,
-    .z: int(0),
-
-    .__init__: (self: Self, x: int, y: int) -> Self {
-        // self = (((self.x = x).y = y).z = x + y)
-        // self = self + {.x: x, .y: y, .z: x + y}
-        // self += {.x: x, .y: y, .z: x + y}
-        // self = (self.x = x) + (self.y = y) + (self.z = x + y)
-        self = (self.x = x)
-        self = (self.y = y)
-        self = (self.z = x + y)
-    },
-}
+r0: Result = Ok[int](0)
+r1: Result = Err[str]("Some error")

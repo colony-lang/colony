@@ -1,0 +1,6 @@
+//
+// generics
+//
+Ok = type<T> { .v: field[T] }
+Err = type<E> { .e: field[E] }
+Result = enum<T, E> (Ok<T> | Err<E>)
