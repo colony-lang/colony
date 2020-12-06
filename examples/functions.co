@@ -1,4 +1,14 @@
 //
+// single param function only
+//
+f0 = int -> int {
+    _ + 2
+}
+
+r0: int = f0 1
+r0 == 3
+
+//
 // function - single param type, single return type 
 //
 f0: fn[int, int] = int -> int {

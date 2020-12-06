@@ -1,24 +1,17 @@
 //
-// auto initialization
-//
-v0: int
-v0 == 0
-
-//
 // manual initialization
 //
 v1: int = 0
 v1 == 0
 
 //
-// single param function only
+// optional initialization
 //
-f0 = int -> int {
-    _ + 2
-}
+v0: Option[int] = 0
+v0 == 0
 
-r0: int = f0 1
-r0 == 3
+v1: Option[int] = None
+v1 == None
 
 //
 // tuple - anonymous product type
@@ -37,8 +30,12 @@ T: (x: int, y: int)
 v: T = (x=1, y=2)
 
 // assignment by destruction
+x, y = v
+x, y = (int, int)(v)
 x: int, y: int = v
 x: int, y: int = v.x, v.y
+x: int, y: int = v.x, v[1]
+x: int, y: int = v[0], v.y
 x: int, y: int = v[0], v[1]
 
 //
