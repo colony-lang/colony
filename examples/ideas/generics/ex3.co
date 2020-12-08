@@ -1,0 +1,78 @@
+// generic functions
+f = <K, V> a: K -> V {
+    b: V = a + 1
+}
+
+r: int = f<int, int> 10
+
+// generic types
+A = <K, V> type {
+    .key_type: K,
+    .value_type: V,
+    .items: dict<K, V>(),
+}
+
+a0 = A<str, int>()
+a1 = A<int, float>()
+
+//
+// Option
+//
+Some = <T> type {
+    .v: field(T),
+    .__init__: <T> (self, v: T) -> Self {
+        self.v = v
+    }
+}
+
+None = type {}
+
+Option = <T> (Some<T> | None)
+
+//
+// Result
+//
+Ok = <T> type {
+    .v: field(T),
+    .__init__: <T> (self, v: T) -> Self {
+        self.v = v
+    }
+}
+
+Err = <T> type {
+    .e: field(T),
+    .__init__: <T> (self, e: T) -> Self {
+        self.e = e
+    }
+}
+
+Result = <T, E> (Ok<T> | Err<E>)
+
+//
+// Examples
+//
+o0: Option = Some<int>(1)
+o1: Option = None
+
+r0: Result = Ok<int>(10)
+r1: Result = Err<str>("KeyError")
+
+v0: int = match(
+    o0,
+    Some<int> -> int {
+        int.abs(_.v)
+    },
+    None -> int {
+        -1
+    }
+)
+
+v1: int = match(
+    r0,
+    Ok<int> -> int {
+        int.abs(_.v)
+    },
+    Err<str> -> int {
+        -1
+    }
+)
