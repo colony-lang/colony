@@ -1,0 +1,33 @@
+generic = ([typelist]) -> type {
+    cls = type {
+        .__typelist__: typelist,
+        .__call__: (cls, t: type) -> type {
+            
+
+            t = {
+                .__typelist__: typelist,
+                ...t
+            }
+
+            t
+        }
+    }
+
+    cls
+}
+
+A = generic(K, V) type {
+    .items: dict[K, V](),
+    .__init__: (self) -> Self {
+        self
+    },
+    .__setitem__: (self, key: K, value: V) -> Self {
+        self = (self.items[key] = value)
+        self
+    },
+    .__getitem__: (self, key: K) -> Self {
+        self.items[key]
+    }
+}
+
+a0: A = A[str, int]()
