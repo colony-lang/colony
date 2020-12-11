@@ -13,11 +13,11 @@ r1 == 3
 // generics example
 //
 A = (K: type, V: type) -> type {
-    .__gentypes__: [K, V],
+    .__gentypes__: [K, V], // required to distinguish between A[str, int] and A[int, float]
     .items: dict[K, V],
     
     .__init__: (self) -> Self {
-        self.items: dict[K, V]
+        self.items = dict[K, V]()
         self
     },
     
@@ -26,10 +26,9 @@ A = (K: type, V: type) -> type {
     },
     
     .set: (self, key: K, value: V) -> {
-        self.items[key] = value
+        self = (self.items[key] = value)
         self
     },
-
 }
 
 a0: A = A[str, int]()
