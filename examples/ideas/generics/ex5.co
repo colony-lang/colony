@@ -1,0 +1,33 @@
+f = int -> fn { int -> _ + 1 }
+f0 = f 1
+r0 = f0 2
+r0 == 3
+
+r1 = f 1 2
+r1 == 3
+
+//
+// generics
+//
+generics = ([types]) ->
+
+//
+// example
+//
+A = generic[K, V] type {
+    .__gentypes__: [K, V],
+    .items: dict[K, V],
+    
+    .__init__: (self) -> Self {
+        self.items: dict[K, V]
+        self
+    },
+    
+    .set: (self, key: K, value: V) -> {
+        self.items[key] = value
+        self
+    },
+}
+
+a0: A = A[str, int]()
+
