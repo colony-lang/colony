@@ -1,3 +1,6 @@
+//
+// partial function call
+//
 f = int -> fn { int -> _ + 1 }
 f0 = f 1
 r0 = f0 2
@@ -7,14 +10,9 @@ r1 = f 1 2
 r1 == 3
 
 //
-// generics
+// generics example
 //
-generics = ([types]) ->
-
-//
-// example
-//
-A = generic[K, V] type {
+A = (K: type, V: type) -> type {
     .__gentypes__: [K, V],
     .items: dict[K, V],
     
@@ -23,11 +21,18 @@ A = generic[K, V] type {
         self
     },
     
+    .__add__: (self, other: Self) -> Self {
+        new: Self = self.items + other.items
+    },
+    
     .set: (self, key: K, value: V) -> {
         self.items[key] = value
         self
     },
+
 }
 
 a0: A = A[str, int]()
+a1: A = A[str, int]()
+a2: A = a0 + a1
 
