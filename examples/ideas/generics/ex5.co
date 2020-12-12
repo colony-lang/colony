@@ -1,28 +1,109 @@
 //
-// partial function call
+// partial-like function call
 //
-f = int -> fn { int -> _ + 1 }
-f0 = f 1
-r0 = f0 2
+f = a: int -> fn[int, int] {
+    b: int -> int {
+        a + b
+    }
+}
+
+f1 = f 1
+r0 = f1 2
 r0 == 3
 
-r1 = f 1 2
-r1 == 3
+f = a: int -> b: int -> int { a + b }
+f1 = f 1
+r0 = f1 2
+r0 == 3
 
 //
-// generics example
+// object/type
 //
-A = (K: type, V: type) -> type {
-    .__gentypes__: [K, V], // required to distinguish between A[str, int] and A[int, float]
+object: mut.dict = mut.dict() // mut is core module containing mutable implementations of list/dict
+type: mut.dict = mut.dict()
+
+// object
+object.__type__ = type 
+object.__name__ = "object"
+object.__fields__ = {} // {field_name: [field_type, field_default_value]}
+
+object.__new__ = (cls: type, [args], {kwargs}) -> object {
+    self: cls = {
+        .__type__: cls,
+    }
+
+    self
+}
+
+object.__init__ = (self: object, [args], {kwargs}) -> object {
+    args_fields: dict = dict(zip(self.__fields__.keys().slice(0, args.len()), args))
+    kwargs_fields: dict = self.__fields__.slice(args.len(), self.__fields__.len()) + kwargs
+    self += args_fields + kwargs_fields
+    self
+}
+
+// type
+type.__type__ = type
+type.__name__ = "type"
+type.__gentypes__ = None
+
+type.__new__ = (mcs: type, [args], {kwargs}) -> type {
+    // create type - FINISH IMPLEMENTATION
+    cls: type = {
+        .__type__: mcs,
+    }
+
+    cls
+}
+
+type.__init__ = (cls: type, [args], {kwargs}) -> type {
+    // init type - FINIHS IMPLEMENTATION
+    cls
+}
+
+type.__call__ = (cls: type, [args], {kwargs}) -> object {
+    // creates instance of cls type
+    self: cls = cls["__new__"](cls, ...args, ...kwargs)
+    self = cls["__init__"](self, ...args, ...kwargs)
+    self
+}
+
+type.__getitem__ = (cls: type, [gentypes]) -> /* ???  */ {
+   // used for generics - IMPLEMENT
+}
+
+// finalize object and type as immutable types
+object: type = type.inplace_imut()
+type: type = type.inplace_imut()
+
+//
+// generic
+//
+generic = ([gentypes]: list[type]) -> fn[type, type] {
+    // generics - FINISH IMPLEMENTATION
+    cls: type = {
+        ...type
+        .__gentypes__: gentypes,
+    }
+}
+
+//
+// generics example 1
+//
+A = generic (K: type, V: type) -> type {
+    // auto-generate by type based on _
+    // required to distinguish between A[str, int] and A[int, float]
+    // .__gentypes__: [K, V],
     .items: dict[K, V],
     
-    .__init__: (self) -> Self {
+    .__init__: (self) -> A {
         self.items = dict[K, V]()
         self
     },
     
-    .__add__: (self, other: Self) -> Self {
-        new: Self = self.items + other.items
+    .__add__: (self, other: A) -> A {
+        new: A = self.items + other.items
+        new
     },
     
     .set: (self, key: K, value: V) -> {
