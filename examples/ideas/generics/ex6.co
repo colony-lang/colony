@@ -1,0 +1,39 @@
+
+f0: fn = int -> int {
+    _ + 1
+}
+
+f1: fn = x: int -> int {
+    x + 1
+}
+
+f2: fn = x: int -> y: int -> int {
+    x + y
+}
+
+f3: fn = (x: int, y: int) -> int {
+    x + y
+}
+
+f4: fn = t: (x: int, y: int) -> {
+    t.x + t.y
+}
+
+f5: fn = t: (x: int, y: int) -> {
+    vars(t) // set variables from tuple, but also works for dict
+    x + y
+}
+
+f6: fn = t: dict[str, int] -> int {
+    t['x'] + t['y']
+}
+
+f7: fn = t: dict[str, int] -> int {
+    t.x + t.y
+}
+
+f8: fn = t: dict[str, int] -> int {
+    vars(t)
+    x + y
+}
+

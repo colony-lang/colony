@@ -25,9 +25,11 @@ type: mut.dict = mut.dict()
 // object
 object.__type__ = type 
 object.__name__ = "object"
-object.__fields__ = {} // {field_name: [field_type, field_default_value]}
+object.__fields__ = {"__type__": type} // {field_name: field_type}
+object.__genfields__ = None
 
 object.__new__ = (cls: type, [args], {kwargs}) -> object {
+    // create empty typed object without initialized fields
     self: cls = {
         .__type__: cls,
     }
@@ -36,19 +38,25 @@ object.__new__ = (cls: type, [args], {kwargs}) -> object {
 }
 
 object.__init__ = (self: object, [args], {kwargs}) -> object {
+    // create object with initialized fields from passed args and kwargs
     args_fields: dict = dict(zip(self.__fields__.keys().slice(0, args.len()), args))
     kwargs_fields: dict = self.__fields__.slice(args.len(), self.__fields__.len()) + kwargs
     self += args_fields + kwargs_fields
     self
 }
 
+object.__repr__ = (self: object) -> str {
+    "{" + self.map((k, v) -> "{}: {}".format(repr(k), repr(v))).join(",") + "}"
+}
+
 // type
 type.__type__ = type
 type.__name__ = "type"
+type.__fields__ = {"__type__": type}
 type.__gentypes__ = None
 
 type.__new__ = (mcs: type, [args], {kwargs}) -> type {
-    // create type - FINISH IMPLEMENTATION
+    // create empty typed object without inialized fields
     cls: type = {
         .__type__: mcs,
     }
@@ -57,19 +65,38 @@ type.__new__ = (mcs: type, [args], {kwargs}) -> type {
 }
 
 type.__init__ = (cls: type, [args], {kwargs}) -> type {
-    // init type - FINIHS IMPLEMENTATION
+    // init type
+    cls = (cls + kwargs)
     cls
 }
 
-type.__call__ = (cls: type, [args], {kwargs}) -> object {
+type.__call__ = obj: dict | (cls: type, [args], {kwargs}) -> object {
     // creates instance of cls type
-    self: cls = cls["__new__"](cls, ...args, ...kwargs)
-    self = cls["__init__"](self, ...args, ...kwargs)
-    self
+    match(obj,
+        dict -> {
+            cls: type = type["__new__"](type, ...[], ...{})
+            cls = type["__init__"](cls, ...[], ...obj)
+            cls
+        },
+        _ -> {
+            cls = _.cls
+            args = _.args
+            kwargs = _.kwargs
+            self: cls = cls["__new__"](cls, ...args, ...kwargs)
+            self = cls["__init__"](self, ...args, ...kwargs)
+            self
+        }
+    )
 }
 
-type.__getitem__ = (cls: type, [gentypes]) -> /* ???  */ {
-   // used for generics - IMPLEMENT
+type.__getitem__ = (cls: type, [gentypes]) -> type {
+    // create new type with generics types set
+    typed_cls: type = {
+        ...cls,
+        .__gentypes__: gentypes,
+    }
+    
+    typed_cls
 }
 
 // finalize object and type as immutable types
@@ -77,33 +104,45 @@ object: type = type.inplace_imut()
 type: type = type.inplace_imut()
 
 //
-// generic
+// custom type 1
 //
-generic = ([gentypes]: list[type]) -> fn[type, type] {
-    // generics - FINISH IMPLEMENTATION
-    cls: type = {
-        ...type
-        .__gentypes__: gentypes,
-    }
+A = type {
+    .x: int,
+    .y: int,
+    .z: int,
+    
+    .add: (self: A, other: A) -> A {
+        res: A = A(
+            self.x + other.x,
+            self.y + other.y,
+            self.z = other.z,
+        )
+
+        res
+    },
 }
+
+a0: A = A(1, 2, 3)
+a1: A = A(2, 3, 4)
+a2: A = a0 + a1
 
 //
 // generics example 1
 //
-A = generic (K: type, V: type) -> type {
+A = generic (K, V) -> type {
     // auto-generate by type based on _
     // required to distinguish between A[str, int] and A[int, float]
     // .__gentypes__: [K, V],
     .items: dict[K, V],
     
-    .__init__: (self) -> A {
-        self.items = dict[K, V]()
+    .__init__: (self, items: dict[K, V]) -> A {
+        self.items = items
         self
     },
     
     .__add__: (self, other: A) -> A {
-        new: A = self.items + other.items
-        new
+        res: A = A(self.items + other.items)
+        res
     },
     
     .set: (self, key: K, value: V) -> {
