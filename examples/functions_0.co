@@ -98,3 +98,22 @@ r0: int = f0 1 2
 r1: int = (f0 1 2)
 r2: int = (f0 1) 2
 r3: int = ((f0 1) 2)
+
+//
+// partial-like function call
+//
+f = a: int -> fn[int, int] {
+    b: int -> int {
+        a + b
+    }
+}
+
+f1 = f 1
+r0 = f1 2
+r0 == 3
+
+f = a: int -> b: int -> int { a + b }
+f1 = f 1
+r0 = f1 2
+r0 == 3
+

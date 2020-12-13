@@ -1,22 +1,4 @@
 //
-// partial-like function call
-//
-f = a: int -> fn[int, int] {
-    b: int -> int {
-        a + b
-    }
-}
-
-f1 = f 1
-r0 = f1 2
-r0 == 3
-
-f = a: int -> b: int -> int { a + b }
-f1 = f 1
-r0 = f1 2
-r0 == 3
-
-//
 // object/type
 //
 object: mut.dict = mut.dict() // mut is core module containing mutable implementations of list/dict
@@ -123,56 +105,4 @@ A = type {
 a0: A = A(1, 2, 3)
 a1: A = A(2, 3, 4)
 a2: A = a0 + a1
-
-//
-// generics example 1
-//
-A = type {
-    // generics
-    .__generics__: {
-        .K: object,
-        .V: object,
-    },
-    
-    .items: dict[K, V], // K and V are vars from __generics__
-    
-    .__init__: (self, items: dict[K, V]) -> A {
-        self.items = items
-        self
-    },
-    
-    .__add__: (self, other: A) -> A {
-        res: A = A(self.items + other.items)
-        res
-    },
-    
-    .set: (self, key: K, value: V) -> {
-        self = (self.items[key] = value)
-        self
-    },
-}
-
-a0: A = A[str, int]()
-a1: A = A[str, int]()
-a2: A = a0 + a1
-
-//
-// generics example 2
-//
-generics: fn = t: dict[str, Option[object]] -> type {
-    cls: type = {
-        .__type__: type,
-        .__generics__: dict(
-            zip(t.keys(), t.values()).map((k, v) -> {
-                [k, match(v, None -> { object }, _ -> v)]
-            })
-        ),
-    }
-
-    cls
-}
-
-A = generic {.K, .V} {
-    .items: dict[K, V],
-}
 
