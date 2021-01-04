@@ -1,0 +1,82 @@
+//
+// primitive types
+//
+b: bool = true
+i: int = 10
+f: float = 20.0
+s: str = 'abc123'
+
+//
+// collections
+//
+a: List[int] = [0, 1, 2, 3]
+d: Dict[str, float] = {'x': 0.0, 'y': 1.0}
+d: Dict[str, float] = {.x: 0.0, .y: 1.0}
+
+//
+// tuple type
+//
+T: type = Tuple[.x: int, .y: int]
+t: T = (.x: 0, .y: 1)
+
+T: type = Tuple[int, int]
+t: T = (0, 1)
+
+//
+// union type
+//
+U: type = Union[.x: int, .y: float]
+u0: U = (.x: 10)
+u1: U = (.y: 20.0)
+
+U: type = Union[int, float]
+
+
+//
+// functions
+//
+inc: fn[int, int] = a: int -> int {
+    a + 1
+}
+
+a: int = inc 0
+a: int = inc a
+
+a: int = inc(0)
+a: int = inc(a)
+
+0 == (0)
+1 == (1)
+0 != (0,)
+
+add_partial_1: fn[int, fn[int, int]] = a: int -> fn[int, int] {
+    f: fn[int, int] = b: int -> int {
+        a + b
+    }
+
+    f
+}
+
+c: int = add_partial_1(1)(2)
+c: int = add_partial_1(2)(3)
+
+
+add_partial_2: fn[int, fn[int, int]] = a: int -> b: int -> int {
+    a + b
+}
+
+d: int = add_partial_2(1)(2)
+d: int = add_partial_2(2)(3)
+
+
+cmp: fn[int, int] = a: (int, int) -> int {
+    a[0] < a[1] ? -1 : a[0] == a[1] ? 0 : 1
+}
+
+e: int = cmp(1, 2)
+
+a: (int, int) = (1, 2)
+e: int = cmp a
+
+a: (int, int) = (1, 2)
+e: int = cmp(a)
