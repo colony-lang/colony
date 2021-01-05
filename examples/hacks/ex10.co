@@ -1,0 +1,129 @@
+//
+// object / type
+//
+object = MutDict()
+type = MutDict()
+
+object.__type__ = type
+object.__bases__ = []
+object.__name__ = 'object'
+object.__fields__ = {}
+
+object.__funcs__ = {
+    .__new__: (cls: type, [args], {kwargs}) -> object {
+        self = {.__type__: cls}
+        self
+    },
+
+    .__init__: (self: object, [args], {kwargs}) -> object {
+        self = {...self} // TODO: init from args and kwargs
+        self
+    },
+
+    .__repr__: (self: object) -> str {
+        res: str = '<{} at {}>'.format(self.__type__.__name__, addressof(self))
+        res
+    },
+}
+
+type.__type__ = type
+type.__bases__ = [object]
+type.__name__ = 'type'
+type.__fields__ = {}
+
+type.__funcs__ = {
+    .__call__: (cls: type, [args], {kwargs}) -> object {
+        cls__new__ = getattr(cls, '__new__')
+        self = cls__new__(cls, ...args, ...kwargs)
+
+        self__init__ = getattr(self, '__init__')
+        self = self__init__(self, ...args, ...kwargs)
+        
+        self
+    },
+
+    .__getitem__: (cls: type, [args]) -> type {
+        // TODO: generics
+        cls
+    },
+}
+
+object.inplace_imut()
+type.inplace_imut()
+
+//
+// examples
+//
+/*
+    P: dict[str, object] = {
+        .__type__: type,
+        .__bases__: [object],
+        .__name__: 'type_0xbeef', // random name
+        .__funcs__: {},
+        .__fields__: {
+            .x: field(int, 0),
+            .y: field(int, 0),
+        }
+    }
+ */
+P: type = (x: int=0, y: int=0)
+
+P_add: fn = (a: P, b: P) -> P {
+    // res: P = P(x=a.x + b.x, y=a.y + b.y)
+    // res = P(x=a.x + b.x, y=a.y + b.y)
+    res: P = (x=a.x + b.x, y=a.y + b.y)
+    res
+}
+
+/*
+    P = {
+        ...P,
+        .__funcs__: {
+            ...P.__funcs__,
+            .add: (a: P, b: P) -> P {
+                res: P = (x=a.x + b.x, y=a.y + b.y)
+                res
+            }
+        }
+    }
+ */
+P.add = (a: P, b: P) -> P {
+    res: P = (x=a.x + b.x, y=a.y + b.y)
+    res
+}
+
+/*
+    P = {
+        ...P,
+        .__funcs__: {
+            ...P.__funcs__,
+            .__add__: P.add,
+        },
+    }
+ */
+// P = setattr(P, '__add__', P.add)
+// P = setattr(P, '__add__', getattr(P, 'add'))
+P.__add__ = P.add
+
+/*
+    p0: P = {.__type__: P, .x: 1, .y: 2}
+    p1: P = {.__type__: P, .x: 2, .y: 3}
+ */
+p0: P = (x=1, y=2)
+p1: P = (x=2, y=3)
+
+/*
+    p2: P = P_add.__type__.__funcs__.__call__(P_add, p0, p1)
+    p2: P = (getattr(getattr(getattr(P_add, '__type__'), '__funcs__'), '__call__'))(P_add, p0, p1)
+ */
+p2: P = P_add(p0, p1)
+
+/*
+    p3: P = p0.__type__.__funcs__.add(p0, p1)
+ */
+p3: P = p0.add(p1)
+
+/*
+    p4: P = p0.__type__.__funcs__.__add__(p0, p1)
+ */
+p4: P = p0 + p1
