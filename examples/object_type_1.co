@@ -1,0 +1,141 @@
+object = MutNamespace()
+type = MutNamespace()
+
+object.__type__ = type
+object.__bases__ = []
+object.__name__ = 'object'
+object.__generics__ = {}
+object.__fields__ = {}
+object.__functions__ = {}
+
+type.__type__ = type
+type.__bases__ = [object]
+type.__name__ = 'type'
+type.__generics__ = {}
+type.__fields__ = {}
+type.__functions__ = {}
+
+object.__functions__.__new__ = (cls: type, [args], {kwargs}) -> object {
+    self: object = {.__type__: cls}
+    self
+}
+
+object.__functions__.__init__ = (self: object, [args], {kwargs}) -> object {
+    self: object = {
+        ...self,
+        ...dict(zip(self.__type__.__fields__.keys(), args)),
+        ...dict(kwargs.items().slice(args.len())),
+    }
+
+    self
+}
+
+object.__functions__.__repr__ = (self: object) -> str {
+    res: str = '<{} at {}>'.format(self.__type__.__name__, addressof(self))
+    res
+}
+
+type.__functions__.__call__ = obj: object -> object {
+    /*
+    match(obj,
+        tuple -> object {
+            // instance
+            cls: type = obj[0]
+            args: list = obj.args
+            kwargs: dict = obj.kwargs
+            self = obj.__functions__.__new__(cls, ...args, ...kwargs)
+            self = obj.__functions__.__init__(self, ...args, ...kwargs)
+            self
+        },
+        list -> type {
+            // generics
+            cls: type = obj
+            
+            cls = {
+                ...cls,
+                .__generics__: dict(zip(cls.__generics__.keys(), obj)),
+            }
+
+            cls
+        },
+        str -> type {
+            // class
+        },
+        _ -> Result {
+            ValueError("Unsupported argumet for {}".format(type))
+        },
+    )
+    */
+}
+
+object.inplace_imut_namespace()
+type.inplace_imut_namespace()
+
+//
+// user-defined type
+//
+O = type {
+    .x: int(0),
+    .y: int(0),
+    
+    .__add__: (self, other) -> {
+        res: O = O(x=self.x + other.x, y=self.y + other.y)
+        res
+    },
+
+    .add: (self, other) -> {
+        res: P = self + other
+        res
+    },
+}
+
+o0: O = O(x=1, y=2)
+o1: O = O(x=2, y=3)
+o2: O = o0.add(o1)
+o3: O = o0 + o1
+
+//
+// user-defined type
+//
+P = type 'P' {
+    .x: int(0),
+    .y: int(0),
+    
+    .__add__: (self: P, other: P) -> P {
+        res: P = P(x=self.x + other.x, y=self.y + other.y)
+        res
+    },
+
+    .add: (self: P, other: P) -> P {
+        res: P = self + other
+        res
+    },
+}
+
+p0: P = P(x=1, y=2)
+p1: P = P(x=2, y=3)
+p2: P = p0.add(p1)
+p3: P = p0 + p1
+
+//
+// user-defined type using generics
+//
+Q = type 'Q' ['X', 'Y'] [object] {
+    .x: X(),
+    .y: Y(),
+    
+    .__add__: (self: Q, other: Q) -> Q {
+        res: Q = Q[X, Y](x=self.x + other.x, y=self.y + other.y)
+        res
+    },
+
+    .add: (self: Q, other: Q) -> Q {
+        res: Q = self + other
+        res
+    },
+}
+
+q0: Q = Q[float, float](1.0, 2.0)
+q1: Q = Q[float, float](2.0, 3.0)
+q2: Q = q0.add(q1)
+q3: Q = q0 + q1
