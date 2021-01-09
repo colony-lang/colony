@@ -1,101 +1,152 @@
-//
-// object / type
-//
-object = MutDict()
-type = MutDict()
+object = MutNamespace()
+type = MutNamespace()
 
 object.__type__ = type
-object.__bases__ = []
 object.__name__ = 'object'
+object.__generics__ = {}
+object.__bases__ = []
 object.__fields__ = {}
-
-object.__funcs__ = {
-    .__new__: (cls: type, [args], {kwargs}) -> object {
-        self = {.__type__: cls}
-        self
-    },
-
-    .__init__: (self: object, [args], {kwargs}) -> object {
-        self = {...self} // TODO: init from args and kwargs
-        self
-    },
-
-    .__repr__: (self: object) -> str {
-        res: str = '<{} at {}>'.format(self.__type__.__name__, addressof(self))
-        res
-    },
-}
+object.__functions__ = {}
 
 type.__type__ = type
-type.__bases__ = [object]
 type.__name__ = 'type'
+type.__generics__ = {}
+type.__bases__ = [object]
 type.__fields__ = {}
+type.__functions__ = {}
 
-type.__funcs__ = {
-    .__call__: (obj: object, [args], {kwargs}) -> object {
-        match (
-            obj,
-            tuple -> object {
-                // instance
-                cls: type = obj
-
-                cls__new__ = getattr(cls, '__new__')
-                self = cls__new__(cls, ...args, ...kwargs)
-
-                self__init__ = getattr(self, '__init__')
-                self = self__init__(self, ...args, ...kwargs)
-                
-                self
-            },
-            list -> type {
-                // generics
-                _
-            },
-            _ -> type {
-                // type
-                mcs: type = obj
-                
-                cls: type = {} // TODO: implement type definition
-                cls
-            }
-        )
+bool.__type__ = type
+bool.__name__ = 'bool'
+bool.__generics__ = {}
+bool.__bases__ = [object]
+bool.__fields__ = {}
+bool.__functions__ = {
+    .__new__: (cls: type, obj: object=false) -> bool {
+        // native code
     },
 
-    .__getitem__: (cls: type, [args]) -> type {
-        // TODO: generics
-        cls
-    },
+    .__repr__: (self: bool) -> str {
+        // native code
+    }
 }
 
-object.inplace_imut()
-type.inplace_imut()
+object.__functions__.__new__ = (cls: type, [args], {kwargs}) -> object {
+    // implemented as native code
+    self: object = {
+        .__type__: cls,
+        ...dict(zip(self.__type__.__fields__.keys(), args)),
+        ...dict(kwargs.items().slice(args.len(), kwargs.len())),
+    }
+
+    self
+}
+
+object.__functions__.__free__ = (self: object) -> object {
+    // implemented as native code
+    //  frees dependent resources
+    //  after this call, `self` is freed by memory allocator
+}
+
+object.__functions__.__repr__ = (self: object) -> str {
+    // implemented as native code
+    res: str = '<{} at {}>'.format(self.__type__.__name__, addressof(self))
+    res
+}
+
+type.__functions__.__new__ = (mcs: type, name: str, generics: list[str], bases: list[type], fields: dict[str, object], functions: dict[str, object]) -> type {
+    // implemented as native code
+    cls: object = {
+        .__type__: mcs,
+        .__name__: name,
+        .__generics__: generics,
+        .__bases__: bases,
+        .__fields__: fields,
+        .__functions__: functions,
+    }
+
+    cls
+}
+
+type.__functions__.__call__ = obj: object -> object {
+    // implemented as native code
+    match(
+        obj,
+        (cls: type, name: str) -> type {
+            // name
+            {
+                ...cls,
+                .__name__: name,
+            }
+        },
+        (cls: type, generics: list[str]) -> type {
+            // generics
+            {
+                ...cls,
+                .__generics__: dict(zip(generics, generics.map(n => object))),
+            }
+        },
+        (cls: type, bases: list[type]) -> type {
+            // bases or specific
+            cls.__generics__ ? {
+                // specific
+                {
+                    ...cls,
+                    .__generics__: dict(zip(cls.__generics__.keys(), bases)),
+                }
+            } : {
+                // bases
+                {
+                    ...cls,
+                    .__bases__: [object] + bases,
+                }
+            }
+        },
+        (cls: type, fields_and_functions: dict[str, object]) -> type {
+            // fields and functions
+            {
+                ...cls,
+                .__fields__: dict(fields_and_functions.filter((k, v) => !iscallable(v))),
+                .__functions__: dict(fields_and_functions.filter((k, v) => iscallable(v))),
+            }
+        },
+        (cls, type, [args], {kwargs}) -> object {
+            // instance
+            self: cls = cls.__functions__.__new__(cls, ...args, ...kwargs)
+            self
+        }
+    )
+}
+
+object.freeze()
+type.freeze()
 
 //
 // user-defined type
 //
-/*
-    P: type = {
-        .__type__: type,
-        .__bases__: [object],
-        .__name__: 'type_0xbeef', // random name
-        .__fields__: {
-            .x: int(0),
-            .y: int(0),
-        },
-        .__funcs__: {
-            .__add__: (self: P, other: P) -> P {
-                res: P = P(x=self.x + other.x, y=self.y + other.y)
-                res
-            },
+O = type {
+    .x: int,
+    .y: int,
+    
+    .__add__: (self, other) -> {
+        res: O = O(x=self.x + other.x, y=self.y + other.y)
+        res
+    },
 
-            .add: (self: P, other: P) -> P {
-                res: P = self + other
-                res
-            },
-        },
-    }
- */
-P = type 'P' [] {
+    .add: (self, other) -> {
+        res: P = self + other
+        res
+    },
+}
+
+o0: O = O(x=1, y=2)
+o1: O = O(x=2, y=3)
+o2: O = o0.add(o1)
+o3: O = o0 + o1
+
+//
+// user-defined type
+//
+P = type 'P' {
     .x: int(0),
     .y: int(0),
     
@@ -110,27 +161,15 @@ P = type 'P' [] {
     },
 }
 
-/*
-    p0: P = {.__type__: P, .x: 1, .y: 2}
-    p1: P = {.__type__: P, .x: 2, .y: 3}
- */
 p0: P = P(x=1, y=2)
 p1: P = P(x=2, y=3)
-
-/*
-    p2: P = p0.__type__.__funcs__.add(p0, p1)
- */
 p2: P = p0.add(p1)
-
-/*
-    p3: P = p0.__type__.__funcs__.__add__(p0, p1)
- */
 p3: P = p0 + p1
 
 //
 // user-defined type using generics
 //
-Q = type 'Q' ['X', 'Y'] [] {
+Q = type 'Q' ['X', 'Y'] [object] {
     .x: X(),
     .y: Y(),
     
@@ -147,4 +186,5 @@ Q = type 'Q' ['X', 'Y'] [] {
 
 q0: Q = Q[float, float](1.0, 2.0)
 q1: Q = Q[float, float](2.0, 3.0)
-q2: Q = q0 + q1
+q2: Q = q0.add(q1)
+q3: Q = q0 + q1
