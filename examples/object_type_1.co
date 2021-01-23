@@ -2,37 +2,25 @@
 os := import('os')
 json := import('json')
 
-object = MutNamespace()
-type = MutNamespace()
+//
+// object/type
+//
+object := MutTuple()
+type := MutTuple()
 
 object.__type__ = type
 object.__name__ = 'object'
-object.__generics__ = {}
+object.__generics__ = []
 object.__bases__ = []
-object.__fields__ = {}
+object.__fields__ = ()
 object.__functions__ = {}
 
 type.__type__ = type
 type.__name__ = 'type'
-type.__generics__ = {}
+type.__generics__ = []
 type.__bases__ = [object]
-type.__fields__ = {}
+type.__fields__ = ()
 type.__functions__ = {}
-
-bool.__type__ = type
-bool.__name__ = 'bool'
-bool.__generics__ = {}
-bool.__bases__ = [object]
-bool.__fields__ = {}
-bool.__functions__ = {
-    .__new__: (cls: type, obj: object=false) -> bool {
-        // native code
-    },
-
-    .__repr__: (self: bool) -> str {
-        // native code
-    }
-}
 
 object.__functions__.__new__ = (cls: type, [args], {kwargs}) -> object {
     // implemented as native code
@@ -71,7 +59,7 @@ type.__functions__.__new__ = (mcs: type, name: str, generics: list[str], bases: 
     cls
 }
 
-type.__functions__.__call__ = obj: object -> object {
+type.__functions__.__call__ = (obj: object) -> object {
     // implemented as native code
     match(
         obj,
@@ -123,6 +111,23 @@ type.__functions__.__call__ = obj: object -> object {
 
 object.freeze()
 type.freeze()
+
+//
+// bool
+//
+bool.__type__ = type
+bool.__name__ = 'bool'
+bool.__generics__ = ()
+bool.__bases__ = (object,)
+bool.__fields__ = ()
+
+bool.__functions__.__new__ := (cls: type, obj: object=false) -> bool {
+    // native code
+}
+
+bool.__functions__.__repr__ := (self: bool) -> str {
+    // native code
+}
 
 //
 // user-defined type
