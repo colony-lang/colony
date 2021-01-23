@@ -7,6 +7,7 @@ type := MutTuple()
 object.__type__: type = type
 object.__name__: str = 'object'
 object.__generics__: list[str] = []
+object.__specifics__: dict[str, type] = {}
 object.__bases__: list[type] = []
 object.__fields__: tuple = ()
 object.__functions__: dict[str, callable] = {}
@@ -14,6 +15,7 @@ object.__functions__: dict[str, callable] = {}
 type.__type__: type = type
 type.__name__: str = 'type'
 type.__generics__: list[str] = []
+type.__specifics__: dict[str, type] = {}
 type.__bases__: list[type] = [object]
 type.__fields__: tuple = ()
 type.__functions__: dict[str, callable] = {}
@@ -44,12 +46,13 @@ object.__functions__.__repr__ = (self: object) -> str {
     res
 }
 
-type.__functions__.__new__ = (mcs: type, name: str, generics: list[str], bases: list[type], fields: dict[str, object], functions: dict[str, object]) -> type {
+type.__functions__.__new__ = (mcs: type, name: str, generics: list[str], specifics: dict[str, type], bases: list[type], fields: dict[str, object], functions: dict[str, object]) -> type {
     // implemented as native code
     cls: object = (
         __type__: type = mcs,
         __name__: str = name,
         __generics__: list[str] = generics,
+        __specifics__: dict[str, type] = specifics,
         __bases__: list[type] = bases,
         __fields__: tuple = fields,
         __functions__: dict[str, callable] = functions,
@@ -64,45 +67,43 @@ type.__functions__.__call__ = (obj: object) -> object {
         obj,
         (cls: type, name: str) -> type {
             // name
-            {
+            (
                 ...cls,
-                .__name__: name,
-            }
+                __name__: str = name,
+            )
         },
         (cls: type, generics: list[str]) -> type {
             // generics
-            {
+            (
                 ...cls,
-                .__generics__: dict(zip(generics, generics.map(n => object))),
-            }
+                __generics__: list[str] = generics,
+            )
         },
-        (cls: type, bases: list[type]) -> type {
-            // bases or specific
-            cls.__generics__ ? {
-                // specific
-                {
-                    ...cls,
-                    .__generics__: dict(zip(cls.__generics__.keys(), bases)),
-                }
-            } : {
+        (cls: type, specifics_or_bases: list[type]) -> type {
+            cls.__fields__ || cls.__functions__ ? (
+                // specifics
+                ...cls,
+                __specifics__: dict[str, type] = dict(zip(cls.__generics__.keys(), specifics_or_bases)),
+            ) : (
                 // bases
-                {
-                    ...cls,
-                    .__bases__: [object] + bases,
-                }
-            }
-        },
-        (cls: type, fields_and_functions: dict[str, object]) -> type {
-            // fields and functions
-            {
                 ...cls,
-                .__fields__: dict(fields_and_functions.filter((k, v) => !iscallable(v))),
-                .__functions__: dict(fields_and_functions.filter((k, v) => iscallable(v))),
-            }
+                __bases__: list[type] = [object] + specifics_or_bases,
+            )
         },
-        (cls, type, [args], {kwargs}) -> object {
+        (cls: type, fields_and_functions: tuple) -> type {
+            // fields and functions
+            (
+                ...cls,
+                __fields__: tuple = tuple(fields_and_functions.filter((k, t, v) => !iscallable(v))),
+                __functions__: dict[str, callable] = dict(fields_and_functions.filter((k, t, v) => iscallable(v)).map((k, t, v) => (k, v))),
+            )
+        },
+        (cls: type) -> object {
+            pfields = _.__pfields__
+            kwfields = _.__kwfields__
+
             // instance
-            self: cls = cls.__functions__.__new__(cls, ...args, ...kwargs)
+            self: cls = cls.__functions__.__new__(cls, ...pfields, ...kwfields)
             self
         }
     )
