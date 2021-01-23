@@ -1,46 +1,33 @@
-// same as `os: object = import('os')`
-os := import('os')
-json := import('json')
+//
+// object/type - implemented low-level in C
+//
+object := MutTuple()
+type := MutTuple()
 
-object = MutNamespace()
-type = MutNamespace()
+object.__type__: type = type
+object.__name__: str = 'object'
+object.__generics__: list[str] = []
+object.__bases__: list[type] = []
+object.__fields__: tuple = ()
+object.__functions__: dict[str, callable] = {}
 
-object.__type__ = type
-object.__name__ = 'object'
-object.__generics__ = {}
-object.__bases__ = []
-object.__fields__ = {}
-object.__functions__ = {}
+type.__type__: type = type
+type.__name__: str = 'type'
+type.__generics__: list[str] = []
+type.__bases__: list[type] = [object]
+type.__fields__: tuple = ()
+type.__functions__: dict[str, callable] = {}
 
-type.__type__ = type
-type.__name__ = 'type'
-type.__generics__ = {}
-type.__bases__ = [object]
-type.__fields__ = {}
-type.__functions__ = {}
-
-bool.__type__ = type
-bool.__name__ = 'bool'
-bool.__generics__ = {}
-bool.__bases__ = [object]
-bool.__fields__ = {}
-bool.__functions__ = {
-    .__new__: (cls: type, obj: object=false) -> bool {
-        // native code
-    },
-
-    .__repr__: (self: bool) -> str {
-        // native code
-    }
-}
-
-object.__functions__.__new__ = (cls: type, [args], {kwargs}) -> object {
+object.__functions__.__new__ = (cls: type) -> object {
     // implemented as native code
-    self: object = {
-        .__type__: cls,
-        ...dict(zip(self.__type__.__fields__.keys(), args)),
-        ...dict(kwargs.items().slice(args.len(), kwargs.len())),
-    }
+    pfields = _.__pfields__
+    kwfields = _.__kwfields__
+
+    self: object = (
+        __type__: type=cls,
+        ...zip(cls.__fields__.keys(), cls.__fields__.types(), pfields),
+        ...kwfields.items().slice(pfields.len(), kwfields.len()),
+    )
 
     self
 }
@@ -59,19 +46,19 @@ object.__functions__.__repr__ = (self: object) -> str {
 
 type.__functions__.__new__ = (mcs: type, name: str, generics: list[str], bases: list[type], fields: dict[str, object], functions: dict[str, object]) -> type {
     // implemented as native code
-    cls: object = {
-        .__type__: mcs,
-        .__name__: name,
-        .__generics__: generics,
-        .__bases__: bases,
-        .__fields__: fields,
-        .__functions__: functions,
-    }
+    cls: object = (
+        __type__: type = mcs,
+        __name__: str = name,
+        __generics__: list[str] = generics,
+        __bases__: list[type] = bases,
+        __fields__: tuple = fields,
+        __functions__: dict[str, callable] = functions,
+    )
 
     cls
 }
 
-type.__functions__.__call__ = obj: object -> object {
+type.__functions__.__call__ = (obj: object) -> object {
     // implemented as native code
     match(
         obj,
@@ -125,68 +112,30 @@ object.freeze()
 type.freeze()
 
 //
-// user-defined type
-//
-O = type {
-    .x: int,
-    .y: int,
-    
-    .__add__: (self, other) -> {
-        res: O = O(x=self.x + other.x, y=self.y + other.y)
-        res
-    },
-
-    .add: (self, other) -> {
-        res: P = self + other
-        res
-    },
-}
-
-o0: O = O(x=1, y=2)
-o1: O = O(x=2, y=3)
-o2: O = o0.add(o1)
-o3: O = o0 + o1
-
-//
-// user-defined type
-//
-P = type 'P' {
-    .x: int(0),
-    .y: int(0),
-    
-    .__add__: (self: P, other: P) -> P {
-        res: P = P(x=self.x + other.x, y=self.y + other.y)
-        res
-    },
-
-    .add: (self: P, other: P) -> P {
-        res: P = self + other
-        res
-    },
-}
-
-p0: P = P(x=1, y=2)
-p1: P = P(x=2, y=3)
-p2: P = p0.add(p1)
-p3: P = p0 + p1
-
-//
 // user-defined type using generics
 //
-Q = type 'Q' ['X', 'Y'] [object] {
-    .x: X(),
-    .y: Y(),
-    
-    .__add__: (self: Q, other: Q) -> Q {
+// Q = type (
+// Q = type ['X', 'Y'] (
+// Q = type 'Q' ['X', 'Y'] (
+Q = type 'Q' ['X', 'Y'] [object] (
+    x: X,
+    y: Y,
+
+    __add__ := (self: Q, other: Q) -> Q {
         res: Q = Q[X, Y](x=self.x + other.x, y=self.y + other.y)
         res
     },
 
-    .add: (self: Q, other: Q) -> Q {
+    __sub__ := (self: Q, other: Q) -> Q {
+        res: Q = Q[X, Y](x=self.x - other.x, y=self.y - other.y)
+        res
+    },
+
+    add := (self: Q, other: Q) -> Q {
         res: Q = self + other
         res
     },
-}
+)
 
 q0: Q = Q[float, float](1.0, 2.0)
 q1: Q = Q[float, float](2.0, 3.0)
