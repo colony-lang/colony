@@ -57,6 +57,12 @@ b := {'x': 0, .y: 1}
 b = b.pop('y')
 ```
 
+## Tuple: `(k[: tv], ...)`
+```
+A := (x: int, y: int)
+a: A = (0, 1)
+```
+
 ## Function: `fn, _ -> {}`
 ```
 f: fn = x: i32 -> i32 {
@@ -84,4 +90,56 @@ c: i32 = h1 2_i32
 
 X: int = unit 1
 X == 1
+```
+
+## Type
+```
+A: type = type {
+    .x: int(0),
+    .y: int(0),
+
+    .__add__: (self: A, other: A) -> A {
+        res: A = {
+            .x: self.x + other.x,
+            .y: self.y + other.y,
+        }
+
+        res
+    }
+}
+
+a0: A = A(1, 1)
+a1: A = A(2, 2)
+
+a2 := A.__add__(a0, a1)
+a2 == {.x: 3, .y: 3}
+
+// a3 := a0.__type__.__add__(a0, a1)
+a3 := a0 + a1
+```
+
+```
+X := type {.x: int(0)}
+Y := type {.y: int(0)}
+
+Z := X | Y
+
+W := X & Y
+
+W.__add__ = (self: W, other: W) -> W {
+    res: W = {
+        .x: self.x + other.x,
+        .y: self.y + other.y,
+    }
+
+    res
+}
+
+z0: Z = X(1,)
+z1: Z = Y(2,)
+
+// w0: W = z0.__type__.__add__(z0, z1)
+w0: W = z0 + z1
+
+w1 := W(0, 1)
 ```
