@@ -77,7 +77,6 @@ h := x: i32 -> y: i32 -> i32 {
     x + y
 }
 
-unit := -> { _ }
 
 a := f 1_i32
 a == 2_i32
@@ -87,14 +86,17 @@ b == 3_i32
 
 h1: fn = h 1_i32
 c: i32 = h1 2_i32
+```
 
+```
+unit := -> { _ }
 X: int = unit 1
 X == 1
 ```
 
 ## Type
 ```
-A: type = type {
+A: type = type 'A' [object] {
     .x: int(0),
     .y: int(0),
 
@@ -105,17 +107,85 @@ A: type = type {
         }
 
         res
+    },
+
+    add: (self: A, other: A) -> A {
+        res: A = {
+            .x: self.x + other.x,
+            .y: self.y + other.y,
+        }
+
+        res
+    },
+}
+```
+
+```
+a0: A = A(1, 1)
+```
+
+```
+a1: A = A(2, 2)
+
+a1.add = (self: A, other: A) -> A {
+    res: A = {
+        .x: self.x + other.x,
+        .y: self.y + other.y,
+    }
+
+    res
+}
+```
+
+```rust
+Ok := type 'Ok' [object] {}
+Error := type 'Error' [object] {}
+Result := type 'Result' [Ok | Error] {}
+
+AttributeError := type 'AttributeError' [Error] {}
+AttributeResult := type 'AttributeResult' [Ok | AttributeError] {}
+
+getattr := (obj: object, attr: str) -> Result {
+    r: Result = obj.get(attr)
+
+    match r |> typeof {
+        Ok: -> {
+            Ok(v) := r
+            Ok(v)
+        },
+        Error: -> {
+            Error(e) := r
+
+            
+        }
     }
 }
 
-a0: A = A(1, 1)
-a1: A = A(2, 2)
+t0 := getattr(a0, 'add')
+```
 
-a2 := A.__add__(a0, a1)
+```
+a2 := a0.add(a1)
+a2 == {.x: 3, .y: 3}
+```
+
+??? Attribute lookup: *Type* vs *Type Namespace* ???
+
+```
+???
+
+// a2 := a0.__type_ns__.add(a0, a1)
+a2 := a0.add(a1)
 a2 == {.x: 3, .y: 3}
 
-// a3 := a0.__type__.__add__(a0, a1)
+// a3 := a0.__type_ns__.__add__(a0, a1)
 a3 := a0 + a1
+a3 == {.x: 3, .y: 3}
+
+a4 := A.__type_ns__.__add__(a0, a1)
+a4 == {.x: 3, .y: 3}
+
+???
 ```
 
 ```
