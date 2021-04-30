@@ -6,12 +6,12 @@ type := _MutDict()
 type.__type__ := type
 type.__name__ := 'type'
 
-type.__call__ := (cls: type, *args, **kwargs) -> {
+type.__call__ := (cls: type, [args], {kwargs}) -> {
     self := _MutDict()
     self.__type__ := cls
     self.update(cls.__fields__)
     self.freeze()
-    self: cls = cls::__init__(self, *args, **kwargs)
+    self: cls = cls::__init__(self, ...args, ...kwargs)
     self
 }
 
@@ -27,13 +27,29 @@ type.__or__ := (cls: type, o: type) -> union {
 type.freeze()
 
 //
+// object
+//
+object: type = {
+    .__type__ := type
+    .__name__: str = 'object'
+
+    .__init__ := (self, {kwargs}) -> {
+        self.update(kwargs)
+    }
+
+    .__str__ := (self) -> str {
+        '<{} {}>'.format([self::__type__::__name__, str::hex(addressof(self))])
+    }
+}
+
+//
 // union
 //
 union: type = {
     .__type__ := type
     .__name__ := 'union'
     
-    .__getattr__ := (cls, *uniontypes) -> union {
+    .__getattr__ := (cls, [uniontypes]) -> union {
         res_union_cls: cls = {
             .__type__ := cls
             .__uniontypes__ := uniontypes
@@ -42,7 +58,7 @@ union: type = {
         res_union_cls
     }
 
-    .__call__ := (cls, *args, **kwargs) -> Result {
+    .__call__ := (cls, [args], {kwargs}) -> Result {
         res: Result = Err("Union cannot be instantiated")
         res
     }
@@ -52,7 +68,7 @@ union: type = {
 // A
 //
 A: type = {
-    .__type__ := type
+    ...object
     .__name__ := 'A'
     
     .__fields__ := {
@@ -67,7 +83,11 @@ A: type = {
     }
 
     .__add__ := (self, other: A) -> A {
-        res: A = A(self.x + other.x, self.y + other.y)
+        res: A = A(
+            self.x + other.x,
+            self.y + other.y,
+        )
+
         res
     }
 }
@@ -90,7 +110,7 @@ a2 := A::__add__(a0, a1)
 // c2 := c0.add_xyz(c1)
 //
 Base := {
-    .__type__ := type
+    ...object
 
     .add_xyz := (self, other) -> {
         cls := self.__type__
@@ -106,7 +126,7 @@ Base := {
 }
 
 A := {
-    **Base
+    ...Base
 
     .__fields__ := {
         .x: i32 = 0_i32
@@ -114,7 +134,7 @@ A := {
 }
 
 B := {
-    **Base
+    ...Base
 
     .__fields__ := {
         .y: i32 = 0_i32
@@ -122,12 +142,12 @@ B := {
 }
 
 C := {
-    **A
-    **B
+    ...A
+    ...B
 
     .__fields__ := {
-        **A.__fields__
-        **B.__fields__
+        ...A.__fields__
+        ...B.__fields__
         .z: i32 = 0_i32
     }
 }
@@ -140,11 +160,11 @@ c2 := c0.add_xyz(c1)
 // C := A | B
 //
 Base := {
-    .__type__ := type
+    ...object
 }
 
 A := {
-    **Base
+    ...Base
 
     .__fields__ := {
         .x: i32 = 0_i32
@@ -152,7 +172,7 @@ A := {
 }
 
 B := {
-    **Base
+    ...Base
 
     .__fields__ := {
         .y: i32 = 0_i32
@@ -176,6 +196,30 @@ c1: C = B(1_i32)
 //
 a: list[i32] = range(10_i64)
 
-a := range(10_i64).map((i: i64) -> {
-    i ** 2.0
-})
+a := range(10_i64).map((i: i64) -> { i ** 2.0 })
+
+a := range(10_i64).filter((i: i64) -> { i % 2 && i ^ 0b11 || i == 1 })
+
+//
+//
+//
+A := {
+    ...object
+    .__name__ := 'A'
+
+    .__fields__ := {
+        .x: i32 = 0_i32
+        .y: i32 = 0_i32
+        .z: i32 = 0_i32
+    }
+}
+
+a0 = A(1_i32, 2_i32, 3_i32)
+A(x, y, z) := a0
+
+v := a0 ?? {
+    A(x, y, z) ? x == 0 -> x + y + z
+    A(x, y, z) ? y == 1 -> x + y + z
+    A(x, y, z) ? z == 2 -> x + y + z
+    A(x, y, z) -> x + y + z
+}
