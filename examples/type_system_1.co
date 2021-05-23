@@ -1,3 +1,14 @@
+
+/*
+ * Mutable Objects
+ *
+    1. MutDict, allowed circular references
+    2. MutList, allowed circular references
+    3. module scope (MutDict)
+    4. expression block scope (MutDict)
+    5. type objects (MutDict) becasue monkey-patching
+ */
+
 // bool
 a: bool = true
 b: bool = false
@@ -11,6 +22,8 @@ d: i64 = -123_i64   // platform dependent, on x86_64 / arm64:
 d: int = -123
                     // int is platform dependent, on x86_64 / arm64:
                     //  int: type = i64
+
+// TODO: needs refinement
 // is: isize = -1_isize             // platform dependent
 // us: usize = 1_usize              // platform dependent
 // ip: iptr = 0x123_iptr            // platform dependent
@@ -74,10 +87,10 @@ f0 := (a: i64, [args: list[i64]], {kwargs: dict[str, i64]}) -> i64 {
     )
 }
 
-// if/else condition expression
+// simple condition expression
 a: bool = 1 < 2 ? true : false
 
-// conditional matching expression
+// complex condition expression
 a: i64 = 10
 
 b: i64 = typeof(a) ? {
@@ -89,11 +102,12 @@ b: i64 = typeof(a) ? {
 // "loop"
 a: array[i64] = range(10).map(i -> { i * 2 })
 
-a: array[i64] = range(100)
-    .while(i -> { i < 10 })
-    .until(i -> { i == 5 })
-    .filter(i -> { i % 2 })
+b: i64 = range(100)
+    .while(i -> { i < 10 }) // break
+    .until(i -> { i == 5 }) // break
+    .filter(i -> { i % 2 }) // continue
     .map(i -> { i * 3 })
+    .reduce(0, (acc, i) -> { acc + i })
 
 //
 // tuple types
@@ -204,7 +218,7 @@ c3.x = c3.x * 2     // (
 c3 := (c3.x = c3.x * 2)
 
 /*
- * conditional matching expression "?"
+ * conditional expression "?"
  */
 typeof(c3) ? {
     C && (c3.x == 2 || c3.y == 2) => { c3.x + c3.y }
@@ -234,4 +248,4 @@ C(x, y) := c3           // x := c3.x
 
 C(xx: x, yy: y) := c3   // xx := c3.x
                         // yy := c3.y
-*/
+ */
