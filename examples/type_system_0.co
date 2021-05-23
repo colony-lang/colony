@@ -39,6 +39,14 @@ c: float = 1.0
                     // float is platform dependent, on x86_64 / arm64:
                     //  float: type = f64
 
+// bytes
+a: bytes = b'\x00\x01abc'
+b: bytes = b"\x00\x01abc"
+
+// unicode (utf8) string
+a: str = 'Hello world'
+b: str = "Hello world"
+
 // big integer
 a: Integer = Integer('-10')
 
@@ -153,12 +161,22 @@ d ? TypeErr(e) => sys.exit(1)
 //
 // custom user-defined types: A, B, C
 //
+any: type = ()
+any.__name__ := 'any'
+any.__bases__ := []
+
+any.__repr__ := (self) -> str {
+    f'<{self::__type__::__name__} at {addressof(self)}>'
+}
+
 A: type = (x: f32, y: f32) & (z: f32)
 // same as
 A: type = (x: f32, y: f32, z: f32)
 
 // A
 A: type = (x: f32,)
+A.__name__ := 'A'       // default
+A.__bases__ := [any]    // default
 
 A.add_x := (self, other: A) -> A {
     A(self.x + other.x)
@@ -168,6 +186,8 @@ A.__add__ := A.add_x
 
 // B
 B: type = (y: f32,)
+B.__name__ := 'B'       // default
+B.__bases__ := [any]    // default
 
 B.add_y := (self, other: B) -> B {
     B(self.y + other.y)
@@ -177,6 +197,8 @@ B.__add__ := B.add_y
 
 // C
 C: type = A & B
+C.__name__ := 'C'       // default
+C.__bases__ := [A, B]   // results to [any, A, B] because of C3 algorithm
 
 C.__init__ := (self, x: f32, y: f32) -> C {
     self.x := x
@@ -249,3 +271,6 @@ C(x, y) := c3           // x := c3.x
 C(xx: x, yy: y) := c3   // xx := c3.x
                         // yy := c3.y
  */
+
+a: any = 10 / 0_    // ZeroDivision('you cannot divide integer by 0 integer'), Err()
+a: int = 10 / 0     // panics

@@ -1,4 +1,5 @@
 # PEG - Parsing Expression Grammar
+# Parsing Combinators
 
 ## Parsing Expressions
 
@@ -7,7 +8,7 @@
 | Nonterminal | Nonterminal | 6 |
 | (<e>) | Parentheses | 6 |
 
-## Lexical
+## Lexical (matching characters)
 
 | Expression | Name | Precedence |
 |---|---|---|
