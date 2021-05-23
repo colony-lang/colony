@@ -1,2 +1,0 @@
-# colony
-Colony Programming Language

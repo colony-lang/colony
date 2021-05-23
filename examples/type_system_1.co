@@ -1,0 +1,237 @@
+// bool
+a: bool = true
+b: bool = false
+
+// integer
+b: i8 = -1_i8
+c: u64 = 123_u64
+d: i64 = -123_i64   // platform dependent, on x86_64 / arm64:
+                    //  d: i64 = -123_i64
+                    //  d: int = -123
+d: int = -123
+                    // int is platform dependent, on x86_64 / arm64:
+                    //  int: type = i64
+// is: isize = -1_isize             // platform dependent
+// us: usize = 1_usize              // platform dependent
+// ip: iptr = 0x123_iptr            // platform dependent
+// up: uptr = 0x123_uptr            // platform dependent
+// pd: ptrdiff = -0x123_ptrdiff     // platform dependent
+
+// float
+b: f32 = 1.0_f32
+c: f64 = 1.0_f64    // platform dependent, on x86_64 / arm64:
+                    //  c: f64 = 1.0_f64
+                    //  c: float = 1.0
+c: float = 1.0
+                    // float is platform dependent, on x86_64 / arm64:
+                    //  float: type = f64
+
+// big integer
+a: Integer = Integer('-10')
+
+// big float
+a: Float = Float('0.19', p=1999, e=36)
+
+// big decimal
+a: Decimal = Decimal('-0.123', p=18)
+
+// list
+a: list[i64] = [0, 1, 2]
+a := a.append(3)
+
+// dict
+a: dict[str, i64] = {'1': 123, '2': 234}
+a_o: Option[dict[str, i64]] = a.set('3', 345)
+
+// function
+sum: (a: i64, b: i64) -> i64
+
+sum: (a: i64, b: i64) -> i64 = (a: i64, b: i64) -> i64 {
+    a + b
+}
+
+sum := (a: i64, b: i64) -> i64 {
+    a + b
+}
+
+sum(10, 20) == 30
+
+// chained functions
+f0 := (a: i64) -> (b: i64) -> i64 {
+    (b: i64) -> i64 {
+        a + b
+    }
+}
+
+f0(10)(20) == 30
+
+// function variadic arguments and keywords arguments
+f0 := (a: i64, [args: list[i64]], {kwargs: dict[str, i64]}) -> i64 {
+    c: i64 = (
+        a +
+        args.reduce(0, (acc: i64, n: i64) -> i64 { acc + n }) +
+        kwargs.items().reduce(0, (acc: i64, item: tuple(str, i64)) -> i64 { acc + item[0] })
+    )
+}
+
+// if/else condition expression
+a: bool = 1 < 2 ? true : false
+
+// conditional matching expression
+a: i64 = 10
+
+b: i64 = typeof(a) ? {
+    i64 => { -1 }
+    f64 => { 0 }
+    _ => { 1 }
+}
+
+// "loop"
+a: array[i64] = range(10).map(i -> { i * 2 })
+
+a: array[i64] = range(100)
+    .while(i -> { i < 10 })
+    .until(i -> { i == 5 })
+    .filter(i -> { i % 2 })
+    .map(i -> { i * 3 })
+
+//
+// tuple types
+//
+A: type = (i32, f32)
+A: type = (x: i32, y: f32)
+A: type = tuple(x=i32, y=f32)
+a0: A = A(x=-1, y=-2.0)
+a1: A = A(-2, -3.0)
+a2: A = (x: -3, y: -4.0)
+a2: A = (-3, -4.0)
+a0.x == a1.x - 1 == a2.x - 2
+
+//
+// union types
+//
+B: type = i32 | f32
+B: type = union(i32, f32)
+b0: B = -1
+b1: B = -2.0
+
+A: type = (i32, i32)
+B: type = (f32, f32)
+C: type = (i32, i32, f32, f32)
+D: type = A | B | C
+
+D: type =
+    (i32, i32) |
+    (f32, f32) |
+    (i32, i32, f32, f32)
+
+d := 1      // doesn't panics
+d: D = 1    // panics
+
+d: Result[D] = 1
+d ? { TypeErr(e) => { sys.exit(1) } }
+
+d: Result[D] = 1
+d ? TypeErr(e) => sys.exit(1)
+
+(d: Result[D] = 1) ? TypeErr(e) => sys.exit(1)
+
+//
+// custom user-defined types: A, B, C
+//
+A: type = (x: f32, y: f32) & (z: f32)
+// same as
+A: type = (x: f32, y: f32, z: f32)
+
+// A
+A: type = (x: f32,)
+
+A.add_x := (self, other: A) -> A {
+    A(self.x + other.x)
+}
+
+A.__add__ := A.add_x
+
+// B
+B: type = (y: f32,)
+
+B.add_y := (self, other: B) -> B {
+    B(self.y + other.y)
+}
+
+B.__add__ := B.add_y
+
+// C
+C: type = A & B
+
+C.__init__ := (self, x: f32, y: f32) -> C {
+    self.x := x
+    self.y := y
+}
+
+C.__add__ := (self, other: C) -> C {
+    C(self.x + other.x, self.y + other.y)
+}
+
+c0: C = C(1.0, 2.0)
+c1: C = C(2.0, 3.0)
+c2: C = c0 + c1 // c2: C = (c0::__type__::__add__(c0, c1))
+c3: C = C(...c2)
+
+c0::__type__ == C
+typeof(c0) == C
+
+c3.x := c3.x * 2    // c3 := (
+                    //  c3::__type__::__set__(
+                    //      c3,
+                    //      'x',
+                    //      (c3::__type__::__get__(
+                    //          c3,
+                    //          'x'
+                    //      ) * 2)
+                    //  )
+
+c3.x = c3.x * 2     // (
+                    //  c3::__type__::__set__(
+                    //      c3,
+                    //      'x',
+                    //      (c3::__type__::__get__(
+                    //          c3,
+                    //          'x'
+                    //      ) * 2)
+                    //  )
+
+c3 := (c3.x = c3.x * 2)
+
+/*
+ * conditional matching expression "?"
+ */
+typeof(c3) ? {
+    C && (c3.x == 2 || c3.y == 2) => { c3.x + c3.y }
+    C => { c3.x + c3.y }
+    B => { c3.y }
+    A => { c3.x }
+    _ => { sys.exit(1) }
+}
+
+/*
+ * structural pattern matching expression "??"
+ *
+c3 ?? {
+    C(x, y) && y == 2 => { x + y }
+    C(x, y) && (x == 2 || y == 2) => { x + y }
+    B(y) => { y }
+    A(x) => { x }
+    _ => { sys.exit(1) }
+}
+*/
+
+/*
+ * structural destructing
+ *
+C(x, y) := c3           // x := c3.x
+                        // y := c3.y
+
+C(xx: x, yy: y) := c3   // xx := c3.x
+                        // yy := c3.y
+*/
