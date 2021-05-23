@@ -24,10 +24,10 @@
 
 | Expression | Name | Precedence |
 |---|---|---|
-| <e>? | Optional | 5 |
-| <e>* | Zero or More | 5 |
-| <e>+ | One or More | 5 |
-| &<e> (Lookahead, for later) | Lookahead | 4 |
-| !<e> (Lookahead, for later) | Forbid | 4 |
-| <e1> ... <eN> | Sequence | 2 |
-| <e1> \| ... \| <eN> | Ordered Choice | 1 |
+| \<e\>? | Optional | 5 |
+| \<e\>* | Zero or More | 5 |
+| \<e\>+ | One or More | 5 |
+| &\<e\> (Lookahead, for later) | Lookahead | 4 |
+| !\<e\> (Lookahead, for later) | Forbid | 4 |
+| \<e1\> \.\.\. \<eN\> | Sequence | 2 |
+| \<e1\> \| ... \| \<eN\> | Ordered Choice | 1 |
