@@ -50,7 +50,7 @@ declaration_assignment: NAME ':' (expression)? '=' expression
 deep_assignment: NAME (('[' expression ']') | (('.' | '::') NAME))+ augmented_assignment expression
 
 augmented_assignment:
-	'=' |
+	':=' |
 	'+=' |
     '-=' |
     '*=' |

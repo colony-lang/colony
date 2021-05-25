@@ -9,6 +9,8 @@ co_object_t *co_i64_new(co_ctx_t *ctx, int64_t v) {
 }
 
 co_object_t *co_i64_free(co_ctx_t *ctx, co_object_t *self) {
+    // TODO: check if self->rc > 0
+
     co_ctx_mem_free(ctx, self);
 
     // TODO: return Ok(None)

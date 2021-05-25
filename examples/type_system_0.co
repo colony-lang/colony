@@ -23,7 +23,14 @@ d: int = -123
                     // int is platform dependent, on x86_64 / arm64:
                     //  int: type = i64
 
-// TODO: needs refinement
+e := 0
+e += 1
+e -= 1
+
+/*
+ * platform dependent integer types
+ * TODO: needs refinement
+ */
 // is: isize = -1_isize             // platform dependent
 // us: usize = 1_usize              // platform dependent
 // ip: iptr = 0x123_iptr            // platform dependent
@@ -57,22 +64,31 @@ a: Float = Float('0.19', p=1999, e=36)
 a: Decimal = Decimal('-0.123', p=18)
 
 // list
-a: list[i64] = [0, 1, 2]
-a = a.append(3)
-a = a.append(4.0) // panics because 4.0 is float and not i64
+a: list[int] = [0, 1, 2]
+a := a.append(3)
+a := a.append(4.0) // panics because 4.0 is float and not i64
 
 // dict
-a: dict[str, i64]
-a = {'1': 123, '2': 234}
-
 a := {'1': 123, '2': 234}
+a: dict[any, any] = {'1': 123, '2': 234}
 a: any = {'1': 123, '2': 234}
 a: dict[str, i64] = {'1': 123, '2': 234}
+
+// Option
 a_o: Option[dict[str, i64]] = a.set('3', 345)
 
-// function
-sum: (a: i64, b: i64) -> i64
+a0: Option[int] = None
+a1: Option[int] = 1
+a1: Option[int] = 1.0      // panics
 
+// function
+sum: Option[(a: i64, b: i64) -> i64] = None
+
+Option[(a: i64, b: i64) -> i64] = Ok((a: i64, b: i64) -> i64 {
+    a + b
+})
+
+//
 sum: (a: i64, b: i64) -> i64 = (a: i64, b: i64) -> i64 {
     a + b
 }
@@ -97,7 +113,7 @@ f0 := (a: i64, [args: list[i64]], {kwargs: dict[str, i64]}) -> i64 {
     c: i64 = (
         a +
         args.reduce(0, (acc: i64, n: i64) -> i64 { acc + n }) +
-        kwargs.items().reduce(0, (acc: i64, item: tuple(str, i64)) -> i64 { acc + item[0] })
+        kwargs.items().reduce(0, (acc: i64, item: (k: str, v: i64)) -> i64 { acc + item.v })
     )
 }
 
@@ -124,11 +140,10 @@ b: i64 = range(100)
     .reduce(0, (acc, i) -> { acc + i })
 
 //
-// tuple types
+// tuple types / product types
 //
 A: type = (i32, f32)
 A: type = (x: i32, y: f32)
-A: type = tuple(x=i32, y=f32)
 a0: A = A(x=-1, y=-2.0)
 a1: A = A(-2, -3.0)
 a2: A = (x: -3, y: -4.0)
@@ -136,12 +151,11 @@ a2: A = (-3, -4.0)
 a0.x == a1.x - 1 == a2.x - 2
 
 //
-// union types
+// union types / sum types
 //
 B: type = i32 | f32
-B: type = union(i32, f32)
-b0: B = -1
-b1: B = -2.0
+b0: B = -1_i32
+b1: B = -2.0_f32
 
 A: type = (i32, i32)
 B: type = (f32, f32)
@@ -153,33 +167,29 @@ D: type =
     (f32, f32) |
     (i32, i32, f32, f32)
 
-d: any
-d = 1           // doesn't panics
-
-d := 1          // doesn't panics
-d: any = 1      // doesn't panics
+d := 1          // doesn't panic
+d: any = 1      // doesn't panic
 d: D = 1        // panics because 1 is not of type D
+d: Result[D, str] = 1        // doesn't panic, returns TypeErr(...)
 
-d: D
-d = 1        // panics because 1 is not of type D
-
-d: Result[D] = 1
+d: Result[D, str] = 1
 d ? { TypeErr(e) => { sys.exit(1) } }
 
-d: Result[D] = 1
+d: Result[D, str] = 1
 d ? TypeErr(e) => sys.exit(1)
 
-(d: Result[D] = 1) ? TypeErr(e) => sys.exit(1)
+(d: Result[D, str] = 1) ? TypeErr(e) => sys.exit(1)
 
 //
 // custom user-defined types: A, B, C
 //
 any: type = ()
-any.__type__ = type
-any.__name__ = 'any'
-any.__bases__ = []
+any.__type__ := type
+any.__name__ := 'any'
+any.__bases__ := []
+any.__fields__ := {}
 
-any.__repr__ = (self) -> str {
+any.__repr__ := (self) -> str {
     f'<{self::__type__::__name__} at {addressof(self)}>'
 }
 
@@ -192,13 +202,13 @@ A: type = (x: f32,)
 // A.__type__ := type      // default
 // A.__name__ := 'A'       // default
 // A.__bases__ := [any]    // default
-// A.__fields__ := {.x: field(name='x', type=f32)}
+// A.__fields__ := {.x: f32}
 
-A.add_x = (self, other: A) -> A {
+A.add_x := (self, other: A) -> A {
     A(self.x + other.x)
 }
 
-A.__add__ = A.add_x
+A.__add__ := A.add_x
 
 // B
 B: type = (y: f32,)
@@ -207,25 +217,25 @@ B: type = (y: f32,)
 // B.__bases__ := [any]    // default
 // B.__fields__ := {.y: field(name='y', type=f32)}
 
-B.add_y = (self, other: B) -> B {
+B.add_y := (self, other: B) -> B {
     B(self.y + other.y)
 }
 
-B.__add__ = B.add_y
+B.__add__ := B.add_y
 
 // C
-C: type = A & B
+C: type = A & B     // (x: f32,) & (y: f32,) == (x: f32, y: f32)
 // C.__type__ := type      // default
 // C.__name__ := 'C'       // default
 // C.__bases__ := [A, B]   // results to [any, A, B] because of C3 algorithm
 // C.__fields__ := {.x: field(name='x', type=f32), .y: field(name='y', type=f32)}
 
-C.__init__ = (self, x: f32, y: f32) -> C {
-    self.x = x
-    self.y = y
+C.__init__ := (self, x: f32, y: f32) -> C {
+    self.x := x
+    self.y := y
 }
 
-C.__add__ = (self, other: C) -> C {
+C.__add__ := (self, other: C) -> C {
     C(self.x + other.x, self.y + other.y)
 }
 
@@ -237,7 +247,7 @@ c3: C = C(...c2)
 c0::__type__ == C
 typeof(c0) == C
 
-c3.x = c3.x * 2     // c3 := (
+c3.x := c3.x * 2    // c3 := (
                     //  c3::__type__::__set__(
                     //      c3,
                     //      'x',
@@ -247,8 +257,11 @@ c3.x = c3.x * 2     // c3 := (
                     //      ) * 2)
                     //  )
 
+// c3 := (c3.x := c3.x * 2)
+c3.x *= 2
+
 // equivalent of `c3.x := c3.x * 2`
-c3 := (c3.x = c3.x * 2)
+c3 := (c3.x := c3.x * 2)
 
 /*
  * conditional expression "?"
@@ -278,4 +291,11 @@ C(xx: x, yy: y) := c3   // xx := c3.x
  * errors
  */
 a: any = 10 / 0     // ZeroDivisionError('you cannot divide integer by 0 integer')
+typeof(a) == ZeroDivisionError
+
+a: Result = 10 / 0     // ZeroDivisionError('you cannot divide integer by 0 integer')
+a: Result[int, any] = 10 / 0     // ZeroDivisionError('you cannot divide integer by 0 integer')
+a: Result[any, any] = 10 / 0     // ZeroDivisionError('you cannot divide integer by 0 integer')
+a: Result[any, str] = 10 / 0     // ZeroDivisionError('you cannot divide integer by 0 integer')
+
 a: int = 10 / 0     // panics because right side does not match type on left side
