@@ -58,9 +58,15 @@ a: Decimal = Decimal('-0.123', p=18)
 
 // list
 a: list[i64] = [0, 1, 2]
-a := a.append(3)
+a = a.append(3)
+a = a.append(4.0) // panics because 4.0 is float and not i64
 
 // dict
+a: dict[str, i64]
+a = {'1': 123, '2': 234}
+
+a := {'1': 123, '2': 234}
+a: any = {'1': 123, '2': 234}
 a: dict[str, i64] = {'1': 123, '2': 234}
 a_o: Option[dict[str, i64]] = a.set('3', 345)
 
@@ -108,7 +114,7 @@ b: i64 = typeof(a) ? {
 }
 
 // "loop"
-a: array[i64] = range(10).map(i -> { i * 2 })
+a: list[i64] = range(10).map(i -> { i * 2 })
 
 b: i64 = range(100)
     .while(i -> { i < 10 }) // break
@@ -147,8 +153,15 @@ D: type =
     (f32, f32) |
     (i32, i32, f32, f32)
 
-d := 1      // doesn't panics
-d: D = 1    // panics
+d: any
+d = 1           // doesn't panics
+
+d := 1          // doesn't panics
+d: any = 1      // doesn't panics
+d: D = 1        // panics because 1 is not of type D
+
+d: D
+d = 1        // panics because 1 is not of type D
 
 d: Result[D] = 1
 d ? { TypeErr(e) => { sys.exit(1) } }
@@ -162,10 +175,11 @@ d ? TypeErr(e) => sys.exit(1)
 // custom user-defined types: A, B, C
 //
 any: type = ()
-any.__name__ := 'any'
-any.__bases__ := []
+any.__type__ = type
+any.__name__ = 'any'
+any.__bases__ = []
 
-any.__repr__ := (self) -> str {
+any.__repr__ = (self) -> str {
     f'<{self::__type__::__name__} at {addressof(self)}>'
 }
 
@@ -175,37 +189,43 @@ A: type = (x: f32, y: f32, z: f32)
 
 // A
 A: type = (x: f32,)
-A.__name__ := 'A'       // default
-A.__bases__ := [any]    // default
+// A.__type__ := type      // default
+// A.__name__ := 'A'       // default
+// A.__bases__ := [any]    // default
+// A.__fields__ := {.x: field(name='x', type=f32)}
 
-A.add_x := (self, other: A) -> A {
+A.add_x = (self, other: A) -> A {
     A(self.x + other.x)
 }
 
-A.__add__ := A.add_x
+A.__add__ = A.add_x
 
 // B
 B: type = (y: f32,)
-B.__name__ := 'B'       // default
-B.__bases__ := [any]    // default
+// B.__type__ := type      // default
+// B.__name__ := 'B'       // default
+// B.__bases__ := [any]    // default
+// B.__fields__ := {.y: field(name='y', type=f32)}
 
-B.add_y := (self, other: B) -> B {
+B.add_y = (self, other: B) -> B {
     B(self.y + other.y)
 }
 
-B.__add__ := B.add_y
+B.__add__ = B.add_y
 
 // C
 C: type = A & B
-C.__name__ := 'C'       // default
-C.__bases__ := [A, B]   // results to [any, A, B] because of C3 algorithm
+// C.__type__ := type      // default
+// C.__name__ := 'C'       // default
+// C.__bases__ := [A, B]   // results to [any, A, B] because of C3 algorithm
+// C.__fields__ := {.x: field(name='x', type=f32), .y: field(name='y', type=f32)}
 
-C.__init__ := (self, x: f32, y: f32) -> C {
-    self.x := x
-    self.y := y
+C.__init__ = (self, x: f32, y: f32) -> C {
+    self.x = x
+    self.y = y
 }
 
-C.__add__ := (self, other: C) -> C {
+C.__add__ = (self, other: C) -> C {
     C(self.x + other.x, self.y + other.y)
 }
 
@@ -217,7 +237,7 @@ c3: C = C(...c2)
 c0::__type__ == C
 typeof(c0) == C
 
-c3.x := c3.x * 2    // c3 := (
+c3.x = c3.x * 2     // c3 := (
                     //  c3::__type__::__set__(
                     //      c3,
                     //      'x',
@@ -227,16 +247,7 @@ c3.x := c3.x * 2    // c3 := (
                     //      ) * 2)
                     //  )
 
-c3.x = c3.x * 2     // (
-                    //  c3::__type__::__set__(
-                    //      c3,
-                    //      'x',
-                    //      (c3::__type__::__get__(
-                    //          c3,
-                    //          'x'
-                    //      ) * 2)
-                    //  )
-
+// equivalent of `c3.x := c3.x * 2`
 c3 := (c3.x = c3.x * 2)
 
 /*
@@ -251,20 +262,11 @@ typeof(c3) ? {
 }
 
 /*
- * structural pattern matching expression "??"
- *
-c3 ?? {
-    C(x, y) && y == 2 => { x + y }
-    C(x, y) && (x == 2 || y == 2) => { x + y }
-    B(y) => { y }
-    A(x) => { x }
-    _ => { sys.exit(1) }
-}
-*/
-
-/*
  * structural destructing
  *
+a := [1, 2]
+x, y = a
+
 C(x, y) := c3           // x := c3.x
                         // y := c3.y
 
@@ -272,5 +274,8 @@ C(xx: x, yy: y) := c3   // xx := c3.x
                         // yy := c3.y
  */
 
-a: any = 10 / 0_    // ZeroDivision('you cannot divide integer by 0 integer'), Err()
-a: int = 10 / 0     // panics
+/*
+ * errors
+ */
+a: any = 10 / 0     // ZeroDivisionError('you cannot divide integer by 0 integer')
+a: int = 10 / 0     // panics because right side does not match type on left side
