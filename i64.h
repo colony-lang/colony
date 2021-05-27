@@ -26,6 +26,12 @@ co_object_t *co_i64_repr(co_ctx_t *ctx, co_object_t *self);
 // (self: i64) -> u64 | Err
 co_object_t *co_i64_hash(co_ctx_t *ctx, co_object_t *self);
 
+// (self: i64) -> i64
+co_object_t *co_i64_pos(co_ctx_t *ctx, co_object_t *self);
+
+// (self: i64) -> i64
+co_object_t *co_i64_neg(co_ctx_t *ctx, co_object_t *self);
+
 // (self: i64, other: i64) -> i64
 co_object_t *co_i64_add(co_ctx_t *ctx, co_object_t *self, co_object_t *other);
 

@@ -4,16 +4,10 @@
 #include <stdlib.h>
 #include "ctx.h"
 #include "object_common.h"
-#include "dict_item.h"
+#include "mut_dict_common.h"
 
-typedef struct co_mut_dict_t {
-    size_t cap;
-    size_t len;
-    co_dict_item_t *items;
-} co_mut_dict_t;
-
-// () -> mut_dict
-co_object_t *co_mut_dict_new(co_ctx_t *ctx);
+// (cap: u64, len: u64, key_type: type, value_type: type items: mut_dict[any, any]) -> mut_dict[any, any]
+co_object_t *co_mut_dict_new(co_ctx_t *ctx, size_t cap, size_t len, co_object_t *key_type, co_object_t *value_type, co_dict_item_t *items);
 
 // (self: mut_dict) -> Result
 co_object_t *co_mut_dict_free(co_ctx_t *ctx, co_object_t *self);

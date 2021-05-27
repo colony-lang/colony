@@ -24,6 +24,7 @@ typedef enum co_kind_t {
     CO_KIND_MUT_DICT,
     CO_KIND_CODE,
     CO_KIND_FUNC,
+    CO_KIND_CLOSURE,
     CO_KIND_TUPLE,
     CO_KIND_UNION,
     CO_KIND_PTR,
@@ -50,6 +51,7 @@ typedef union co_value_t {
     void *mut_dict;
     void *code;
     void *func;
+    void *closue;
     void *tuple;
     void *union_;
     void *ptr;
