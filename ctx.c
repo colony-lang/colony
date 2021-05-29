@@ -1,4 +1,5 @@
 #include "ctx.h"
+#include "object.h"
 
 co_ctx_t *co_ctx_new(co_ctx_t *parent) {
     co_ctx_t *ctx = malloc(sizeof(co_ctx_t));
@@ -8,14 +9,14 @@ co_ctx_t *co_ctx_new(co_ctx_t *parent) {
     return ctx;
 }
 
-co_ctx_t *co_ctx_new_with_ns(struct co_ctx_t *parent, co_object_t *ns_types, co_object_t *ns_values) {
+co_ctx_t *co_ctx_new_with_ns(struct co_ctx_t *parent, void *ns_types, void *ns_values) {
     co_ctx_t *ctx = malloc(sizeof(co_ctx_t));
     ctx->parent = parent;
 
-    CO_INC_REF(ctx, ns_types);
+    // CO_OBJECT_INC_RC(ctx, (co_object_t *)ns_types);
     ctx->ns_types = ns_types;
 
-    CO_INC_REF(ctx, ns_values);
+    // CO_OBJECT_INC_RC(ctx, (co_object_t *)ns_values);
     ctx->ns_values = ns_values;
     return ctx;
 }
