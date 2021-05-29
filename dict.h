@@ -6,32 +6,23 @@
 #include "object_common.h"
 #include "dict_common.h"
 
-// (len: u64, key_type: type, value_type: type items: dict[any, any]) -> dict[any, any]
-co_object_t *co_dict_new(co_ctx_t *ctx, size_t len, co_object_t *key_type, co_object_t *value_type, co_dict_item_t *items);
+// (cls: DictType, len: 'size_t'=0, items: Option['co_dict_item_t *']=None) -> dict[any, any]
+co_object_t *co_dict_type_new(co_ctx_t *ctx, co_object_t *cls, size_t len, co_dict_item_t *items);
+
+// (cls: DictType, types: (key: any, value: any)) -> dict[types.key, types.value]
+co_object_t *co_dict_type_get(co_ctx_t *ctx, co_object_t *self, co_object_t *key_type, co_object_t *value_type);
 
 // (self: dict) -> Result
 co_object_t *co_dict_free(co_ctx_t *ctx, co_object_t *self);
 
-// (self: dict, key: any, type_: type, value: any) -> dict
-co_object_t *co_dict_setitem(co_ctx_t *ctx, co_object_t *self, co_object_t *key, co_object_t *type_, co_object_t *value);
-
 // (self: dict, key: any, value: any) -> dict
 co_object_t *co_dict_set(co_ctx_t *ctx, co_object_t *self, co_object_t *key, co_object_t *value);
-
-// (self: dict, key: any) -> (type, any) | Err
-co_object_t *co_dict_getitem(co_ctx_t *ctx, co_object_t *self, co_object_t *key);
 
 // (self: dict, key: any) -> any | Err
 co_object_t *co_dict_get(co_ctx_t *ctx, co_object_t *self, co_object_t *key);
 
-// (self: dict, key: any) -> (dict, type, any) | Err
-co_object_t *co_dict_delitem(co_ctx_t *ctx, co_object_t *self, co_object_t *key);
-
 // (self: dict, key: any) -> dict | Err
 co_object_t *co_dict_del(co_ctx_t *ctx, co_object_t *self, co_object_t *key);
-
-// (self: dict, key: any, type_: type) -> bool
-co_object_t *co_dict_hasitem(co_ctx_t *ctx, co_object_t *self, co_object_t *key, co_object_t *type_);
 
 // (self: dict, key: any) -> bool
 co_object_t *co_dict_has(co_ctx_t *ctx, co_object_t *self, co_object_t *key);
@@ -39,10 +30,15 @@ co_object_t *co_dict_has(co_ctx_t *ctx, co_object_t *self, co_object_t *key);
 // (self: dict, other: dict) -> dict
 co_object_t *co_dict_add(co_ctx_t *ctx, co_object_t *self, co_object_t *other);
 
-// (self: dict) -> list[(any, type, any)]
+// (self: dict) -> list[(any, any)]
 co_object_t *co_dict_items(co_ctx_t *ctx, co_object_t *self);
 
-// (self: dict) -> list[(any, any)]
-co_object_t *co_dict_entries(co_ctx_t *ctx, co_object_t *self);
+static co_object_t co_DictType = (co_object_t){
+    .rc = SIZE_MAX,
+    .kind = CO_KIND_LW_TYPE,
+    .value = {
+        .lw_type = NULL
+    }
+};
 
 #endif

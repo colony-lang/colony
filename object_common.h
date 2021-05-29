@@ -27,6 +27,7 @@ typedef enum co_kind_t {
     CO_KIND_CLOSURE,
     CO_KIND_TUPLE,
     CO_KIND_UNION,
+    CO_KIND_LW_TYPE, // light-weight
     CO_KIND_PTR,
     CO_KIND_OWNED_PTR
 } co_kind_t;
@@ -54,12 +55,13 @@ typedef union co_value_t {
     void *closue;
     void *tuple;
     void *union_;
+    void *lw_type;
     void *ptr;
     void *owned_ptr;
 } co_value_t;
 
 typedef struct co_object_t {
-    uint32_t rc;
+    size_t rc;
     co_kind_t kind;
     co_value_t value;
 } co_object_t;

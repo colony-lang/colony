@@ -6,8 +6,6 @@
 
 typedef struct co_dict_t {
     size_t len;
-    co_object_t *key_type;
-    co_object_t *value_type;
     co_dict_item_t *items;
 } co_dict_t;
 
