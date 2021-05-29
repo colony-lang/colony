@@ -5,6 +5,7 @@
 #include "ctx.h"
 #include "object_common.h"
 #include "dict_common.h"
+#include "lw_type_common.h"
 
 // (cls: DictType, len: 'size_t'=0, items: Option['co_dict_item_t *']=None) -> dict[any, any]
 co_object_t *co_dict_type_new(co_ctx_t *ctx, co_object_t *cls, size_t len, co_dict_item_t *items);
@@ -33,12 +34,17 @@ co_object_t *co_dict_add(co_ctx_t *ctx, co_object_t *self, co_object_t *other);
 // (self: dict) -> list[(any, any)]
 co_object_t *co_dict_items(co_ctx_t *ctx, co_object_t *self);
 
-static co_object_t co_DictType = (co_object_t){
+/*static co_object_t co_DictType = (co_object_t){
     .rc = SIZE_MAX,
     .kind = CO_KIND_LW_TYPE,
     .value = {
-        .lw_type = NULL
+        .lw_type = &(co_lw_type_t){
+            .items = (co_lw_type_item_t*){
+                { NULL, NULL, NULL },
+                { NULL, NULL, NULL }
+            }
+        }
     }
-};
+};*/
 
 #endif

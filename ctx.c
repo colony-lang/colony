@@ -1,11 +1,29 @@
 #include "ctx.h"
 
-co_ctx_t *co_ctx_new(void) {
+co_ctx_t *co_ctx_new(co_ctx_t *parent) {
     co_ctx_t *ctx = malloc(sizeof(co_ctx_t));
+    ctx->parent = parent;
+    ctx->ns_types = NULL;
+    ctx->ns_values = NULL;
+    return ctx;
+}
+
+co_ctx_t *co_ctx_new_with_ns(struct co_ctx_t *parent, co_object_t *ns_types, co_object_t *ns_values) {
+    co_ctx_t *ctx = malloc(sizeof(co_ctx_t));
+    ctx->parent = parent;
+
+    CO_INC_REF(ctx, ns_types);
+    ctx->ns_types = ns_types;
+
+    CO_INC_REF(ctx, ns_values);
+    ctx->ns_values = ns_values;
     return ctx;
 }
 
 void co_ctx_free(co_ctx_t *ctx) {
+    ctx->parent = NULL;
+    ctx->ns_types = NULL;
+    ctx->ns_values = NULL;
     free(ctx);
 }
 
