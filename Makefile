@@ -4,7 +4,7 @@ CC=clang
 CFLAGS=-c -Wall -O0 -g
 # CFLAGS=-c -Wall -O3
 LDFLAGS=-lm -lpthread
-SOURCES=main.c ctx.c object.c struct.c bool.c i64.c f64.c bytes.c str.c mut_dict.c dict.c mut_list.c list.c ns.c code.c builtins.c
+SOURCES=main.c ctx.c object.c bool.c i64.c f64.c bytes.c str.c mut_dict.c dict.c mut_list.c list.c ns.c code.c struct.c union.c builtins.c
 OBJECTS=$(SOURCES:.c=.o)
 EXECUTABLE=colony
 
