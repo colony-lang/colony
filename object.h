@@ -11,14 +11,14 @@ struct co_object_t;
 #include "object.h"
 
 #define CO_OBJECT_INC_RC(ctx, obj) do { \
-    ((co_object_t *)(obj))->rc++; \
+    ((struct co_object_t *)(obj))->rc++; \
 } while(0)
 
 #define CO_OBJECT_DEC_RC(ctx, obj) do { \
     if (obj == NULL) break; \
-    ((co_object_t *)(obj))->rc--; \
-    if (((co_object_t *)(obj))->rc == 0) { \
-        co_object_free(ctx, (co_object_t *)(obj)); \
+    ((struct co_object_t *)(obj))->rc--; \
+    if (((struct co_object_t *)(obj))->rc == 0) { \
+        co_object_free(ctx, (struct co_object_t *)(obj)); \
     } \
 } while(0)
 
@@ -40,6 +40,7 @@ typedef enum co_kind_t {
     CO_KIND_MUT_LIST,
     CO_KIND_DICT,
     CO_KIND_MUT_DICT,
+    CO_KIND_NS,
     CO_KIND_CODE,
     CO_KIND_FUNC,
     CO_KIND_CLOSURE,
@@ -68,6 +69,7 @@ typedef union co_value_t {
     void *mut_list;
     void *dict;
     void *mut_dict;
+    void *ns;
     void *code;
     void *func;
     void *closue;
@@ -84,13 +86,13 @@ typedef struct co_object_t {
     union co_value_t value;
 } co_object_t;
 
-co_object_t *co_object_new(co_ctx_t * ctx, co_kind_t kind, co_value_t value);
-co_object_t *co_object_free(co_ctx_t * ctx, co_object_t *self);
+co_object_t *co_object_new(struct co_ctx_t * ctx, co_kind_t kind, co_value_t value);
+co_object_t *co_object_free(struct co_ctx_t * ctx, co_object_t *self);
 
 // (self: any) -> str | Err
-co_object_t *co_object_repr(co_ctx_t * ctx, co_object_t *self);
+co_object_t *co_object_repr(struct co_ctx_t * ctx, co_object_t *self);
 
 // (self: any) -> u64 | Err
-co_object_t *co_object_hash(co_ctx_t * ctx, co_object_t *self);
+co_object_t *co_object_hash(struct co_ctx_t * ctx, co_object_t *self);
 
 #endif

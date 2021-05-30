@@ -4,20 +4,16 @@
 co_ctx_t *co_ctx_new(co_ctx_t *parent) {
     co_ctx_t *ctx = malloc(sizeof(co_ctx_t));
     ctx->parent = parent;
-    ctx->ns_types = NULL;   // dict[str, type]()
-    ctx->ns_values = NULL;  // dict[str, any]()0
+    ctx->ns = NULL;
     return ctx;
 }
 
-co_ctx_t *co_ctx_new_with_ns(co_ctx_t *parent, void *ns_types, void *ns_values) {
+co_ctx_t *co_ctx_new_with_ns(co_ctx_t *parent, struct co_object_t *ns) {
     co_ctx_t *ctx = malloc(sizeof(co_ctx_t));
     ctx->parent = parent;
 
-    CO_OBJECT_INC_RC(ctx, ns_types);
-    ctx->ns_types = ns_types;
-
-    CO_OBJECT_INC_RC(ctx, ns_values);
-    ctx->ns_values = ns_values;
+    CO_OBJECT_INC_RC(ctx, ns);
+    ctx->ns = ns;
 
     return ctx;
 }
@@ -25,11 +21,8 @@ co_ctx_t *co_ctx_new_with_ns(co_ctx_t *parent, void *ns_types, void *ns_values) 
 void co_ctx_free(co_ctx_t *ctx) {
     ctx->parent = NULL;
 
-    CO_OBJECT_DEC_RC(ctx, ctx->ns_types);
-    ctx->ns_types = NULL;
-    
-    CO_OBJECT_DEC_RC(ctx, ctx->ns_values);
-    ctx->ns_values = NULL;
+    CO_OBJECT_DEC_RC(ctx, ctx->ns);
+    ctx->ns = NULL;
     
     free(ctx);
 }
@@ -40,4 +33,9 @@ void *co_ctx_mem_alloc(co_ctx_t *ctx, size_t size) {
 
 void co_ctx_mem_free(co_ctx_t *ctx, void *ptr) {
     free(ptr);
+}
+
+struct co_object_t * *co_ctx_eval(co_ctx_t *ctx, void *code) {
+    // FIXME: implement
+    return NULL;
 }
