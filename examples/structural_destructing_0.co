@@ -2,29 +2,67 @@
  * list destructing
  */
 a := [1, '2', 3.0]
-[x, y] := a 					// panics
-[x, y, z] := a 					// success
-[x, y, z] := a[0], a[1], a[2] 	// success
+[x, y] := a                     // panics
+[x, ...others] := a             // success
+[x, y, z] := a                  // success
+[x, y, z] := a[0], a[1], a[2]   // success
 
 /*
  * dict destructing
  */
 a := {'x': 1, 'y': '2', 'z': 3.0}
-{x, y, z} := a 					// success, takes values - not keys
-[x, y, z] := a.x, a.y, a.z 		// success
-[x1, y2, z30] := a 				// success, takes pairs (key, value)
+
+{x, y} := a                     // success
+x == 1
+y == '2'
+
+[kx, ky, kz] := a.keys()        // success
+kx == 'x'
+ky == 'y'
+kz == 'z'
+
+[x, y, z] := a.values()         // success
+x == 1
+y == '2'
+z == 3.0
+
+[x, y, z] := [a.x, a.y, a.z]    // success
+x == 1
+y == '2'
+z == 3.0
+
+[x1, y2, z30] := a.items()      // success, takes pairs (key, value)
+x1 == ['x', 1]
+y2 == ['y', '2']
+y3 == ['z', 3.0]
+
+[x1, y2, z30] := a              // panics, on right is dict, on left is list destruction
 x1 == ['x', 1]
 y2 == ['y', '2']
 y3 == ['z', 3.0]
 
 /*
- * struct destructing
+ * struct destructing (1)
  */
 A := struct(int, int)
 a := A(1, 2)
 
-A(x, y) := a 			// success
-A(x, y, z) := a 		// panics
-[x, y] := a 			// success
-[x, y, z] := a 			// panics
-[x, y] := a[0], a[1]	// success
+A(x, y) := a            // success
+A(x, y, z) := a         // panics
+A(x, ...others) := a    // sucesss
+[x, y] := a             // success
+[x, y, z] := a          // panics
+[x, ...others] := a     // success
+[x, y] := a[0], a[1]    // success
+
+/*
+ * struct destructing (2)
+ */
+A := struct(x: int, y: int)
+a := A(x=1, y=2)
+
+A(x, y) := a            // success
+A(x, y, z) := a         // panics
+[x, y] := a             // success
+[x, y, z] := a          // panics
+[x, y] := a[0], a[1]    // success
