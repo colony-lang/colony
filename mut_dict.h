@@ -1,12 +1,17 @@
 #ifndef CO_MUT_DICT_H
 #define CO_MUT_DICT_H
 
+struct co_mut_dict_item_t;
 struct co_mut_dict_t;
 
 #include <stdlib.h>
 #include "ctx.h"
 #include "object.h"
-#include "mut_dict_item.h"
+
+typedef struct co_mut_dict_item_t {
+    struct co_object_t *key;   // any
+    struct co_object_t *value; // any
+} co_mut_dict_item_t;
 
 typedef struct co_mut_dict_t {
     size_t cap;

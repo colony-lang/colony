@@ -1,22 +1,22 @@
-#ifndef CO_DICT_H
-#define CO_DICT_H
+#ifndef CO_NS_H
+#define CO_NS_H
 
-struct co_dict_item_t;
-struct co_dict_t;
+struct co_ns_item_t
+struct co_ns_t;
 
 #include <stdlib.h>
 #include "ctx.h"
 #include "object.h"
-// #include "lw_type.h"
 
-typedef struct co_dict_item_t {
+typedef struct co_ns_item_t {
     struct co_object_t *key;   // any
+    struct co_object_t *type;   // any
     struct co_object_t *value; // any
-} co_dict_item_t;
+} co_ns_item_t;
 
-typedef struct co_dict_t {
+typedef struct co_ns_t {
     size_t len;
-    struct co_dict_item_t *items;
+    struct co_ns_item_t *items;
 } co_dict_t;
 
 // (cls: DictType, len: 'size_t'=0, items: Option['co_dict_item_t *']=None) -> dict[any, any]
@@ -46,17 +46,5 @@ co_object_t *co_dict_add(co_ctx_t *ctx, co_object_t *self, co_object_t *other);
 // (self: dict) -> list[(any, any)]
 co_object_t *co_dict_items(co_ctx_t *ctx, co_object_t *self);
 
-/*static co_object_t co_DictType = (co_object_t){
-    .rc = SIZE_MAX,
-    .kind = CO_KIND_LW_TYPE,
-    .value = {
-        .lw_type = &(co_lw_type_t){
-            .items = (co_lw_type_item_t*){
-                { NULL, NULL, NULL },
-                { NULL, NULL, NULL }
-            }
-        }
-    }
-};*/
 
 #endif
