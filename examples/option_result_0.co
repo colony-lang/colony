@@ -1,0 +1,23 @@
+/*
+ * Result
+ */
+a: Result[int, str] = Ok(1)
+b: Result[int, str] = Err('some error')
+c: Result[int, str] = 1 // panics, since `1` isn't compatible with Result[int, str]
+
+r0: int | str = a ? {
+	Ok(v) => { v }
+	Err(e) => { e }
+}
+
+/*
+ * Option
+ */
+a: Option[int] = Some(10)
+b: Option[int] = None
+c: Option[int] = 10 // panics, since `1` isn't compatible with Option[int]
+
+r0: int | str = a ? {
+	Some(v) => { v }
+	None => { 'None' }
+}

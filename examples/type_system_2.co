@@ -4,9 +4,9 @@
  *
     1. MutDict, allowed circular references
     2. MutList, allowed circular references
-    3. module scope (MutDict)
-    4. expression block scope (MutDict)
-    5. type objects (MutDict) becasue monkey-patching
+    3. NameSpace
+    4. Struct becasue monkey-patching
+    5. Union becasue monkey-patching (?)
  */
 
 // bool
@@ -72,16 +72,22 @@ a := a.append(4.0) // panics because 4.0 is float and not i64
 a := {'1': 123, '2': 234}
 a: dict[any, any] = {'1': 123, '2': 234}
 a: any = {'1': 123, '2': 234}
-a: dict[str, i64] = {'1': 123, '2': 234}
+a: dict[str, int] = {'1': 123, '2': 234}
 
 // Option
-a_o: Option[dict[str, i64]] = a.set('3', 345)
+a_o: Option[dict[str, int]] = a.set('3', 345)
 
 a0: Option[int] = None
+a0 == typeof(a0) == None
+
 a1: Option[int] = 1
-a1: Option[int] = 1.0      // panics
+type(a1) == Some[int]
+
+a1: Option[int] = 1.0      // panics because typeof 1.0 is float, but int is expected
 
 // function
+sum: Option[Fn] = None
+sum: Option[Fn(a: i64, b: i64, returns: i64)] = None
 sum: Option[(a: i64, b: i64) -> i64] = None
 
 Option[(a: i64, b: i64) -> i64] = Ok((a: i64, b: i64) -> i64 {
@@ -117,6 +123,9 @@ f0 := (a: i64, [args: list[i64]], {kwargs: dict[str, i64]}) -> i64 {
     )
 }
 
+f1 := i -> { i * 2 }
+range(10).map(f1)
+
 // simple condition expression
 a: bool = 1 < 2 ? true : false
 
@@ -142,67 +151,57 @@ b: i64 = range(100)
 //
 // struct types / product types
 //
-A: type = (i32, f32)
-A: type = (x: i32=0, y: f32=0.0)
+A: type = struct(x: i32=0, y: f32=0.0)
 a0: A = A(x=-1, y=-2.0)
 a1: A = A(-2, -3.0)
-a2: A = (x: -3, y: -4.0)
-a2: A = (-3, -4.0)
-a0.x == a1.x - 1 == a2.x - 2
+a0.x == a1.x - 1
 
 //
 // union types / sum types
 //
+B: type = union(i32, f32)
 B: type = i32 | f32
 b0: B = -1_i32
 b1: B = -2.0_f32
 
-A: type = (i32, i32)
-B: type = (f32, f32)
-C: type = (i32, i32, f32, f32)
+A: type = struct(i32, i32)
+B: type = struct(f32, f32)
+C: type = struct(i32, i32, f32, f32)
+
+D: type = union(A, B, C)
 D: type = A | B | C
+// D.__type__ := union      // implicit, immutable
+// D.__name__ := 'D'        // implicit, mutable
+// D.__bases__ := [A, B, C] // implicit, immutable
+// D.__fields__ := ns()     // implicit, immutable
 
-D: type =
-    (i32, i32) |
-    (f32, f32) |
-    (i32, i32, f32, f32)
-
-d := 1          // doesn't panic
-d: any = 1      // doesn't panic
-d: D = 1        // panics because 1 is not of type D
-d: Result[D, str] = 1        // doesn't panic, returns TypeErr(...)
-
-d: Result[D, str] = 1
-d ? { TypeErr(e) => { sys.exit(1) } }
-
-d: Result[D, str] = 1
-d ? TypeErr(e) => sys.exit(1)
-
-(d: Result[D, str] = 1) ? TypeErr(e) => sys.exit(1)
+d := 1                      // doesn't panic
+d: any = 1                  // doesn't panic
+d: D = 1                    // panics because 1 is not of of types of D.__bases__
+d: Result[D, str] = 1       // TypeErr('...')
 
 //
 // custom user-defined types: A, B, C
 //
-any: type = ()
-any.__type__ := type
-any.__name__ := 'any'
-any.__bases__ := []
-any.__fields__ := {}
+any: type = struct()
+// any.__type__ := struct   // implicit, immutable
+// any.__name__ := 'any'    // implicit, mutbale
+// any.__bases__ := []      // implicit, immutable
+// any.__fields__ := ns()   // implicit, immutable
 
 any.__repr__ := (self) -> str {
     f'<{self::__type__::__name__} at {addressof(self)}>'
 }
 
-A: type = (x: f32, y: f32) & (z: f32)
-// same as
-A: type = (x: f32, y: f32, z: f32)
+A: type = struct(x: f32, y: f32) & struct(z: f32)
+A: type = struct(x: f32, y: f32, z: f32)
 
 // A
-A: type = (x: f32,)
-// A.__type__ := type      // default
-// A.__name__ := 'A'       // default
-// A.__bases__ := [any]    // default
-// A.__fields__ := {.x: f32}
+A: type = struct(x: f32)
+// A.__type__ := struct         // implicit, immutable
+// A.__name__ := 'A'            // implicit, mutbale
+// A.__bases__ := [any]         // implicit, immutable
+// A.__fields__ := ns(x: f32)   // implicit, immutable
 
 A.add_x := (self, other: A) -> A {
     A(self.x + other.x)
@@ -211,11 +210,11 @@ A.add_x := (self, other: A) -> A {
 A.__add__ := A.add_x
 
 // B
-B: type = (y: f32,)
-// B.__type__ := type      // default
-// B.__name__ := 'B'       // default
-// B.__bases__ := [any]    // default
-// B.__fields__ := {.y: field(name='y', type=f32)}
+B: type = struct(y: f32)
+// B.__type__ := struct         // implicit, immutable
+// B.__name__ := 'B'            // implicit, mutable
+// B.__bases__ := [any]         // implicit, immutable
+// B.__fields__ := ns(y: f32)   // implicit, immutable
 
 B.add_y := (self, other: B) -> B {
     B(self.y + other.y)
@@ -225,10 +224,10 @@ B.__add__ := B.add_y
 
 // C
 C: type = A & B     // (x: f32,) & (y: f32,) == (x: f32, y: f32)
-// C.__type__ := type      // default
-// C.__name__ := 'C'       // default
-// C.__bases__ := [A, B]   // results to [any, A, B] because of C3 algorithm
-// C.__fields__ := {.x: field(name='x', type=f32), .y: field(name='y', type=f32)}
+// C.__type__ := struct                 // implicit, immutable
+// C.__name__ := 'C'                    // implicit, mutable
+// C.__bases__ := [A, B]                // implicit, immutable
+// C.__fields__ := ns(x: f32, y: f32)   // implicit, immutable
 
 C.__init__ := (self, x: f32, y: f32) -> C {
     self.x := x
@@ -275,27 +274,38 @@ typeof(c3) ? {
 }
 
 /*
+ * errors
+ */
+a: int = 10 / 0                 // panics because right side does not match type on left side
+a: any = 10 / 0                 // ZeroDivisionError('you cannot divide integer by 0 integer')
+typeof(a) == ZeroDivisionError
+
+a: Result = 10 / 0              // ZeroDivisionError('...')
+a: Result[int, any] = 10 / 0    // ZeroDivisionError('...')
+a: Result[any, any] = 10 / 0    // ZeroDivisionError('...')
+a: Result[any, str] = 10 / 0    // ZeroDivisionError('...')
+typeof(a) == ZeroDivisionError
+
+/*
  * structural destructing
- *
+ */
 a := [1, 2]
 x, y = a
 
-C(x, y) := c3           // x := c3.x
-                        // y := c3.y
+C := struct(int, int)
+c := C(1, 2)
+C(x, y) = c
 
-C(xx: x, yy: y) := c3   // xx := c3.x
-                        // yy := c3.y
- */
+D := struct(float)
+d: Result[D, str] = 1
+typeof(d) == TypeErr
 
-/*
- * errors
- */
-a: any = 10 / 0     // ZeroDivisionError('you cannot divide integer by 0 integer')
-typeof(a) == ZeroDivisionError
+r0: float = d ? {
+    Ok(v) => { v }
+    TypeErr(e) => { -0.0 }
+}
 
-a: Result = 10 / 0     // ZeroDivisionError('you cannot divide integer by 0 integer')
-a: Result[int, any] = 10 / 0     // ZeroDivisionError('you cannot divide integer by 0 integer')
-a: Result[any, any] = 10 / 0     // ZeroDivisionError('you cannot divide integer by 0 integer')
-a: Result[any, str] = 10 / 0     // ZeroDivisionError('you cannot divide integer by 0 integer')
-
-a: int = 10 / 0     // panics because right side does not match type on left side
+r1: float = (d: Result[D, str] = 1) ? {
+    Ok(v) => { v }
+    TypeErr(e) => { -0.0 }
+}

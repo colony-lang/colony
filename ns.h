@@ -25,6 +25,10 @@ typedef struct co_ns_t {
 // // (cls: DictType, types: (key: any, value: any)) -> dict[types.key, types.value]
 // co_object_t *co_dict_type_get(co_ctx_t *ctx, co_object_t *self, co_object_t *key_type, co_object_t *value_type);
 
+/*
+ * c-level
+ */
+
 // (self: dict) -> Result
 struct co_object_t *co_ns_free(struct co_ctx_t *ctx, struct co_object_t *self);
 
@@ -50,5 +54,9 @@ struct co_object_t *co_ns_add(struct co_ctx_t *ctx, struct co_object_t *self, st
 // (self: ns) -> list[(any, type, any)]
 struct co_object_t *co_ns_items(struct co_ctx_t *ctx, struct co_object_t *self);
 
+/*
+ * colony-level
+ */
+struct co_object_t *co_ns_create_co_type(struct co_ctx_t *ctx);
 
 #endif

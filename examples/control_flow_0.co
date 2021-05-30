@@ -1,0 +1,27 @@
+/*
+ * simple condition expression
+ */
+a: bool = 1 < 2 ? true : false
+
+/*
+ * complex condition expression
+ */
+a: i64 = 10
+
+b: i64 = typeof(a) ? {
+    i64 => { -1 }
+    f64 => { 0 }
+    _ => { 1 }
+}
+
+/*
+ * "loop"
+ */
+a: list[i64] = range(10).map(i -> { i * 2 })
+
+b: i64 = range(100)
+    .while(i -> { i < 10 }) // break
+    .until(i -> { i == 5 }) // break
+    .filter(i -> { i % 2 }) // continue
+    .map(i -> { i * 3 })
+    .reduce(0, (acc, i) -> { acc + i })
