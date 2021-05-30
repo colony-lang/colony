@@ -1,11 +1,18 @@
 #ifndef CO_DICT_H
 #define CO_DICT_H
 
+struct co_dict_t;
+
 #include <stdlib.h>
 #include "ctx.h"
-#include "object_common.h"
-#include "dict_common.h"
-#include "lw_type_common.h"
+#include "object.h"
+#include "dict_item.h"
+// #include "lw_type.h"
+
+typedef struct co_dict_t {
+    size_t len;
+    struct co_dict_item_t *items;
+} co_dict_t;
 
 // (cls: DictType, len: 'size_t'=0, items: Option['co_dict_item_t *']=None) -> dict[any, any]
 co_object_t *co_dict_type_new(co_ctx_t *ctx, co_object_t *cls, size_t len, co_dict_item_t *items);

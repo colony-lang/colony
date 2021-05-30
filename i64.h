@@ -1,7 +1,7 @@
 #ifndef CO_I64_H
 #define CO_I64_H
 
-#include "object_common.h"
+#include "object.h"
 
 // () -> i64
 co_object_t *co_i64_new(co_ctx_t *ctx, int64_t v);

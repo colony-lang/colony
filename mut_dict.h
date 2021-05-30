@@ -1,10 +1,18 @@
 #ifndef CO_MUT_DICT_H
 #define CO_MUT_DICT_H
 
+struct co_mut_dict_t;
+
 #include <stdlib.h>
 #include "ctx.h"
-#include "object_common.h"
-#include "mut_dict_common.h"
+#include "object.h"
+#include "mut_dict_item.h"
+
+typedef struct co_mut_dict_t {
+    size_t cap;
+    size_t len;
+    struct co_mut_dict_item_t *items;
+} co_mut_dict_t;
 
 // (cap: u64, len: u64, items: mut_dict[any, any]) -> mut_dict[any, any]
 co_object_t *co_mut_dict_new(co_ctx_t *ctx, co_object_t *cls, size_t cap, size_t len, co_mut_dict_item_t *items);

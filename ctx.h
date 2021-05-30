@@ -1,9 +1,9 @@
 #ifndef CO_CTX_H
 #define CO_CTX_H
 
-#include <stdlib.h>
-
 struct co_ctx_t;
+
+#include <stdlib.h>
 
 typedef struct co_ctx_t {
     struct co_ctx_t *parent;    // parent context, default NULL which means root
@@ -11,8 +11,8 @@ typedef struct co_ctx_t {
     void *ns_values;     // dict[str, any]
 } co_ctx_t;
 
-co_ctx_t *co_ctx_new(struct co_ctx_t *parent);
-co_ctx_t *co_ctx_new_with_ns(struct co_ctx_t *parent, void *ns_types, void *ns_values);
+co_ctx_t *co_ctx_new(co_ctx_t *parent);
+co_ctx_t *co_ctx_new_with_ns(co_ctx_t *parent, void *ns_types, void *ns_values);
 void co_ctx_free(co_ctx_t *ctx);
 void *co_ctx_mem_alloc(co_ctx_t *ctx, size_t size);
 void co_ctx_mem_free(co_ctx_t *ctx, void *ptr);

@@ -1,10 +1,17 @@
 #ifndef CO_LIST_H
 #define CO_LIST_H
 
+struct co_list_t;
+
 #include <stdlib.h>
 #include "ctx.h"
-#include "object_common.h"
-#include "list_common.h"
+#include "object.h"
+
+typedef struct co_list_t {
+    size_t len;
+    struct co_object_t *type;
+    struct co_object_t *items;
+} co_list_t;
 
 // (len: u64, type: type, items: list[any]) -> list[type]
 co_object_t *co_list_new(co_ctx_t *ctx, size_t len, co_object_t *type, co_object_t *items);

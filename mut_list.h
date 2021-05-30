@@ -1,10 +1,18 @@
 #ifndef CO_MUT_LIST_H
 #define CO_MUT_LIST_H
 
+struct co_mut_list_t;
+
 #include <stdlib.h>
 #include "ctx.h"
-#include "object_common.h"
-#include "mut_list_common.h"
+#include "object.h"
+
+typedef struct co_mut_list_t {
+    size_t cap;
+    size_t len;
+    struct co_object_t *type;
+    struct co_object_t *items;
+} co_mut_list_t;
 
 // (cap: u64, len: u64, type: type, items: mut_list[any]) -> mut_list[type]
 co_object_t *co_mut_list_new(co_ctx_t *ctx, size_t cap, size_t len, co_object_t *type, co_object_t *items);

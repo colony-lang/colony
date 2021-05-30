@@ -1,8 +1,15 @@
 #ifndef CO_BYTES_H
 #define CO_BYTES_H
 
-#include "object_common.h"
-#include "bytes_common.h"
+struct co_bytes_t;
+
+#include "object.h"
+
+typedef struct co_bytes_t {
+    size_t len;
+    char *items;
+} co_bytes_t;
+
 
 // () -> bytes
 co_object_t *co_bytes_new(co_ctx_t *ctx, size_t len, char *items);
