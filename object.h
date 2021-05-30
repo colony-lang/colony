@@ -8,7 +8,7 @@ struct co_object_t;
 #include <stdlib.h>
 #include <stdint.h>
 #include "ctx.h"
-#include "object.h"
+#include "ns.h"
 
 #define CO_OBJECT_INC_RC(ctx, obj) do { \
     ((struct co_object_t *)(obj))->rc++; \
@@ -69,7 +69,7 @@ typedef union co_value_t {
     void *mut_list;
     void *dict;
     void *mut_dict;
-    void *ns;
+    struct co_ns_t *ns;
     void *code;
     void *func;
     void *closue;

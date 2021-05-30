@@ -35,7 +35,16 @@ void co_ctx_mem_free(co_ctx_t *ctx, void *ptr) {
     free(ptr);
 }
 
-struct co_object_t * *co_ctx_eval(co_ctx_t *ctx, void *code) {
+struct co_object_t *co_ctx_def(co_ctx_t *ctx,
+                               struct co_object_t *key,
+                               struct co_object_t *type,
+                               struct co_object_t *value) {
+    // FIXME:
+    // return co_ns_set(ctx, ctx->ns, key, type, value);
+    return NULL;
+}
+
+struct co_object_t *co_ctx_eval(co_ctx_t *ctx, struct co_object_t *code) {
     // FIXME: implement
     return NULL;
 }
