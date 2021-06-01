@@ -4,7 +4,6 @@
 /*
  * c-level
  */
-
 co_ctx_t *co_ctx_new(co_ctx_t *parent) {
     co_ctx_t *ctx = malloc(sizeof(co_ctx_t));
     ctx->parent = parent;
@@ -50,14 +49,5 @@ struct co_object_t *co_ctx_def(co_ctx_t *ctx,
 
 struct co_object_t *co_ctx_eval(co_ctx_t *ctx, struct co_object_t *code) {
     // FIXME: implement
-    return NULL;
-}
-
-/*
- * colony-level
- */
-
-struct co_object_t *co_ns_create_co_type(struct co_ctx_t *ctx) {
-    // FIXME:
     return NULL;
 }

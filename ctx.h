@@ -11,6 +11,9 @@ typedef struct co_ctx_t {
     struct co_object_t *ns;     // attr: type = value; ... 
 } co_ctx_t;
 
+/*
+ * c-level
+ */
 co_ctx_t *co_ctx_new(co_ctx_t *parent);
 co_ctx_t *co_ctx_new_with_ns(co_ctx_t *parent, struct co_object_t *ns);
 void co_ctx_free(co_ctx_t *ctx);
