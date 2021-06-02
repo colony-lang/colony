@@ -8,7 +8,15 @@ struct co_object_t;
 #include <stdlib.h>
 #include <stdint.h>
 #include "../core/ctx.h"
+#include "./result.h"
+#include "./ok.h"
+#include "./err.h"
+#include "./option.h"
+#include "./some.h"
+#include "./none.h"
 #include "./ns.h"
+#include "./struct.h"
+#include "./union.h"
 
 #define CO_OBJECT_INC_RC(ctx, obj) do { \
     ((struct co_object_t *)(obj))->rc++; \
