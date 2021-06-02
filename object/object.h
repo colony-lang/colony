@@ -8,14 +8,26 @@ struct co_object_t;
 #include <stdlib.h>
 #include <stdint.h>
 #include "../core/ctx.h"
-#include "./result.h"
-#include "./ok.h"
+#include "./bool.h"
+#include "./bytes.h"
+#include "./code.h"
+#include "./dict.h"
 #include "./err.h"
-#include "./option.h"
-#include "./some.h"
+#include "./f64.h"
+#include "./i64.h"
+#include "./list.h"
+#include "./mut_dict.h"
+#include "./mut_list.h"
 #include "./none.h"
 #include "./ns.h"
+#include "./object.h"
+#include "./ok.h"
+#include "./option.h"
+#include "./result.h"
+#include "./some.h"
+#include "./str.h"
 #include "./struct.h"
+#include "./type.h"
 #include "./union.h"
 
 #define CO_OBJECT_INC_RC(ctx, obj) do { \
@@ -31,6 +43,7 @@ struct co_object_t;
 } while(0)
 
 typedef enum co_kind_t {
+    CO_KIND_TYPE,
     CO_KIND_BOOL,
     CO_KIND_U8,
     CO_KIND_U16,
@@ -64,6 +77,7 @@ typedef enum co_kind_t {
 } co_kind_t;
 
 typedef union co_value_t {
+    struct co_type_t *type;
     _Bool b;
     uint8_t u8;
     uint16_t u16;

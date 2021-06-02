@@ -18,6 +18,7 @@ SOURCES=main.c \
 	object/list.c \
 	object/ns.c \
 	object/code.c \
+	object/type.c \
 	object/struct.c \
 	object/union.c \
 	object/option.c \
