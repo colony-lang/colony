@@ -10,51 +10,51 @@ typedef struct co_str_t {
 } co_str_t;
 
 // () -> str
-co_object_t *co_str_new(co_ctx_t *ctx, size_t len, size_t items_len, char *items);
+struct co_object_t *co_str_new(struct co_ctx_t *ctx, size_t len, size_t items_len, char *items);
 
 // (self: str) -> Result
-co_object_t *co_str_free(co_ctx_t *ctx, co_object_t *self);
+struct co_object_t *co_str_free(struct co_ctx_t *ctx, struct co_object_t *self);
 
 // (self: str) -> str | Err
-co_object_t *co_str_repr(co_ctx_t *ctx, co_object_t *self);
+struct co_object_t *co_str_repr(struct co_ctx_t *ctx, struct co_object_t *self);
 
 // (self: str) -> u64 | Err
-co_object_t *co_str_hash(co_ctx_t *ctx, co_object_t *self);
+struct co_object_t *co_str_hash(struct co_ctx_t *ctx, struct co_object_t *self);
 
 // (self: str, other: str) -> str
-co_object_t *co_str_add(co_ctx_t *ctx, co_object_t *self, co_object_t *other);
+struct co_object_t *co_str_add(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *other);
 
 // (self: str, index: i64) -> str
-co_object_t *co_str_getitem(co_ctx_t *ctx, co_object_t *self, co_object_t *index);
+struct co_object_t *co_str_getitem(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *index);
 
 // (self: str, index: i64, byte: str) -> str
-co_object_t *co_str_setitem(co_ctx_t *ctx, co_object_t *self, co_object_t *index, co_object_t *byte);
+struct co_object_t *co_str_setitem(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *index, struct co_object_t *byte);
 
 // (self: str, index: i64) -> str
-co_object_t *co_str_delitem(co_ctx_t *ctx, co_object_t *self, co_object_t *index);
+struct co_object_t *co_str_delitem(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *index);
 
 // (self: str, begin: i64, end: i64) -> str
-co_object_t *co_str_get_slice(co_ctx_t *ctx, co_object_t *self, co_object_t *begin, co_object_t *end);
+struct co_object_t *co_str_get_slice(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *begin, struct co_object_t *end);
 
 // (self: str, begin: i64, end: i64, other: str) -> str
-co_object_t *co_str_set_slice(co_ctx_t *ctx, co_object_t *self, co_object_t *begin, co_object_t *end, co_object_t *other);
+struct co_object_t *co_str_set_slice(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *begin, struct co_object_t *end, struct co_object_t *other);
 
 // (self: str, begin: i64, end: i64) -> str
-co_object_t *co_str_del_slice(co_ctx_t *ctx, co_object_t *self, co_object_t *begin, co_object_t *end);
+struct co_object_t *co_str_del_slice(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *begin, struct co_object_t *end);
 
 // (self: str, pattern: str) -> i64 | Err
-co_object_t *co_str_find(co_ctx_t *ctx, co_object_t *self, co_object_t *pattern);
+struct co_object_t *co_str_find(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *pattern);
 
 // (self: str, pattern: str) -> list[i64] | Err
-co_object_t *co_str_find_all(co_ctx_t *ctx, co_object_t *self, co_object_t *pattern);
+struct co_object_t *co_str_find_all(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *pattern);
 
 // (self: str, pattern: str, replacement: str) -> str | Err
-co_object_t *co_str_replace(co_ctx_t *ctx, co_object_t *self, co_object_t *pattern, co_object_t *replacement);
+struct co_object_t *co_str_replace(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *pattern, struct co_object_t *replacement);
 
 // (self: str, pattern: str, replacement: str) -> str | Err
-co_object_t *co_str_replace_all(co_ctx_t *ctx, co_object_t *self, co_object_t *pattern, co_object_t *replacement);
+struct co_object_t *co_str_replace_all(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *pattern, struct co_object_t *replacement);
 
 // (self: str) -> bytes | Err
-co_object_t *co_str_encode(co_ctx_t *ctx, co_object_t *self);
+struct co_object_t *co_str_encode(struct co_ctx_t *ctx, struct co_object_t *self);
 
 #endif

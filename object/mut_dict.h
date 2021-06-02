@@ -19,27 +19,27 @@ typedef struct co_mut_dict_t {
 } co_mut_dict_t;
 
 // (cap: u64, len: u64, items: mut_dict[any, any]) -> mut_dict[any, any]
-co_object_t *co_mut_dict_new(co_ctx_t *ctx, co_object_t *cls, size_t cap, size_t len, co_mut_dict_item_t *items);
+struct co_object_t *co_mut_dict_new(struct co_ctx_t *ctx, struct co_object_t *cls, size_t cap, size_t len, co_mut_dict_item_t *items);
 
 // (self: mut_dict) -> Result
-co_object_t *co_mut_dict_free(co_ctx_t *ctx, co_object_t *self);
+struct co_object_t *co_mut_dict_free(struct co_ctx_t *ctx, struct co_object_t *self);
 
 // (self: mut_dict, key: any, value: any) -> mut_dict
-co_object_t *co_mut_dict_set(co_ctx_t *ctx, co_object_t *self, co_object_t *key, co_object_t *value);
+struct co_object_t *co_mut_dict_set(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *key, struct co_object_t *value);
 
 // (self: mut_dict, key: any) -> any | Err
-co_object_t *co_mut_dict_get(co_ctx_t *ctx, co_object_t *self, co_object_t *key);
+struct co_object_t *co_mut_dict_get(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *key);
 
 // (self: mut_dict, key: any) -> mut_dict | Err
-co_object_t *co_mut_dict_del(co_ctx_t *ctx, co_object_t *self, co_object_t *key);
+struct co_object_t *co_mut_dict_del(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *key);
 
 // (self: mut_dict, key: any) -> bool
-co_object_t *co_mut_dict_has(co_ctx_t *ctx, co_object_t *self, co_object_t *key);
+struct co_object_t *co_mut_dict_has(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *key);
 
 // (self: mut_dict, other: mut_dict) -> mut_dict
-co_object_t *co_mut_dict_add(co_ctx_t *ctx, co_object_t *self, co_object_t *other);
+struct co_object_t *co_mut_dict_add(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *other);
 
 // (self: mut_dict) -> list[(any, any)]
-co_object_t *co_mut_dict_items(co_ctx_t *ctx, co_object_t *self);
+struct co_object_t *co_mut_dict_items(struct co_ctx_t *ctx, struct co_object_t *self);
 
 #endif

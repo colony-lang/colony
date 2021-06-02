@@ -4,10 +4,10 @@
 #include "./object.h"
 
 // () -> i64
-co_object_t *co_i64_new(co_ctx_t *ctx, int64_t v);
+struct co_object_t *co_i64_new(struct co_ctx_t *ctx, int64_t v);
 
 // (self: i64) -> Result
-co_object_t *co_i64_free(co_ctx_t *ctx, co_object_t *self);
+struct co_object_t *co_i64_free(struct co_ctx_t *ctx, struct co_object_t *self);
 
 // a: i64 = 1
 // b: i64 = 2
@@ -21,51 +21,51 @@ co_object_t *co_i64_free(co_ctx_t *ctx, co_object_t *self);
 // }
 
 // (self: i64) -> str | Err
-co_object_t *co_i64_repr(co_ctx_t *ctx, co_object_t *self);
+struct co_object_t *co_i64_repr(struct co_ctx_t *ctx, struct co_object_t *self);
 
 // (self: i64) -> u64 | Err
-co_object_t *co_i64_hash(co_ctx_t *ctx, co_object_t *self);
+struct co_object_t *co_i64_hash(struct co_ctx_t *ctx, struct co_object_t *self);
 
 // (self: i64) -> i64
-co_object_t *co_i64_pos(co_ctx_t *ctx, co_object_t *self);
+struct co_object_t *co_i64_pos(struct co_ctx_t *ctx, struct co_object_t *self);
 
 // (self: i64) -> i64
-co_object_t *co_i64_neg(co_ctx_t *ctx, co_object_t *self);
+struct co_object_t *co_i64_neg(struct co_ctx_t *ctx, struct co_object_t *self);
 
 // (self: i64, other: i64) -> i64
-co_object_t *co_i64_add(co_ctx_t *ctx, co_object_t *self, co_object_t *other);
+struct co_object_t *co_i64_add(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *other);
 
 // (self: i64, other: i64) -> i64
-co_object_t *co_i64_sub(co_ctx_t *ctx, co_object_t *self, co_object_t *other);
+struct co_object_t *co_i64_sub(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *other);
 
 // (self: i64, other: i64) -> i64
-co_object_t *co_i64_mul(co_ctx_t *ctx, co_object_t *self, co_object_t *other);
+struct co_object_t *co_i64_mul(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *other);
 
 // (self: i64, other: i64) -> i64 | Err
-co_object_t *co_i64_div(co_ctx_t *ctx, co_object_t *self, co_object_t *other);
+struct co_object_t *co_i64_div(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *other);
 
 // (self: i64, other: i64) -> i64
-co_object_t *co_i64_mod(co_ctx_t *ctx, co_object_t *self, co_object_t *other);
+struct co_object_t *co_i64_mod(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *other);
 
 // (self: i64, other: i64) -> i64
-co_object_t *co_i64_pow(co_ctx_t *ctx, co_object_t *self, co_object_t *other);
+struct co_object_t *co_i64_pow(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *other);
 
 // (self: i64) -> i64
-co_object_t *co_i64_inv(co_ctx_t *ctx, co_object_t *self);
+struct co_object_t *co_i64_inv(struct co_ctx_t *ctx, struct co_object_t *self);
 
 // (self: i64, other: i64) -> i64
-co_object_t *co_i64_and(co_ctx_t *ctx, co_object_t *self, co_object_t *other);
+struct co_object_t *co_i64_and(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *other);
 
 // (self: i64, other: i64) -> i64
-co_object_t *co_i64_or(co_ctx_t *ctx, co_object_t *self, co_object_t *other);
+struct co_object_t *co_i64_or(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *other);
 
 // (self: i64, other: i64) -> i64
-co_object_t *co_i64_xor(co_ctx_t *ctx, co_object_t *self, co_object_t *other);
+struct co_object_t *co_i64_xor(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *other);
 
 // (self: i64, other: i64) -> i64
-co_object_t *co_i64_lshift(co_ctx_t *ctx, co_object_t *self, co_object_t *other);
+struct co_object_t *co_i64_lshift(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *other);
 
 // (self: i64, other: i64) -> i64
-co_object_t *co_i64_rshift(co_ctx_t *ctx, co_object_t *self, co_object_t *other);
+struct co_object_t *co_i64_rshift(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *other);
 
 #endif

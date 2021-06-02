@@ -4,27 +4,27 @@
 #include "./object.h"
 
 // () -> bool
-co_object_t *co_bool_new(co_ctx_t *ctx, _Bool v);
+struct co_object_t *co_bool_new(struct co_ctx_t *ctx, _Bool v);
 
 // (self: bool) -> Result
-co_object_t *co_bool_free(co_ctx_t *ctx, co_object_t *self);
+struct co_object_t *co_bool_free(struct co_ctx_t *ctx, struct co_object_t *self);
 
 // (self: bool) -> str | Err
-co_object_t *co_bool_repr(co_ctx_t *ctx, co_object_t *self);
+struct co_object_t *co_bool_repr(struct co_ctx_t *ctx, struct co_object_t *self);
 
 // (self: bool) -> u64 | Err
-co_object_t *co_bool_hash(co_ctx_t *ctx, co_object_t *self);
+struct co_object_t *co_bool_hash(struct co_ctx_t *ctx, struct co_object_t *self);
 
 // (self: bool) -> bool
-co_object_t *co_bool_inv(co_ctx_t *ctx, co_object_t *self);
+struct co_object_t *co_bool_inv(struct co_ctx_t *ctx, struct co_object_t *self);
 
 // (self: bool, other: bool) -> bool
-co_object_t *co_bool_and(co_ctx_t *ctx, co_object_t *self, co_object_t *other);
+struct co_object_t *co_bool_and(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *other);
 
 // (self: bool, other: bool) -> bool
-co_object_t *co_bool_or(co_ctx_t *ctx, co_object_t *self, co_object_t *other);
+struct co_object_t *co_bool_or(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *other);
 
 // (self: bool, other: bool) -> bool
-co_object_t *co_bool_xor(co_ctx_t *ctx, co_object_t *self, co_object_t *other);
+struct co_object_t *co_bool_xor(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *other);
 
 #endif

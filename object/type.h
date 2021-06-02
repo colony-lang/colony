@@ -2,6 +2,7 @@
 #define CO_TYPE_H
 
 enum co_type_kind_t;
+union co_type_value_t;
 struct co_type_t;
 
 #include <stdlib.h>
@@ -19,7 +20,7 @@ typedef union co_type_value_t {
 
 typedef struct co_type_t {
     enum co_type_kind_t kind;
-    union co_type_value_t;
+    union co_type_value_t value;
 } co_type_t;
 
 #endif
