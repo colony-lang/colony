@@ -3,7 +3,7 @@
 
 struct co_bytes_t;
 
-#include "object.h"
+#include "./object.h"
 
 typedef struct co_bytes_t {
     size_t len;

@@ -1,7 +1,7 @@
 #include <stdio.h>
-#include "ctx.h"
-#include "object.h"
-#include "builtins.h"
+#include "core/ctx.h"
+#include "object/object.h"
+#include "lib/builtins.h"
 
 int main(int argc, char **argv) {
     // root context

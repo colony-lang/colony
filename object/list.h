@@ -4,8 +4,7 @@
 struct co_list_t;
 
 #include <stdlib.h>
-#include "ctx.h"
-#include "object.h"
+#include "./object.h"
 
 typedef struct co_list_t {
     size_t len;

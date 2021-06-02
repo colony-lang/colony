@@ -1,7 +1,7 @@
 #ifndef CO_BOOL_H
 #define CO_BOOL_H
 
-#include "object.h"
+#include "./object.h"
 
 // () -> bool
 co_object_t *co_bool_new(co_ctx_t *ctx, _Bool v);

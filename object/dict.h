@@ -5,9 +5,7 @@ struct co_dict_item_t;
 struct co_dict_t;
 
 #include <stdlib.h>
-#include "ctx.h"
-#include "object.h"
-// #include "lw_type.h"
+#include "./object.h"
 
 typedef struct co_dict_item_t {
     struct co_object_t *key;   // any
@@ -45,18 +43,5 @@ co_object_t *co_dict_add(co_ctx_t *ctx, co_object_t *self, co_object_t *other);
 
 // (self: dict) -> list[(any, any)]
 co_object_t *co_dict_items(co_ctx_t *ctx, co_object_t *self);
-
-/*static co_object_t co_DictType = (co_object_t){
-    .rc = SIZE_MAX,
-    .kind = CO_KIND_LW_TYPE,
-    .value = {
-        .lw_type = &(co_lw_type_t){
-            .items = (co_lw_type_item_t*){
-                { NULL, NULL, NULL },
-                { NULL, NULL, NULL }
-            }
-        }
-    }
-};*/
 
 #endif

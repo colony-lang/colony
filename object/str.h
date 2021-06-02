@@ -1,7 +1,7 @@
 #ifndef CO_STR_H
 #define CO_STR_H
 
-#include "object.h"
+#include "./object.h"
 
 typedef struct co_str_t {
     size_t len;

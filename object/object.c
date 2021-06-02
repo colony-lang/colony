@@ -1,5 +1,5 @@
-#include "object.h"
-#include "i64.h"
+#include "./object.h"
+#include "./i64.h"
 
 co_object_t *co_object_new(co_ctx_t * ctx, co_kind_t kind, co_value_t value) {
     co_object_t *self = co_ctx_mem_alloc(ctx, sizeof(co_object_t));

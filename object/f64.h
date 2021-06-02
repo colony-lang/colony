@@ -1,7 +1,7 @@
 #ifndef CO_F64_H
 #define CO_F64_H
 
-#include "object.h"
+#include "./object.h"
 
 // () -> f64
 co_object_t *co_f64_new(co_ctx_t *ctx, double v);

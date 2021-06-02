@@ -1,5 +1,4 @@
 #include "ctx.h"
-#include "object.h"
 
 /*
  * c-level

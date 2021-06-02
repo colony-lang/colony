@@ -5,8 +5,7 @@ struct co_ns_item_t;
 struct co_ns_t;
 
 #include <stdlib.h>
-#include "ctx.h"
-#include "object.h"
+#include "./object.h"
 
 typedef struct co_ns_item_t {
     struct co_object_t *key;   // any

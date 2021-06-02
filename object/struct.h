@@ -5,7 +5,7 @@ struct co_struct_t;
 struct co_struct_item_t;
 
 #include <stdlib.h>
-#include "object.h"
+#include "./object.h"
 
 typedef struct co_struct_item_t {
     struct co_object_t *attr;       // int | str

@@ -7,8 +7,8 @@ struct co_object_t;
 
 #include <stdlib.h>
 #include <stdint.h>
-#include "ctx.h"
-#include "ns.h"
+#include "../core/ctx.h"
+#include "./ns.h"
 
 #define CO_OBJECT_INC_RC(ctx, obj) do { \
     ((struct co_object_t *)(obj))->rc++; \

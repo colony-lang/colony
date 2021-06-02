@@ -4,7 +4,7 @@
 struct co_union_t;
 
 #include <stdlib.h>
-#include "object.h"
+#include "./object.h"
 
 typedef struct co_union_t {
     struct co_object_t *type;       // type
