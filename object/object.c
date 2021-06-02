@@ -50,13 +50,25 @@ co_object_t *co_object_free(co_ctx_t * ctx, co_object_t *self) {
             break;
         case CO_KIND_FUNC:
             break;
+        case CO_KIND_CLOSURE:
+            break;
         case CO_KIND_TUPLE:
             break;
         case CO_KIND_UNION:
             break;
-        case CO_KIND_PTR:
+        case CO_KIND_OPTION:
             break;
-        case CO_KIND_OWNED_PTR:
+        case CO_KIND_SOME:
+            break;
+        case CO_KIND_NONE:
+            break;
+        case CO_KIND_RESULT:
+            break;
+        case CO_KIND_OK:
+            break;
+        case CO_KIND_ERR:
+            break;
+        case CO_KIND_PTR:
             break;
         default:
             // TODO: return KindError('unknown kind')

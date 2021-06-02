@@ -43,12 +43,16 @@ typedef enum co_kind_t {
     CO_KIND_NS,
     CO_KIND_CODE,
     CO_KIND_FUNC,
-    CO_KIND_CLOSURE,
+    CO_KIND_CLOSURE, // ?
     CO_KIND_TUPLE,
     CO_KIND_UNION,
-    CO_KIND_LW_TYPE, // light-weight
-    CO_KIND_PTR,
-    CO_KIND_OWNED_PTR
+    CO_KIND_OPTION,
+    CO_KIND_SOME,
+    CO_KIND_NONE,
+    CO_KIND_RESULT,
+    CO_KIND_OK,
+    CO_KIND_ERR,
+    CO_KIND_PTR
 } co_kind_t;
 
 typedef union co_value_t {
@@ -72,12 +76,16 @@ typedef union co_value_t {
     struct co_ns_t *ns;
     void *code;
     void *func;
-    void *closue;
+    void *closure; // ?
     void *tuple;
     void *union_;
-    void *lw_type;
+    void *option;
+    void *some;
+    void *none;
+    void *result;
+    void *ok;
+    void *err;
     void *ptr;
-    void *owned_ptr;
 } co_value_t;
 
 typedef struct co_object_t {
