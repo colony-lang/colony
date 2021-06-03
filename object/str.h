@@ -25,13 +25,13 @@ struct co_object_t *co_str_hash(struct co_ctx_t *ctx, struct co_object_t *self);
 struct co_object_t *co_str_add(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *other);
 
 // (self: str, index: i64) -> str
-struct co_object_t *co_str_getitem(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *index);
+struct co_object_t *co_str_get(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *index);
 
 // (self: str, index: i64, byte: str) -> str
-struct co_object_t *co_str_setitem(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *index, struct co_object_t *byte);
+struct co_object_t *co_str_set(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *index, struct co_object_t *byte);
 
 // (self: str, index: i64) -> str
-struct co_object_t *co_str_delitem(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *index);
+struct co_object_t *co_str_del(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *index);
 
 // (self: str, begin: i64, end: i64) -> str
 struct co_object_t *co_str_get_slice(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *begin, struct co_object_t *end);

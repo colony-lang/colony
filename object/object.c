@@ -11,71 +11,67 @@ co_object_t *co_object_new(co_ctx_t * ctx, co_kind_t kind, co_value_t value) {
 co_object_t *co_object_free(co_ctx_t * ctx, co_object_t *self) {
     switch (self->kind) {
         case CO_KIND_TYPE:
-            break;
+            return NULL;
         case CO_KIND_BOOL:
-            break;
+            return NULL;
         case CO_KIND_U8:
-            break;
+            return NULL;
         case CO_KIND_U16:
-            break;
+            return NULL;
         case CO_KIND_U32:
-            break;
+            return NULL;
         case CO_KIND_U64:
-            break;
+            return NULL;
         case CO_KIND_I8:
-            break;
+            return NULL;
         case CO_KIND_I16:
-            break;
+            return NULL;
         case CO_KIND_I32:
-            break;
+            return NULL;
         case CO_KIND_I64:
-            co_i64_free(ctx, self);
-            break;
+            return co_i64_free(ctx, self);
         case CO_KIND_F32:
-            break;
+            return NULL;
         case CO_KIND_F64:
-            break;
+            return NULL;
         case CO_KIND_BYTES:
-            break;
+            return NULL;
         case CO_KIND_STR:
-            break;
+            return NULL;
         case CO_KIND_LIST:
-            break;
+            return NULL;
         case CO_KIND_MUT_LIST:
-            break;
+            return NULL;
         case CO_KIND_DICT:
-            break;
+            return NULL;
         case CO_KIND_MUT_DICT:
-            break;
+            return NULL;
         case CO_KIND_CODE:
-            break;
+            return NULL;
         case CO_KIND_FUNC:
-            break;
+            return NULL;
         case CO_KIND_CLOSURE:
-            break;
+            return NULL;
         case CO_KIND_TUPLE:
-            break;
+            return NULL;
         case CO_KIND_UNION:
-            break;
+            return NULL;
         case CO_KIND_OPTION:
-            break;
+            return NULL;
         case CO_KIND_SOME:
-            break;
+            return NULL;
         case CO_KIND_NONE:
-            break;
+            return NULL;
         case CO_KIND_RESULT:
-            break;
+            return co_result_free(ctx, self);
         case CO_KIND_OK:
-            break;
+            return co_ok_free(ctx, self);
         case CO_KIND_ERR:
-            break;
+            return co_err_free(ctx, self);
         case CO_KIND_PTR:
-            break;
+            return NULL;
         default:
-            // TODO: return KindError('unknown kind')
-            break;
+            // err
+            return co_ctx_err(ctx, "KindError, unknown kind");
     }
-
-    // TODO: return Ok(None)
-    return NULL;
 }

@@ -22,7 +22,7 @@ struct co_object_t *co_result_type_get(struct co_ctx_t *ctx,
     result->E = E;
     CO_OBJECT_INC_RC(ctx, E);
 
-    // create cls; cls == Result
+    // cls
     co_object_t *cls = co_object_new(ctx, CO_KIND_RESULT, (co_value_t){.result = result});
     return cls;
 }

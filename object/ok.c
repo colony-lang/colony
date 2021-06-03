@@ -22,7 +22,7 @@ struct co_object_t *co_ok_type_get(struct co_ctx_t *ctx,
     // v is not set
     ok->v = NULL;
 
-    // create cls; cls == Result
+    // cls
     co_object_t *cls = co_object_new(ctx, CO_KIND_OK, (co_value_t){.ok = ok});
     return cls;
 }
@@ -62,7 +62,7 @@ struct co_object_t *_co_ok_new(struct co_ctx_t *ctx,
     ok->v = v;
     CO_OBJECT_INC_RC(ctx, v);
 
-    // create cls; cls == Result
+    // ok
     co_object_t *self = co_object_new(ctx, CO_KIND_OK, (co_value_t){.ok = ok});
     return self;
 }
@@ -85,7 +85,7 @@ struct co_object_t *co_ok_new(struct co_ctx_t *ctx,
     ok->v = v;
     CO_OBJECT_INC_RC(ctx, v);
 
-    // create cls; cls == Result
+    // ok
     co_object_t *self = co_object_new(ctx, CO_KIND_OK, (co_value_t){.ok = ok});
     return self;
 }

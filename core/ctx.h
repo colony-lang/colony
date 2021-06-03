@@ -4,6 +4,7 @@
 struct co_ctx_t;
 
 #include <stdlib.h>
+#include <string.h>
 #include "../object/object.h"
 
 typedef struct co_ctx_t {

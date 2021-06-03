@@ -27,13 +27,13 @@ struct co_object_t *co_bytes_hash(struct co_ctx_t *ctx, struct co_object_t *self
 struct co_object_t *co_bytes_add(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *other);
 
 // (self: bytes, index: i64) -> bytes
-struct co_object_t *co_bytes_getitem(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *index);
+struct co_object_t *co_bytes_get(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *index);
 
 // (self: bytes, index: i64, byte: bytes) -> bytes
-struct co_object_t *co_bytes_setitem(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *index, struct co_object_t *byte);
+struct co_object_t *co_bytes_set(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *index, struct co_object_t *byte);
 
 // (self: bytes, index: i64) -> bytes
-struct co_object_t *co_bytes_delitem(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *index);
+struct co_object_t *co_bytes_del(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *index);
 
 // (self: bytes, begin: i64, end: i64) -> bytes
 struct co_object_t *co_bytes_get_slice(struct co_ctx_t *ctx, struct co_object_t *self, struct co_object_t *begin, struct co_object_t *end);

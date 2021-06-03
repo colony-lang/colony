@@ -22,9 +22,8 @@ struct co_object_t *co_err_type_get(struct co_ctx_t *ctx,
     // e is not set
     err->e = NULL;
 
-    // create cls; cls == Result
-    co_value_t value = {.err = err};
-    co_object_t *cls = co_object_new(ctx, CO_KIND_ERR, value);
+    // cls
+    co_object_t *cls = co_object_new(ctx, CO_KIND_ERR, (co_value_t){.err = err});
     return cls;
 }
 
@@ -63,9 +62,8 @@ struct co_object_t *_co_err_new(struct co_ctx_t *ctx,
     err->e = e;
     CO_OBJECT_INC_RC(ctx, e);
 
-    // create cls; cls == Result
-    co_value_t value = {.err = err};
-    co_object_t *self = co_object_new(ctx, CO_KIND_ERR, value);
+    // err
+    co_object_t *self = co_object_new(ctx, CO_KIND_ERR, (co_value_t){.err = err});
     return self;
 }
 
@@ -87,9 +85,8 @@ struct co_object_t *co_err_new(struct co_ctx_t *ctx,
     err->e = e;
     CO_OBJECT_INC_RC(ctx, e);
 
-    // create cls; cls == Result
-    co_value_t value = {.err = err};
-    co_object_t *self = co_object_new(ctx, CO_KIND_ERR, value);
+    // err
+    co_object_t *self = co_object_new(ctx, CO_KIND_ERR, (co_value_t){.err = err});
     return self;
 }
 

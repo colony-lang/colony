@@ -40,14 +40,14 @@ typedef union co_value_t {
     int64_t i64;
     float f32;
     double f64;
-    void *bytes;
-    void *str;
-    void *list;
-    void *mut_list;
-    void *dict;
-    void *mut_dict;
+    struct co_bytes_t *bytes;
+    struct co_str_t *str;
+    struct co_list_t *list;
+    struct co_mut_list_t *mut_list;
+    struct co_dict_t *dict;
+    struct co_mut_dict_t *mut_dict;
     struct co_ns_t *ns;
-    void *code;
+    struct co_code_t *code;
     void *func;
     void *closure; // ?
     void *tuple;
