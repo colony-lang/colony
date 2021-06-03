@@ -23,8 +23,10 @@ co_ctx_t *co_ctx_new_with_ns(co_ctx_t *parent, struct co_object_t *ns) {
 void co_ctx_free(co_ctx_t *ctx) {
     ctx->parent = NULL;
 
-    CO_OBJECT_DEC_RC(ctx, ctx->ns);
-    ctx->ns = NULL;
+    if (ctx->ns != NULL) {
+        CO_OBJECT_DEC_RC(ctx, ctx->ns);
+        ctx->ns = NULL;
+    }
     
     free(ctx);
 }

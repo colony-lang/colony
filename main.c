@@ -13,9 +13,10 @@ int main(int argc, char **argv) {
     
     // context with root contect as parent
     co_ctx_t *ctx = co_ctx_new(root_ctx);
-    co_ctx_free(ctx);
 
     // cleanup
+    co_ctx_free(ctx);
+    co_ctx_free(root_ctx);
     CO_OBJECT_DEC_RC(root_ctx, res);
     return 0;
 }
