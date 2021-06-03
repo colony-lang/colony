@@ -50,3 +50,11 @@ struct co_object_t *co_ctx_eval(co_ctx_t *ctx, struct co_object_t *code) {
     // FIXME: implement
     return NULL;
 }
+
+struct co_object_t *co_ctx_ok(co_ctx_t *ctx, char *msg) {
+    return NULL;
+}
+
+struct co_object_t *co_ctx_err(co_ctx_t *ctx, char *msg) {
+    return NULL;
+}
