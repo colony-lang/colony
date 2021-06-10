@@ -1,0 +1,104 @@
+/*
+Operators:
+    __decl__ := (self: namespace, var_name: str, type_decl: type) -> namespace
+        var_name: type
+
+    __def__ := (self: namespace, var_name: str, type_decl: type, value: type_decl) -> namespace
+        var_name: type = value
+
+    __defn__ := (self: namespace, in_type: type, out_type: type, body: code)
+        in_type -> out_type { ... code ... }
+        in_type -> out_type => code
+
+    __call__ := (self: fn, in: self.in_type) -> self.out_type
+        fn(in)
+        fn((in))
+        fn(((in)))
+    
+    __neg__ := (self: object) -> object
+        -self
+
+    __pos__ := (self: object) -> object
+        +self
+
+    __add__ := (self: object, other: object) -> object
+        self + other
+
+    __sub__ := (self: object, other: object) -> object
+        self - other
+
+    __mul__ := (self: object, other: object) -> object
+        self * other
+    
+    __div__ := (self: object, other: object) -> object
+        self / other
+
+    __pow__ := (self: object, other: object) -> object
+        self ** other
+    
+    __not__ := (self: object) -> object
+        !self
+
+    __and__ := (self: object, other: object) -> object
+        self && other
+
+    __or__ := (self: object, other: object) -> object
+        self || other
+
+    __bit_inv__ := (self: object) -> object
+        ~self
+
+    __bit_and__ := (self: object, other: object) -> object
+        self & other
+
+    __bit_or__ := (self: object, other: object) -> object
+        self | other
+
+    __bit_xor__ := (self: object, other: object) -> object
+        self ^ other
+*/
+
+// type - pseudo-code
+struct.__bases__ = [type]
+union.__bases__ = [type]
+
+// struct, union
+A: struct = (x: f32=0.0, y: f32=0.0)
+B: struct = (z: f32=0.0)
+C: struct = A & B
+D: union = A | B
+
+// code
+// does not act as closure before used __defn__
+code0: code = {
+    z: f32 = x + y
+    B(z)
+}
+
+// function
+// __defn__ captures closure inside of function at the moment of definition
+/*
+fn.__defn__ = (cls, in: struct, out: type, body: code) -> fn {
+    res: fn[in, out] = fn.__new__(fn, in, out, scope)
+}
+*/
+f0: fn = A -> B => code0
+
+f1: fn = A -> B {
+    z: f32 = x + y
+    B(z)
+}
+
+/*
+fn.__call__ = (self, in: self.in) -> self.out {
+    res: self.out = fn.__eval__(self, in)
+}
+*/
+b0: B = f0(1.0, 2.0)
+
+a1: A = (1.0, 2.0)
+b1: B = f0(a1)
+
+b2: B = f0((1.0, 2.0))
+b3: B = f0(((1.0, 2.0)))
+b4: B = f0((((1.0, 2.0))))
