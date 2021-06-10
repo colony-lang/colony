@@ -56,6 +56,12 @@ Operators:
 
     __bit_xor__ := (self: object, other: object) -> object
         self ^ other
+
+    __shl__ := (self: object, other: object) -> object
+        self << other
+
+    __shr__ := (self: object, other: object) -> object
+        self >> other
 */
 
 // type - pseudo-code
@@ -102,3 +108,18 @@ b1: B = f0(a1)
 b2: B = f0((1.0, 2.0))
 b3: B = f0(((1.0, 2.0)))
 b4: B = f0((((1.0, 2.0))))
+
+/*
+simple match
+*/
+ab: A | B = a1
+
+s: f32 = typeof(ab) ? {
+    A -> {
+        x, y := ab.x, ab.y
+        x + y
+    }
+    B -> {
+        z := ab.z
+    }
+}
