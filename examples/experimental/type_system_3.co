@@ -1,5 +1,6 @@
 /*
 Operators:
+
     __decl__ := (self: namespace, var_name: str, type_decl: type) -> namespace
         var_name: type
 
@@ -15,11 +16,19 @@ Operators:
         fn((in))
         fn(((in)))
     
+
     __neg__ := (self: object) -> object
         -self
 
     __pos__ := (self: object) -> object
         +self
+
+    __not__ := (self: object) -> object
+        !self
+
+    __inv__ := (self: object) -> object
+        ~self
+
 
     __add__ := (self: object, other: object) -> object
         self + other
@@ -33,35 +42,84 @@ Operators:
     __div__ := (self: object, other: object) -> object
         self / other
 
+    __mod__ := (self: object, other: object) -> object
+        self % other
+
     __pow__ := (self: object, other: object) -> object
         self ** other
-    
-    __not__ := (self: object) -> object
-        !self
 
     __and__ := (self: object, other: object) -> object
-        self && other
-
-    __or__ := (self: object, other: object) -> object
-        self || other
-
-    __bit_inv__ := (self: object) -> object
-        ~self
-
-    __bit_and__ := (self: object, other: object) -> object
         self & other
 
-    __bit_or__ := (self: object, other: object) -> object
+    __or__ := (self: object, other: object) -> object
         self | other
 
-    __bit_xor__ := (self: object, other: object) -> object
+    __and_and__ := (self: object, other: object) -> object
+        self && other
+
+    __or_or__ := (self: object, other: object) -> object
+        self || other
+
+    __xor__ := (self: object, other: object) -> object
         self ^ other
 
-    __shl__ := (self: object, other: object) -> object
+    __lt__ := (self: object, other: object) -> object
+        self < other
+
+    __gt__ := (self: object, other: object) -> object
+        self > other
+
+    __lt_lt__ := (self: object, other: object) -> object
         self << other
 
-    __shr__ := (self: object, other: object) -> object
+    __gt_gt__ := (self: object, other: object) -> object
         self >> other
+
+
+    __add_eq__ := (self: object, other: object) -> object
+        self += other
+
+    __sub_eq__ := (self: object, other: object) -> object
+        self -= other
+
+    __mul_eq__ := (self: object, other: object) -> object
+        self *= other
+    
+    __div_eq__ := (self: object, other: object) -> object
+        self /= other
+
+    __mod_eq__ := (self: object, other: object) -> object
+        self %= other
+
+    __pow_eq__ := (self: object, other: object) -> object
+        self **= other
+
+    __and_eq__ := (self: object, other: object) -> object
+        self &= other
+
+    __or_eq__ := (self: object, other: object) -> object
+        self |= other
+
+    __and_and_eq__ := (self: object, other: object) -> object
+        self &&= other
+
+    __or_or_eq__ := (self: object, other: object) -> object
+        self ||= other
+
+    __xor_eq__ := (self: object, other: object) -> object
+        self ^= other
+
+    __lt_eq__ := (self: object, other: object) -> object
+        self <= other
+
+    __gt_eq__ := (self: object, other: object) -> object
+        self >= other
+
+    __lt_lt_eq__ := (self: object, other: object) -> object
+        self <<= other
+
+    __gt_gt_eq__ := (self: object, other: object) -> object
+        self >>= other
 */
 
 // type - pseudo-code
