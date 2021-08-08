@@ -1,0 +1,26 @@
+// unary operations
+-1
+!false
+
+// binary operation
+1 + 2
+true && false
+
+// ternary operation :=
+// assignment is an expression
+   a : = 1
+// -  -  -
+// A  B  C
+   b: f32 = 1.0_f32 + 2.0_f32
+// -  ---   -----------------
+// A   B            C
+
+// ternary operation ?
+b := a == 1 ? true : false
+//   ------   ----   -----
+//      A       B       C
+
+// ternary operation ->
+f1 := (x: f32, y: f32) -> f32 { x + y }
+//    ----------------    --- ---------
+//            A            B      C
