@@ -1,0 +1,76 @@
+// unary operations
+-1
+!false
+
+// binary operation
+1 + 2
+true && false
+
+// type - pseudo-code
+type := {}      // mutable dict
+object := {}    // mutable dict
+
+type.__type__ := type
+type.__bases__ := [object]
+
+object.__type__ := type
+object.__bases__ := []
+
+struct.__type__ := type
+struct.__bases__ := [object]  // `struct` can be instantiated and inherited
+
+union.__type__ := type
+union.__bases__ := [object]   // `union` cannot be instantiated nor inherited
+
+// struct, union
+A: struct = (
+    // __type__: type = type,
+    // __bases__: array[type] = [object],
+    
+    x: f32=0.0,
+    y: f32=0.0,
+    
+    add: fn = (self: A, other: A) -> A {
+        A(self.x + other.x, self.y + other.y)
+    },
+    
+    sub: fn = (self: A, other: A) -> A {
+        A(self.x - other.x, self.y - other.y)
+    },
+)
+
+B: struct = (z: f32=0.0)
+C: struct = A & B
+D: union = A | B
+
+// functions
+f0: fn = A -> B {
+    // x and y are from argument of type A
+    z: f32 = x + y
+    B(z)
+}
+
+// methods
+A := A.add: fn = (self: A, other: A) -> A {
+    A(self.x + other.x, self.y + other.y)
+}
+
+A := A.sub: fn = (self: A, other: A) -> A {
+    A(self.x - other.x, self.y - other.y)
+}
+
+// methods
+A += (
+    add: fn = (self: A, other: A) -> A {
+        A(self.x + other.x, self.y + other.y)
+    },
+    
+    sub: fn = (self: A, other: A) -> A {
+        A(self.x - other.x, self.y - other.y)
+    },
+)
+
+// instantiation
+a0: A = A(1.0, 2.0)
+a1: A = A(2.0, 3.0)
+a2 := a0.add(a1)
