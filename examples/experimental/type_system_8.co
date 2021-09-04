@@ -1,0 +1,17 @@
+
+// A := struct(
+A: struct = (
+    x: f32=0.0
+)
+
+// B := struct(
+B: struct = (
+    y: f32=0.0
+)
+
+// C := struct(A, B)(
+C: struct(A, B) = (
+    z: f32=0.0
+)
+
+c := C(1.0, 2.0, 3.0)

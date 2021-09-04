@@ -1,0 +1,49 @@
+A: struct = (
+    x: f32,
+    y: f32,
+)
+
+B: struct = (
+    z: f32,
+    w: f32,
+)
+
+C: union = A | B
+
+c0: C = A(1.0, 2.0)
+c1: C = B(2.0, 3.0)
+
+A(x, y) = c0
+B(z, w) = c1
+r := x + y + z + w
+
+// if/else ?:
+r: f32 = typeof(c0) == A ? {
+    A(x, y) := c0
+
+    x >= 0 && y >= 0 {
+        x + y
+    } : {
+        -x + -y
+    }
+} : typeof(c0) == B ? {
+    B(z, w) := c1
+    z + w
+} : {
+    -1.0
+}
+
+// match matching ??
+r: f32 = c0 ?? {
+    A(x, y) -> {
+        x >= 0 && y >= 0 {
+            x + y
+        } : {
+            -x + -y
+        }
+    },
+    B(z, w) -> {
+        z + w
+    },
+    _ -> -1.0
+}

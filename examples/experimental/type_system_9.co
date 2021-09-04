@@ -1,0 +1,13 @@
+
+AType: type = (
+
+)
+
+A: AType = (
+    x: f32=0.0
+)
+
+a0 := A(1.0)
+a0.__type__ == A
+A.__type__ == AType
+AType == type
