@@ -1,0 +1,16 @@
+a: dict = {
+    .x: 1.0,
+    .y: 2.0,
+    .items: [
+        {
+            .name: 'John Doe',
+            .done: false,
+        }
+    ]
+}
+
+a0: dict = a.update(a: dict -> dict {
+    a.items[0].done = true
+})
+
+a.is(a0) == true

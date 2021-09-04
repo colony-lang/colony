@@ -1,0 +1,32 @@
+//  custom `async` from custom event loop
+{ Loop } := import('async')
+loop := Loop()
+async := loop.async
+
+// custom `async` from anonymous loop
+{ async } := Loop()
+
+// default `async` of default event loop
+// imported by default in runtime, __builtins__
+{ async } := import('async')
+
+// f0 := fn((x: f32, y: f32) -> f32 { ... })
+f0: fn = (x: f32, y: f32) -> f32 {
+    x + y
+}
+
+// f1 := async((x: f32, y: f32) -> f32 { ... })
+f1: async = (x: f32, y: f32) -> f32 {
+    x + y
+}
+
+r0 := f0(1.0, 2.0)
+r0 == 3.0
+
+r1 := f1(1.0, 2.0).await()
+r1 == 3.0
+
+r2 := f1(1.0, 2.0)
+typeof(r2) == coroutine
+r3 := r2.await()
+r3 == 3.0
