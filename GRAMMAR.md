@@ -30,8 +30,8 @@ power: atom_expr ['**' factor]
 atom_expr: atom trailer*
 
 atom:
-    | '(' [test_list] ')'                                       # 1a needs to be resolved
-    | '(' [typed_arg_list] ')' '->' test '{' [stmt_list] '}'    # 1b needs to be resolved
+    # NOTE: in case of function definition `->` and after parts are always present
+    | '(' [typed_arg_list] ')' ['->' test '{' [stmt_list] '}']
     | '[' [test_list] ']'
     | '{' [dict_maker] '}'
     | NAME
@@ -43,7 +43,13 @@ atom:
 arg: NAME ['=' test]
 arg_list: arg (',' arg)* [',']
 
-typed_arg: NAME [':' test] ['=' test]
+# NOTE: in case of function definition
+#       first `test` is always `NAME` and
+#       `[':' test] ['=' test]` is not present
+typed_arg: test [':' test] ['=' test]
+
+# NOTE: in case of function definition
+#       `'[' NAME ']'` and `'{' NAME '}'` could be present present
 typed_arg_list:
     | typed_arg (',' typed_arg)* [',' '[' NAME ']' [',' '{' NAME '}']]
     | typed_arg (',' typed_arg)* [',' [
