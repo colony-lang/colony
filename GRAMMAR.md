@@ -3,27 +3,8 @@
 ```
 eval: expr_list ENDMARKER
 expr_delim: ';' | NEWLINE
-
-aug_assign_op:
-    | '+='
-    | '-='
-    | '*='
-    | '/='
-    | '%='
-    | '&='
-    | '|='
-    | '^='
-    | '<<='
-    | '>>='
-    | '**='
-
-comp_op:
-    | '<'
-    | '>'
-    | '=='
-    | '>='
-    | '<='
-    | '!='
+aug_assign_op: '+=' | '-=' | '*=' | '/=' | '%=' | '&=' | '|=' | '^=' | '<<=' | '>>=' | '**='
+comp_op: '<' | '>' | '==' | '>=' | '<=' | '!='
 
 expr_list: expr (expr_delim expr)* [expr_delim]
 
