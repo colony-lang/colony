@@ -14,7 +14,7 @@ expr = test_list (
 )
 
 test_list: test (',' test)* [',']
-test: or_test '?' or_test ':' test
+test: or_test '?' or_test ':' or_test
 or_test: and_test ('||' and_test)*
 and_test: not_test ('&&' not_test)*
 not_test: '!' not_test | comparison
