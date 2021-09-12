@@ -1,18 +1,18 @@
 #ifndef CO_OBJECT_H
 #define CO_OBJECT_H
 
-enum co_kind_t;
+/*enum co_kind_t;
 union co_value_t;
-struct co_object_t;
+struct co_object_t;*/
 
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "../core/ctx.h"
+#include "ctx.h"
 
-typedef enum co_kind_t {
+/*typedef enum co_kind_t {
     CO_KIND_CTX,
     CO_KIND_BOOL,
     CO_KIND_I8,
@@ -71,6 +71,6 @@ inline void co_ref(struct co_ctx_t *ctx, struct co_object_t *obj);
 inline void co_unref(struct co_ctx_t *ctx, struct co_object_t *obj);
 
 struct co_object_t *co_object_new(struct co_ctx_t *ctx, enum co_kind_t k, union co_value_t v);
-struct co_object_t *co_object_free(struct co_ctx_t *ctx, struct co_object_t *self);
+struct co_object_t *co_object_free(struct co_ctx_t *ctx, struct co_object_t *self);*/
 
 #endif

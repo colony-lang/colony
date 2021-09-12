@@ -1,6 +1,6 @@
 #include "ctx.h"
 
-struct co_object_t *co_ctx_new(struct co_object_t *parent) {
+/*struct co_object_t *co_ctx_new(struct co_object_t *parent) {
     co_ctx_t *ctx = malloc(sizeof(co_ctx_t));
     co_object_t *self = co_object_new(parent, CO_KIND_CTX, {.ctx = ctx});
     self->rc = 1;
@@ -34,3 +34,4 @@ void co_ctx_rel(struct co_ctx_t *ctx) {
         co_ctx_free(ctx);
     }
 }
+*/

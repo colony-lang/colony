@@ -1,6 +1,6 @@
 #include "object.h"
 
-inline void co_ref(struct co_ctx_t *ctx, struct co_object_t *obj) {
+/*inline void co_ref(struct co_ctx_t *ctx, struct co_object_t *obj) {
     obj->rc++;
 }
 
@@ -34,3 +34,4 @@ struct co_object_t *co_object_free(struct co_ctx_t *ctx, struct co_object_t *sel
     free(self);
     return NULL;
 }
+*/

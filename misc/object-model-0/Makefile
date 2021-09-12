@@ -5,8 +5,8 @@ CFLAGS=-c -Wall -O0 -g
 # CFLAGS=-c -Wall -O3
 LDFLAGS=-lm -lpthread
 SOURCES=main.c \
-	core/ctx.c \
-	object/object.c
+	ctx.c \
+	object.c
 OBJECTS=$(SOURCES:.c=.o)
 EXECUTABLE=colony
 
