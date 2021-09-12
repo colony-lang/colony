@@ -33,6 +33,8 @@ typedef enum co_kind_t {
     CO_KIND_MUT_DICT,
     CO_KIND_CODE,
     CO_KIND_FUNC,
+    CO_KIND_ASYNC_FUNC,
+    CO_KIND_FUTURE,
     CO_KIND_STRUCT,
     CO_KIND_UNION,
     CO_KIND_OPTION,
