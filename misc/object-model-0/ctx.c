@@ -1,37 +1,32 @@
 #include "ctx.h"
 
-/*struct co_object_t *co_ctx_new(struct co_object_t *parent) {
-    co_ctx_t *ctx = malloc(sizeof(co_ctx_t));
-    co_object_t *self = co_object_new(parent, CO_KIND_CTX, {.ctx = ctx});
-    self->rc = 1;
+struct co_object_t *co_ctx_new(struct co_object_t *ctx, struct co_object_t *parent, struct co_object_t *ns) {
+    co_ctx_t *context = (co_ctx_t*)malloc(sizeof(co_ctx_t));
 
     // parent
-    ctx->parent = parent;
+    context->parent = parent;
 
     if (parent) {
-        parent->rc++;
+        co_ref(ctx, parent);
     }
 
+    // ns
+    context->ns = ns;
+
+    if (ns) {
+        co_ref(ctx, ns);
+    }
+
+    // object
+    co_object_t *self = co_object_new(parent, CO_KIND_CTX, (co_value_t){.ctx = context});
+    self->rc = 1;
     return ctx;
 }
 
-void co_ctx_free(struct co_ctx_t *ctx) {
-    free(ctx);
+struct co_object_t *co_ctx_free(struct co_object_t *ctx, struct co_object_t *self) {
+    co_ctx_t *context = self->v.ctx;
+    co_unref(ctx, context->parent);
+    co_unref(ctx, context->ns);
+    free(self);
+    return NULL;
 }
-
-void co_ctx_rel(struct co_ctx_t *ctx) {
-    if (ctx->root) {
-        co_ctx_rel(ctx->root);
-    }
-
-    if (ctx->parent) {
-        co_ctx_rel(ctx->parent);
-    }
-
-    ctx->rc--;
-
-    if (ctx->rc == 0) {
-        co_ctx_free(ctx);
-    }
-}
-*/
