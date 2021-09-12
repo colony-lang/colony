@@ -34,8 +34,16 @@ typedef enum co_kind_t {
     CO_KIND_CODE,
     CO_KIND_FUNC,
     CO_KIND_STRUCT,
-    CO_KIND_UNION/*,
-    CO_KIND_USER_DEFINED*/
+    CO_KIND_UNION,
+    CO_KIND_OPTION,
+    CO_KIND_SOME,
+    CO_KIND_NONE,
+    CO_KIND_RESULT,
+    CO_KIND_OK,
+    CO_KIND_ERR
+    /*
+    CO_KIND_USER_DEFINED
+    */
 } co_kind_t;
 
 typedef union co_value_t {
