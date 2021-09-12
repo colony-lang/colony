@@ -13,7 +13,10 @@ expr = test_list (
     | (':' [test] '=' test_list)*
 )
 
+expr_test_list: expr_test (',' expr_test)* [',']
 test_list: test (',' test)* [',']
+
+expr_test: test [':' [test] '=' test]
 test: or_test '?' or_test ':' or_test
 or_test: and_test ('||' and_test)*
 and_test: not_test ('&&' not_test)*
@@ -32,7 +35,7 @@ atom_expr: atom trailer*
 atom:
     # NOTE: in case of function definition `->` and after parts are always present
     | '(' [typed_arg_list] ')' ['->' test '{' [stmt_list] '}']
-    | '[' [test_list] ']'
+    | '[' [expr_test_list] ']'
     | '{' [dict_maker] '}'
     | NAME
     | NUMBER
@@ -49,7 +52,7 @@ arg_list: arg (',' arg)* [',']
 typed_arg: test [':' test] ['=' test]
 
 # NOTE: in case of function definition
-#       `'[' NAME ']'` and `'{' NAME '}'` could be present present
+#       `'[' NAME ']'` (var. args) and `'{' NAME '}'` (var. kwargs) could be present
 typed_arg_list:
     | typed_arg (',' typed_arg)* [',' '[' NAME ']' [',' '{' NAME '}']]
     | typed_arg (',' typed_arg)* [',' [
