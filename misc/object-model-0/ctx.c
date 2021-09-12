@@ -66,6 +66,8 @@ struct co_object_t *co_ctx_post_message(struct co_object_t *ctx, struct co_objec
     // FIXME:
     //  co_object_t *message_queue = co_mut_list_append(ctx, context->message_queue, message);
     // NOTE: message_queue is same as context->message_queue
+
+    context = NULL; // FIXME: after method is implemented, remove this line
     
     // FIXME: probaby return None of Optional[object]
     return NULL;
