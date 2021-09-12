@@ -28,7 +28,9 @@ typedef enum co_kind_t {
     CO_KIND_F64,
     CO_KIND_STR,
     CO_KIND_LIST,
+    CO_KIND_MUT_LIST,
     CO_KIND_DICT,
+    CO_KIND_MUT_DICT,
     CO_KIND_CODE,
     CO_KIND_FUNC,
     CO_KIND_STRUCT,
@@ -52,7 +54,9 @@ typedef union co_value_t {
     double f64;
     // struct co_str_t *str;
     // struct co_list_t *list;
+    // struct co_list_t *mut_list;
     // struct co_dict_t *dict;
+    // struct co_dict_t *mut_dict;
     // struct co_code_t *code;
     // struct co_func_t *func;
     // struct co_struct_t *struct_;

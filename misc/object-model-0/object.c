@@ -1,10 +1,12 @@
 #include "object.h"
 
 inline void co_ref(struct co_object_t *ctx, struct co_object_t *obj) {
+    if (!obj) return;
     obj->rc++;
 }
 
 inline void co_unref(struct co_object_t *ctx, struct co_object_t *obj) {
+    if (!obj) return;
     obj->rc--;
     
     if (obj->rc == 0) {
