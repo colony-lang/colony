@@ -1,20 +1,9 @@
 #include "ctx.h"
 
-struct co_ctx_t *co_ctx_new(struct co_ctx_t *parent) {
+struct co_object_t *co_ctx_new(struct co_object_t *parent) {
     co_ctx_t *ctx = malloc(sizeof(co_ctx_t));
-    ctx->rc = 1;
-
-    // root
-    if (parent) {
-        if (parent->root) {
-            ctx->root = parent->root;
-            parent->root->rc++;
-        } else {
-            ctx->root = parent;
-        }
-    } else {
-        ctx->root = NULL;
-    }
+    co_object_t *self = co_object_new(parent, CO_KIND_CTX, {.ctx = ctx});
+    self->rc = 1;
 
     // parent
     ctx->parent = parent;
