@@ -44,6 +44,7 @@ struct co_object_t;
     enum co_kind_t k;
 
 #define CO_OBJECT(obj) ((struct co_object_t*)(obj))
+#define CO_OBJ(obj) CO_OBJECT(obj)
 
 #include <stdlib.h>
 #include <string.h>
@@ -51,9 +52,6 @@ struct co_object_t;
 #include <stdbool.h>
 
 #include "ctx.h"
-
-
-
 
 typedef struct co_object_t {
     CO_OBJECT_HEAD;
