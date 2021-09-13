@@ -2,15 +2,8 @@
 #define CO_OBJECT_H
 
 enum co_kind_t;
+union co_value_t;
 struct co_object_t;
-
-#define CO_OBJECT_HEAD \
-    size_t rc; \
-    enum co_kind_t k;
-
-#define CO_CTX(obj) ((struct co_ctx_t*)(obj))
-#define CO_OBJECT(obj) ((struct co_object_t*)(obj))
-#define CO_OBJ(obj) CO_OBJECT(obj)
 
 #include <stdlib.h>
 #include <string.h>
@@ -18,7 +11,6 @@ struct co_object_t;
 #include <stdbool.h>
 
 #include "ctx.h"
-
 
 typedef enum co_kind_t {
     CO_KIND_CTX,
@@ -56,6 +48,36 @@ typedef enum co_kind_t {
     */
 } co_kind_t;
 
+typedef union co_value_t {
+    struct co_ctx_t *ctx;
+    // struct co_ns_t *ns;
+    _Bool b;
+    int8_t i8;
+    int16_t i16;
+    int32_t i32;
+    int64_t i64;
+    uint8_t u8;
+    uint16_t u16;
+    uint32_t u32;
+    uint64_t u64;
+    float f32;
+    double f64;
+    // struct co_str_t *str;
+    // struct co_list_t *list;
+    // struct co_list_t *mut_list;
+    // struct co_dict_t *dict;
+    // struct co_dict_t *mut_dict;
+    // struct co_code_t *code;
+    // struct co_func_t *func;
+    // struct co_struct_t *struct_;
+    // struct co_union_t *union_;
+} co_value_t;
+
+#define CO_OBJECT_HEAD \
+    size_t rc; \
+    enum co_kind_t k; \
+    union co_value_t v;
+
 typedef struct co_object_t {
     CO_OBJECT_HEAD;
 } co_object_t;
@@ -63,6 +85,7 @@ typedef struct co_object_t {
 void co_ref(struct co_object_t *ctx, struct co_object_t *obj);
 void co_unref(struct co_object_t *ctx, struct co_object_t *obj);
 
+struct co_object_t *co_object_new(struct co_object_t *ctx, enum co_kind_t k, union co_value_t v);
 struct co_object_t *co_object_free(struct co_object_t *ctx, struct co_object_t *self);
 
 #endif

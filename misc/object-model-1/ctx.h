@@ -37,7 +37,6 @@ z: str = ctx_A.post_message('get_z').await()
 */
 
 typedef struct co_ctx_t {
-    CO_OBJECT_HEAD;
     struct co_object_t *parent;         // parent: Option[Context] = None
     struct co_object_t *ns;             // ns: Option[Namespace] = None
     struct co_object_t *on_message_cb;  // on_message_cb: Option[fn[Callable, Result[str, str]]] = None
