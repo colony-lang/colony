@@ -3,9 +3,12 @@
 
 struct co_ctx_t;
 
+#define CO_CTX(obj) ((struct co_ctx_t*)(obj))
+
 #include <stdlib.h>
 
 #include "object.h"
+
 
 /*
 ctx_A: Context = Context(None, None, None)

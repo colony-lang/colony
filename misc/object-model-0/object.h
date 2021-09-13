@@ -1,25 +1,6 @@
 #ifndef CO_OBJECT_H
 #define CO_OBJECT_H
 
-enum co_kind_t;
-struct co_object_t;
-
-#define CO_OBJECT_HEAD \
-    size_t rc; \
-    enum co_kind_t k;
-
-#define CO_CTX(obj) ((struct co_ctx_t*)(obj))
-#define CO_OBJECT(obj) ((struct co_object_t*)(obj))
-#define CO_OBJ(obj) CO_OBJECT(obj)
-
-#include <stdlib.h>
-#include <string.h>
-#include <stdint.h>
-#include <stdbool.h>
-
-#include "ctx.h"
-
-
 typedef enum co_kind_t {
     CO_KIND_CTX,
     CO_KIND_NS,
@@ -55,6 +36,24 @@ typedef enum co_kind_t {
     CO_KIND_USER_DEFINED
     */
 } co_kind_t;
+
+struct co_object_t;
+
+#define CO_OBJECT_HEAD \
+    size_t rc; \
+    enum co_kind_t k;
+
+#define CO_OBJECT(obj) ((struct co_object_t*)(obj))
+
+#include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
+#include <stdbool.h>
+
+#include "ctx.h"
+
+
+
 
 typedef struct co_object_t {
     CO_OBJECT_HEAD;
