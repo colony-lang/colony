@@ -1,6 +1,7 @@
 #ifndef CO_CTX_H
 #define CO_CTX_H
 
+struct _co_ctx_t;
 struct co_ctx_t;
 
 #define CO_CTX(obj) ((struct co_ctx_t*)(obj))
@@ -39,12 +40,17 @@ ctx_A.post_message('set_z')
 z: str = ctx_A.post_message('get_z').await()
 */
 
-typedef struct co_ctx_t {
-    CO_OBJECT_HEAD;
+typedef struct _co_ctx_t {
+    size_t rc;                          // ref count
     struct co_object_t *parent;         // parent: Option[Context] = None
     struct co_object_t *ns;             // ns: Option[Namespace] = None
     struct co_object_t *on_message_cb;  // on_message_cb: Option[fn[Callable, Result[str, str]]] = None
     struct co_object_t *message_queue;  // message_queue: Queue[str]() = Queue[str]()
+} _co_ctx_t;
+
+typedef struct co_ctx_t {
+    CO_OBJECT_HEAD;
+    struct _co_ctx_t *ctx;
 } co_ctx_t;
 
 struct co_object_t *co_ctx_new(struct co_object_t *ctx, struct co_object_t *parent, struct co_object_t *ns, struct co_object_t *on_message_cb);

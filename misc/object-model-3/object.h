@@ -2,8 +2,6 @@
 #define CO_OBJECT_H
 
 typedef enum co_kind_t {
-    CO_KIND_CTX,
-    CO_KIND_NS,
     CO_KIND_BOOL,
     CO_KIND_I8,
     CO_KIND_I16,
@@ -15,6 +13,9 @@ typedef enum co_kind_t {
     CO_KIND_U64,
     CO_KIND_F32,
     CO_KIND_F64,
+    
+    CO_KIND_CTX,
+    CO_KIND_NS,
     CO_KIND_STR,
     CO_KIND_LIST,
     CO_KIND_MUT_LIST,
@@ -37,14 +38,19 @@ typedef enum co_kind_t {
     */
 } co_kind_t;
 
+struct _co_rc_t;
+union co_value_t;
 struct co_object_t;
 
 #define CO_OBJECT_HEAD \
-    size_t rc; \
     enum co_kind_t k;
+
+#define CO_RC_HEAD \
+    size_t rc;
 
 #define CO_OBJECT(obj) ((struct co_object_t*)(obj))
 #define CO_OBJ(obj) CO_OBJECT(obj)
+// #define CO_RC(obj) CO_OBJECT(obj)->rc
 
 #include <stdlib.h>
 #include <string.h>
@@ -53,8 +59,32 @@ struct co_object_t;
 
 #include "ctx.h"
 
+typedef struct _co_rc_t {
+    CO_RC_HEAD;
+} _co_rc_t;
+
+typedef union co_value_t {
+    // primitive values
+    _Bool b;
+    int8_t i8;
+    int16_t i16;
+    int32_t i32;
+    int64_t i64;
+    uint8_t u8;
+    uint16_t u16;
+    uint32_t u32;
+    uint64_t u64;
+    float f32;
+    double f64;
+
+    // ref counted
+    struct _co_rc_t *rc;
+    struct _co_ctx_t *ctx;
+} co_value_t;
+
 typedef struct co_object_t {
     CO_OBJECT_HEAD;
+    union co_value_t v;
 } co_object_t;
 
 void co_ref(struct co_object_t *ctx, struct co_object_t *obj);

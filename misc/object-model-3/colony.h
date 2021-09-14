@@ -3,5 +3,6 @@
 
 #include "ctx.h"
 #include "object.h"
+#include "str.h"
 
 #endif
