@@ -16,11 +16,8 @@ inline void co_ref(struct co_object_t *ctx, struct co_object_t *self) {
         case CO_KIND_F32:
         case CO_KIND_F64:
             return;
-        case CO_KIND_CTX:
-            self->v.ctx->rc++;
-            break;
         default:
-            ;
+            self->v.rc->rc++;
     }
 }
 
@@ -40,11 +37,8 @@ inline void co_unref(struct co_object_t *ctx, struct co_object_t *self) {
         case CO_KIND_F32:
         case CO_KIND_F64:
             return;
-        case CO_KIND_CTX:
-            if (--self->v.ctx->rc == 0) co_object_free(ctx, self);
-            break;
         default:
-            ;
+            if (--self->v.rc->rc == 0) co_object_free(ctx, self);
     }
 }
 
