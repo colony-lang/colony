@@ -56,6 +56,6 @@ typedef struct co_ctx_t {
 struct co_object_t *co_ctx_new(struct co_object_t *ctx, struct co_object_t *parent, struct co_object_t *ns, struct co_object_t *on_message_cb);
 struct co_object_t *co_ctx_free(struct co_object_t *ctx, struct co_object_t *self);
 struct co_object_t *co_ctx_on_message(struct co_object_t *ctx, struct co_object_t *self, struct co_object_t *on_message_cb /* fn[Callable, Result[str, str]] */);
-struct co_object_t * /* Future[str] */ co_ctx_post_message(struct co_object_t *ctx, struct co_object_t *self, struct co_object_t *message /* str */);
+struct co_object_t *co_ctx_post_message(struct co_object_t *ctx, struct co_object_t *self, struct co_object_t *message /* str */) /* Future[str] */;
 
 #endif
