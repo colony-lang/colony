@@ -38,19 +38,18 @@ typedef enum co_kind_t {
     */
 } co_kind_t;
 
-struct _co_rc_t;
+struct co_gc_t;
 union co_value_t;
 struct co_object_t;
 
 #define CO_OBJECT_HEAD \
     enum co_kind_t k;
 
-#define CO_RC_HEAD \
+#define CO_GC_HEAD \
     size_t rc;
 
 #define CO_OBJECT(obj) ((struct co_object_t*)(obj))
 #define CO_OBJ(obj) CO_OBJECT(obj)
-// #define CO_RC(obj) CO_OBJECT(obj)->rc
 
 #include <stdlib.h>
 #include <string.h>
@@ -59,9 +58,9 @@ struct co_object_t;
 
 #include "ctx.h"
 
-typedef struct _co_rc_t {
-    CO_RC_HEAD;
-} _co_rc_t;
+typedef struct co_gc_t {
+    CO_GC_HEAD;
+} co_gc_t;
 
 typedef union co_value_t {
     // primitive values
@@ -78,8 +77,9 @@ typedef union co_value_t {
     double f64;
 
     // ref counted
-    struct _co_rc_t *rc;
+    struct co_gc_t *gc;
     struct _co_ctx_t *ctx;
+    struct _co_str_t *str;
 } co_value_t;
 
 typedef struct co_object_t {
@@ -87,9 +87,16 @@ typedef struct co_object_t {
     union co_value_t v;
 } co_object_t;
 
-void co_ref(struct co_object_t *ctx, struct co_object_t *obj);
-void co_unref(struct co_object_t *ctx, struct co_object_t *obj);
+void co_ref(struct co_object_t *ctx, struct co_object_t *self);
+void co_unref(struct co_object_t *ctx, struct co_object_t *self);
 
+void co_object_gc_ref(struct co_object_t *ctx, struct co_object_t *self, struct co_gc_t *gc);
+void co_object_gc_unref(struct co_object_t *ctx, struct co_object_t *self, struct co_gc_t *gc);
+
+void co_object_value_ref(struct co_object_t *ctx, struct co_object_t *self, union co_value_t *v);
+void co_object_value_unref(struct co_object_t *ctx, struct co_object_t *self, union co_value_t *v);
+
+struct co_object_t *co_object_new(struct co_object_t *ctx, enum co_kind_t k, union co_value_t v);
 struct co_object_t *co_object_free(struct co_object_t *ctx, struct co_object_t *self);
 
 #endif
