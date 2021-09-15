@@ -15,7 +15,7 @@ typedef enum co_kind_t {
     CO_KIND_F32,
     CO_KIND_F64,
 
-    // ref counted
+    // ref counted values
     CO_KIND_CTX,
     CO_KIND_NS,
     CO_KIND_STR,
@@ -65,6 +65,7 @@ struct co_object_t;
 #include <stdbool.h>
 
 #include "ctx.h"
+#include "type.h"
 #include "result.h"
 
 typedef struct co_gc_t {
@@ -85,12 +86,13 @@ typedef union co_value_t {
     float f32;
     double f64;
 
-    // ref counted
+    // ref counted values
     struct co_gc_t *gc;
     struct _co_ctx_t *ctx;
     struct _co_str_t *str;
 
     // misc
+    struct _co_type_t *type;
     struct _co_ok_type_t *ok_type;
     struct _co_ok_t *ok;
     struct _co_err_type_t *err_type;

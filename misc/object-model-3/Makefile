@@ -7,6 +7,7 @@ LDFLAGS=-lm -lpthread
 SOURCES=main.c \
 	ctx.c \
 	object.c \
+	type.c \
 	result.c \
 	str.c
 OBJECTS=$(SOURCES:.c=.o)
