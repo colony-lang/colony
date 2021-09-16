@@ -54,7 +54,8 @@ struct co_object_t;
     size_t rc;
 
 #define CO_OBJECT_HEAD \
-    enum co_kind_t k;
+    enum co_kind_t k; \
+    void *t;
 
 #define CO_OBJECT(obj) ((struct co_object_t*)(obj))
 #define CO_OBJ(obj) CO_OBJECT(obj)

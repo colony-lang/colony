@@ -21,8 +21,13 @@ typedef struct _co_type_t {
 
 typedef struct co_type_t {
     CO_OBJECT_HEAD;
-    struct _co_type_t *type;
+    struct _co_type_t *_type;
 } co_type_t;
+
+static co_type_t CO_TYPE_TYPE = {
+    .k = CO_KIND_TYPE,
+    ._type = NULL,
+};
 
 /* (cls: type, name: str, bases: list[type], attrs: dict[str, object]) -> 'Self' */
 struct co_object_t *co_type_new(struct co_object_t *ctx, struct co_object_t *type, struct co_object_t *name, struct co_object_t *bases, struct co_object_t *attrs);
