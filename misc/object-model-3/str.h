@@ -22,6 +22,28 @@ typedef struct co_str_t {
     struct _co_str_t *str;
 } co_str_t;
 
+/*
+ *
+ */
+typedef struct co_str_type_t {
+    CO_OBJECT_HEAD;
+    CO_TYPE_HEAD;
+} co_str_type_t;
+
+typedef struct _co_str_obj_t {
+    CO_GC_HEAD;
+    struct co_str_type_t *type;
+    enum co_own_t own;  // ownnership of items
+    size_t len;         // len of items
+    char *items;        // items
+    char *encoding;     // encoding of items
+} _co_str_obj_t;
+
+typedef struct co_str_obj_t {
+    CO_OBJECT_HEAD;
+    struct _co_str_obj_t *str;
+} co_str_obj_t;
+
 struct co_object_t *co_str_c_new(struct co_object_t *ctx, size_t len, char *items, enum co_own_t own, char *encoding);
 struct co_object_t *co_str_new(struct co_object_t *ctx, struct co_object_t *other);
 struct co_object_t *co_str_free(struct co_object_t *ctx, struct co_object_t *self);
