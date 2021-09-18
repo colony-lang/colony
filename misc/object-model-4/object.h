@@ -118,6 +118,8 @@ void co_object_value_ref(struct co_object_t *ctx, struct co_object_t *self, unio
 void co_object_value_unref(struct co_object_t *ctx, struct co_object_t *self, union co_value_t *v);
 
 struct co_object_t *co_object_new(struct co_object_t *ctx, enum co_kind_t k, union co_value_t v);
+
+/* (self: 'Self') -> Result[str, str] */
 struct co_object_t *co_object_free(struct co_object_t *ctx, struct co_object_t *self);
 
 #endif
