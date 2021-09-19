@@ -20,11 +20,12 @@ typedef struct co_bytes_t {
     struct _co_bytes_t *bytes;
 } co_bytes_t;
 
-static struct co_type_t co_type;
+static struct co_type_t co_type_type;
+static struct co_type_t co_bytes_type;
 
 void _co_type_static_init(void) {
-    // static co_type
-    co_type = (struct co_type_t){
+    // type
+    co_type_type = (struct co_type_t){
         .k = CO_KIND_TYPE,
         ._type = &(struct _co_type_t){
             .rc = 1,
@@ -35,7 +36,19 @@ void _co_type_static_init(void) {
         },
     };
 
-    co_type._type->type = &co_type;
+    co_type_type._type->type = (struct co_object_t*)&co_type_type;
+
+    // bytes
+    co_bytes_type = (struct co_type_t){
+        .k = CO_KIND_TYPE,
+        ._type = &(struct _co_type_t){
+            .rc = 1,
+            .type = (struct co_object_t*)&co_type_type,
+            .name = NULL,
+            .bases = NULL,
+            .attrs = NULL,
+        },
+    };
 };
 
 /*static struct co_type_type_t co_bytes_type = {
