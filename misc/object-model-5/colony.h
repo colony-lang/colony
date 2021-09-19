@@ -4,5 +4,6 @@
 #include "ctx.h"
 #include "object.h"
 #include "str.h"
+#include "bytes.h"
 
 #endif

@@ -41,7 +41,7 @@ z: str = ctx_A.post_message('get_z').await()
 */
 
 
-typedef struct _co_ctx_type_t {
+/*typedef struct _co_ctx_type_t {
     CO_GC_HEAD;
     CO_TYPE_HEAD;
 } _co_ctx_type_t;
@@ -50,8 +50,7 @@ typedef struct co_ctx_type_t {
     CO_OBJECT_HEAD;
     struct _co_ctx_type_t *_type;
 } co_ctx_type_t;
-
-
+*/
 
 typedef struct _co_ctx_t {
     CO_GC_HEAD;
@@ -66,8 +65,11 @@ typedef struct co_ctx_t {
     struct _co_ctx_t *ctx;
 } co_ctx_t;
 
+/* (parent: Option[Context]=None, ns: Option[Namespace]=None, on_message_cb: Option[fn[Callable, Result[str, str]]]=None) */
 struct co_object_t *co_ctx_new(struct co_object_t *ctx, struct co_object_t *parent, struct co_object_t *ns, struct co_object_t *on_message_cb);
-struct co_object_t *co_ctx_free(struct co_object_t *ctx, struct co_object_t *self);
+
+/* (self: Context) */
+void co_ctx_free(struct co_object_t *ctx, struct co_object_t *self);
 struct co_object_t *co_ctx_on_message(struct co_object_t *ctx, struct co_object_t *self, struct co_object_t *on_message_cb /* fn[Callable, Result[str, str]] */);
 struct co_object_t *co_ctx_post_message(struct co_object_t *ctx, struct co_object_t *self, struct co_object_t *message /* str */) /* Future[str] */;
 

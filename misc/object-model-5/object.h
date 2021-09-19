@@ -1,6 +1,16 @@
 #ifndef CO_OBJECT_H
 #define CO_OBJECT_H
 
+enum co_kind_t;
+struct _co_type_t;
+struct co_type_t;
+union co_kind_type_t;
+enum co_own_t;
+struct co_gc_t;
+union co_value_t;
+struct co_object_t;
+
+/* kind of object, mainly used to distinguish between primitive and GC'ed objects */
 typedef enum co_kind_t {
     // primitive values
     CO_KIND_BOOL,
@@ -18,32 +28,9 @@ typedef enum co_kind_t {
     // ref counted values
     CO_KIND_GC,
 
-    // CO_KIND_CTX,
-    // CO_KIND_NS,
-    // CO_KIND_STR,
-    // CO_KIND_LIST,
-    // CO_KIND_MUT_LIST,
-    // CO_KIND_DICT,
-    // CO_KIND_MUT_DICT,
-    // CO_KIND_CODE,
-    // CO_KIND_FUNC,
-    // CO_KIND_ASYNC_FUNC,
-    
-    // misc
-    // CO_KIND_TYPE,
-    // CO_KIND_STRUCT,
-    // CO_KIND_UNION,
-    // CO_KIND_OPTION,
-    // CO_KIND_SOME,
-    // CO_KIND_NONE,
-    // CO_KIND_RESULT,
-    // CO_KIND_OK,
-    // CO_KIND_ERR,
-    // CO_KIND_FUTURE,
+    // special
+    CO_KIND_TYPE
 } co_kind_t;
-
-struct _co_type_t;
-struct co_type_t;
 
 /* used to transfer ownership */
 typedef enum co_own_t {
@@ -51,9 +38,8 @@ typedef enum co_own_t {
     CO_OWN_FULL
 } co_own_t;
 
-struct co_gc_t;
-union co_value_t;
-struct co_object_t;
+#define CO_GC_HEAD \
+    size_t rc;
 
 #define CO_OBJECT_HEAD \
     union { \
@@ -67,12 +53,7 @@ struct co_object_t;
     struct co_object_t *bases; \
     struct co_object_t *attrs;
 
-#define CO_GC_HEAD \
-    size_t rc;
-
-
 #define CO_OBJECT(obj) ((struct co_object_t*)(obj))
-#define CO_OBJ(obj) CO_OBJECT(obj)
 
 #include <stdlib.h>
 #include <string.h>
@@ -100,7 +81,7 @@ typedef union co_value_t {
     float f32;
     double f64;
 
-    // gc'ed values
+    // GC'ed values
     struct co_gc_t *gc;
 } co_value_t;
 
@@ -122,8 +103,13 @@ typedef struct co_type_t {
     struct _co_type_t *_type;
 } co_type_t;
 
+typedef union co_kind_type_t {
+    enum co_kind_t k;
+    struct co_type_t *t;
+} co_kind_type_t;
+
 /*
- * gc
+ * GC - reference counter
  */
 void co_ref(struct co_object_t *ctx, struct co_object_t *self);
 void co_unref(struct co_object_t *ctx, struct co_object_t *self);
@@ -131,10 +117,23 @@ void co_unref(struct co_object_t *ctx, struct co_object_t *self);
 /*
  * object
  */
-struct co_object_t *co_object_new(struct co_object_t *ctx, enum co_kind_t k, union co_value_t v);
+/* (...) -> object */
+struct co_object_t *co_object_new(struct co_object_t *ctx, union co_kind_type_t kt, union co_value_t v);
 
-/* (self: 'Self') -> Result[str, str] */
-struct co_object_t *co_object_free(struct co_object_t *ctx, struct co_object_t *self);
+/* (self: 'Self') */
+void co_object_free(struct co_object_t *ctx, struct co_object_t *self);
+
+/* (self: 'Self') -> type */
+struct co_object_t *co_object_gettype(struct co_object_t *ctx, struct co_object_t *self);
+
+/* (self: 'Self', attr: str) -> Result[object, str] */
+struct co_object_t *co_object_getattr(struct co_object_t *ctx, struct co_object_t *self, struct co_object_t *attr);
+
+/* (self: 'Self', attr: str, value: object) -> 'Self' */
+struct co_object_t *co_object_setattr(struct co_object_t *ctx, struct co_object_t *self, struct co_object_t *attr, struct co_object_t *value);
+
+/* (self: 'Self', attr: str) -> 'Self' */
+struct co_object_t *co_object_delattr(struct co_object_t *ctx, struct co_object_t *self, struct co_object_t *attr);
 
 /*
  * type
@@ -142,8 +141,8 @@ struct co_object_t *co_object_free(struct co_object_t *ctx, struct co_object_t *
 /* (cls: type, name: str, bases: list[type], attrs: dict[str, object]) -> 'Self' */
 struct co_object_t *co_type_new(struct co_object_t *ctx, struct co_object_t *type, struct co_object_t *name, struct co_object_t *bases, struct co_object_t *attrs);
 
-/* (self: 'Self') -> object */
-struct co_object_t *co_type_free(struct co_object_t *ctx, struct co_object_t *self);
+/* (self: 'Self') */
+void co_type_free(struct co_object_t *ctx, struct co_object_t *self);
 
 /* (self: type, args: list[object], kwargs: dict[str, object]) -> 'Self' */
 struct co_object_t *co_type_call(struct co_object_t *ctx, struct co_object_t *self, struct co_object_t *args, struct co_object_t *kwargs);
