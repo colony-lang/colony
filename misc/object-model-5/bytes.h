@@ -51,11 +51,4 @@ void _co_type_static_init(void) {
     };
 };
 
-/*static struct co_type_type_t co_bytes_type = {
-    .type = co_type,
-    .name = NULL,
-    .bases = NULL,
-    .attrs = NULL
-};*/
-
 #endif
