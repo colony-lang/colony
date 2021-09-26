@@ -32,6 +32,10 @@ ctx_A.on_message((message: str) -> Result[str, str] {
     }
 })
 
+ctx_A.on_message((message: str) -> Result[str, str] {
+    
+})
+
 ctx_A.post_message('set_x_10')
 ctx_A.post_message('set_y_20')
 ctx_A.post_message('set_z')
