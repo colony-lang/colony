@@ -1,0 +1,59 @@
+
+__ctx__.on_error = (ctx: Ctx, error: Ere) -> None {
+    println('Context: {}, error: {}', ctx, error)
+    0.0
+}
+
+a: float = 1.0
+b: float = 0.0
+
+c: float = a / b    // panics
+                    // go to __ctx__.on_error
+                    // it will print context and error objects
+                    // and resume after that and returns `0.0`
+
+d: float = b / a
+
+// NOTE: idea
+// another idiomatic approach is to use `try` builtin function
+// try a / b, if it fails then return 0
+c: float = try(a / b, 0.0)
+
+// NOTE: idea
+c: float = try(a / b, (error: Err) -> float {
+    Err(e) = error
+    
+    e == 'ZeroDivision' ? {
+        Infinite
+    } : {
+        NaN
+    }
+})
+
+// NOTE: idea
+c: float = try(a / b, {
+    Err('ZeroDivision'): (e) -> { Infinite },
+    Err: (e) -> { NaN },
+})
+
+// NOTE: idea
+c: float = try(a / b, {
+    Err('ZeroDivision'): Infinite,
+    Err: NaN,
+})
+
+// NOTE: idea
+c: float = try(a / b, (e: Err) -> {{
+    'ZeroDivision': Infinite,
+    _: NaN,
+}})
+
+// NOTE: idea
+c: float = try(a / b, {
+    Err: {
+        'Zero Division': Infinite,
+        _: NaN,
+    },
+    _: NaN,
+})
+

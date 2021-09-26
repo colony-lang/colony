@@ -32,10 +32,6 @@ ctx_A.on_message((message: str) -> Result[str, str] {
     }
 })
 
-ctx_A.on_message((message: str) -> Result[str, str] {
-    
-})
-
 ctx_A.post_message('set_x_10')
 ctx_A.post_message('set_y_20')
 ctx_A.post_message('set_z')
@@ -44,22 +40,12 @@ ctx_A.post_message('set_z')
 z: str = ctx_A.post_message('get_z').await()
 */
 
-
-/*typedef struct _co_ctx_type_t {
-    CO_GC_HEAD;
-    CO_TYPE_HEAD;
-} _co_ctx_type_t;
-
-typedef struct co_ctx_type_t {
-    CO_OBJECT_HEAD;
-    struct _co_ctx_type_t *_type;
-} co_ctx_type_t;
-*/
-
 typedef struct _co_ctx_t {
     CO_GC_HEAD;
     struct co_object_t *parent;         // parent: Option[Context] = None
     struct co_object_t *ns;             // ns: Option[Namespace] = None
+    struct co_object_t *error;          // error: Option[object] = None
+    struct co_object_t *on_error_cb;    // on_error_cb: 
     struct co_object_t *on_message_cb;  // on_message_cb: Option[fn[Callable, Result[str, str]]] = None
     struct co_object_t *message_queue;  // message_queue: Queue[str]() = Queue[str]()
 } _co_ctx_t;
@@ -69,12 +55,27 @@ typedef struct co_ctx_t {
     struct _co_ctx_t *ctx;
 } co_ctx_t;
 
-/* (parent: Option[Context]=None, ns: Option[Namespace]=None, on_message_cb: Option[fn[Callable, Result[str, str]]]=None) */
+/* (parent: Option[Context]=None, ns: Option[Namespace]=None, on_message_cb: Option[fn[Callable, Result[str, str]]]=None) -> Context */
 struct co_object_t *co_ctx_new(struct co_object_t *ctx, struct co_object_t *parent, struct co_object_t *ns, struct co_object_t *on_message_cb);
 
-/* (self: Context) */
+/* (self: Context) -> None */
 void co_ctx_free(struct co_object_t *ctx, struct co_object_t *self);
-struct co_object_t *co_ctx_on_message(struct co_object_t *ctx, struct co_object_t *self, struct co_object_t *on_message_cb /* fn[Callable, Result[str, str]] */);
-struct co_object_t *co_ctx_post_message(struct co_object_t *ctx, struct co_object_t *self, struct co_object_t *message /* str */) /* Future[str] */;
+
+/* (self: Context, on_message_cb: fn[Callable, Result[str, str]]) -> None */
+struct co_object_t *co_ctx_on_message(struct co_object_t *ctx, struct co_object_t *self, struct co_object_t *on_message_cb);
+
+/* (self: Context, message: str) -> Future[str] */
+struct co_object_t *co_ctx_post_message(struct co_object_t *ctx, struct co_object_t *self, struct co_object_t *message);
+
+/*
+ * FIXME: finish implementation
+struct co_object_t *co_ctx_type = co_type_new(
+    ctx,
+    co_object_getattr(ctx, (struct co_namespace_t*)ctx->gc), (struct co_object_t*)&(co_str_new(ctx, )),
+    'Ctx',
+    [object],
+    Namespace()
+);
+*/
 
 #endif

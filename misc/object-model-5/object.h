@@ -124,7 +124,7 @@ struct co_object_t *co_object_alloc(struct co_object_t *ctx, union co_kind_type_
 /* (cls: type) -> Self */
 struct co_object_t *co_object_new(struct co_object_t *ctx, struct co_object_t *cls); 
 
-/* (self: Self) */
+/* (self: Self) -> None */
 void co_object_free(struct co_object_t *ctx, struct co_object_t *self);
 
 /* (self: Self) -> type */
