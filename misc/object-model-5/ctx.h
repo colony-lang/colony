@@ -46,8 +46,8 @@ typedef struct _co_ctx_t {
     struct co_object_t *ns;             // ns: Option[Namespace] = None
     struct co_object_t *error;          // error: Option[object] = None
     struct co_object_t *on_error_cb;    // on_error_cb: 
-    struct co_object_t *on_message_cb;  // on_message_cb: Option[fn[Callable, Result[str, str]]] = None
     struct co_object_t *message_queue;  // message_queue: Queue[str]() = Queue[str]()
+    struct co_object_t *on_message_cb;  // on_message_cb: Option[fn[Callable, Result[str, str]]] = None
 } _co_ctx_t;
 
 typedef struct co_ctx_t {
@@ -59,7 +59,7 @@ typedef struct co_ctx_t {
 struct co_object_t *co_ctx_new(struct co_object_t *ctx, struct co_object_t *parent, struct co_object_t *ns, struct co_object_t *on_message_cb);
 
 /* (self: Context) -> None */
-void co_ctx_free(struct co_object_t *ctx, struct co_object_t *self);
+struct co_object_t *co_ctx_free(struct co_object_t *ctx, struct co_object_t *self);
 
 /* (self: Context, on_message_cb: fn[Callable, Result[str, str]]) -> None */
 struct co_object_t *co_ctx_on_message(struct co_object_t *ctx, struct co_object_t *self, struct co_object_t *on_message_cb);

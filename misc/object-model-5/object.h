@@ -27,10 +27,23 @@ typedef enum co_kind_t {
 
     // ref counted values
     CO_KIND_GC,
-
+    
     // special
+    CO_KIND_TYPE,
     CO_KIND_CTX,
-    CO_KIND_TYPE
+
+    // Result, Ok, Err
+    CO_KIND_OK_TYPE,
+    CO_KIND_OK,
+    CO_KIND_ERR_TYPE,
+    CO_KIND_ERR,
+    CO_KIND_RESULT_TYPE,
+
+    // Option, Some, None
+    CO_KIND_SOME_TYPE,
+    CO_KIND_SOME,
+    CO_KIND_NONE,
+    CO_KIND_OPTION_TYPE,
 } co_kind_t;
 
 /* used to transfer ownership */
@@ -62,6 +75,9 @@ typedef enum co_own_t {
 #include <stdbool.h>
 
 #include "ctx.h"
+#include "bytes.h"
+#include "str.h"
+#include "option.h"
 #include "result.h"
 
 typedef struct co_gc_t {
@@ -125,7 +141,7 @@ struct co_object_t *co_object_alloc(struct co_object_t *ctx, union co_kind_type_
 struct co_object_t *co_object_new(struct co_object_t *ctx, struct co_object_t *cls); 
 
 /* (self: Self) -> None */
-void co_object_free(struct co_object_t *ctx, struct co_object_t *self);
+struct co_object_t *co_object_free(struct co_object_t *ctx, struct co_object_t *self);
 
 /* (self: Self) -> type */
 struct co_object_t *co_object_gettype(struct co_object_t *ctx, struct co_object_t *self);
@@ -146,7 +162,7 @@ struct co_object_t *co_object_delattr(struct co_object_t *ctx, struct co_object_
 struct co_object_t *co_type_new(struct co_object_t *ctx, struct co_object_t *cls, struct co_object_t *name, struct co_object_t *bases, struct co_object_t *attrs);
 
 /* (self: Self) */
-void co_type_free(struct co_object_t *ctx, struct co_object_t *self);
+struct co_object_t *co_type_free(struct co_object_t *ctx, struct co_object_t *self);
 
 /* (self: type, args: Option[list[object]]=None, kwargs: Option[dict[str, object]]=None) -> Self */
 struct co_object_t *co_type_call(struct co_object_t *ctx, struct co_object_t *self, struct co_object_t *args, struct co_object_t *kwargs);

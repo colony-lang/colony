@@ -21,7 +21,7 @@ void ex0(void) {
 }
 
 int main(int argc, char **argv) {
-    _co_type_static_init();
+    // _co_type_static_init();
     ex0();
     return 0;
 }

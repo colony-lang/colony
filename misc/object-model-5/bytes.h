@@ -20,6 +20,7 @@ typedef struct co_bytes_t {
     struct _co_bytes_t *bytes;
 } co_bytes_t;
 
+/*
 static struct co_type_t co_type_type;
 static struct co_type_t co_bytes_type;
 
@@ -50,5 +51,6 @@ void _co_type_static_init(void) {
         },
     };
 };
+*/
 
 #endif
