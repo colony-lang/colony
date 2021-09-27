@@ -37,6 +37,7 @@ typedef enum co_kind_t {
     CO_KIND_LIST,
     CO_KIND_DICT_TYPE,
     CO_KIND_DICT,
+    CO_KIND_NS,
 
     // Result, Ok, Err
     CO_KIND_OK_TYPE,
@@ -85,6 +86,7 @@ typedef enum co_own_t {
 #include "str.h"
 #include "list.h"
 #include "dict.h"
+#include "ns.h"
 #include "option.h"
 #include "result.h"
 
