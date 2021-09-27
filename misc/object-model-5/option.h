@@ -48,6 +48,7 @@ typedef struct co_none_t {
 
 /*
  * Option[V]
+ * Option := Some[V] | None
  */
 typedef struct _co_option_type_t {
     CO_GC_HEAD;

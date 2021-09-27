@@ -31,6 +31,12 @@ typedef enum co_kind_t {
     // special
     CO_KIND_TYPE,
     CO_KIND_CTX,
+    CO_KIND_BYTES,
+    CO_KIND_STR,
+    CO_KIND_LIST_TYPE,
+    CO_KIND_LIST,
+    CO_KIND_DICT_TYPE,
+    CO_KIND_DICT,
 
     // Result, Ok, Err
     CO_KIND_OK_TYPE,
@@ -77,6 +83,8 @@ typedef enum co_own_t {
 #include "ctx.h"
 #include "bytes.h"
 #include "str.h"
+#include "list.h"
+#include "dict.h"
 #include "option.h"
 #include "result.h"
 

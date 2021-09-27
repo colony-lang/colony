@@ -23,7 +23,7 @@ typedef struct co_str_t {
 } co_str_t;
 
 /* (...) -> str */
-struct co_object_t *co_str_alloc(struct co_object_t *ctx, size_t len, char *items, enum co_own_t own, char *encoding);
+struct co_object_t *co_str_alloc(struct co_object_t *ctx, enum co_own_t own, size_t len, char *items, char *encoding);
 
 /* (cls: type, other: Option[object]=None) -> str */
 struct co_object_t *co_str_new(struct co_object_t *ctx, struct co_object_t *cls, struct co_object_t *other);

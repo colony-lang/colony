@@ -70,6 +70,7 @@ typedef struct co_err_t {
 
 /*
  * Result[V, E]
+ * Result := Ok[V] | Err[E]
  */
 typedef struct _co_result_type_t {
     CO_GC_HEAD;
