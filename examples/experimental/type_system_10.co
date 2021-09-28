@@ -13,8 +13,8 @@ C: union = A | B
 c0: C = A(1.0, 2.0)
 c1: C = B(2.0, 3.0)
 
-A(x, y) = c0
-B(z, w) = c1
+A(x, y) := c0
+B(z, w) := c1
 r := x + y + z + w
 
 // if/else ?:

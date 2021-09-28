@@ -14,14 +14,12 @@ c: float = a / b    // panics
 
 d: float = b / a
 
-// NOTE: idea
 // another idiomatic approach is to use `try` builtin function
 // try a / b, if it fails then return 0
-c: float = try(a / b, 0.0)
+c: float = try(a / b, default=0.0)
 
-// NOTE: idea
 c: float = try(a / b, (error: Err) -> float {
-    Err(e) = error
+    Err(e) := error
     
     e == 'ZeroDivision' ? {
         Infinite
@@ -30,30 +28,26 @@ c: float = try(a / b, (error: Err) -> float {
     }
 })
 
-// NOTE: idea
-c: float = try(a / b, {
-    Err('ZeroDivision'): (e) -> { Infinite },
-    Err: (e) -> { NaN },
+c: float = try(a / b, (err) -> {
+    0.0
 })
 
 // NOTE: idea
-c: float = try(a / b, {
-    Err('ZeroDivision'): Infinite,
-    Err: NaN,
+c: Result[float, Error] = try(() -> {
+    1 / 0
 })
 
-// NOTE: idea
-c: float = try(a / b, (e: Err) -> {{
-    'ZeroDivision': Infinite,
-    _: NaN,
-}})
+c0: float = c.unwrap(0.0)
+c1: float = instanceof(c, ZerpDivision) ? Infinite : NaN
 
-// NOTE: idea
-c: float = try(a / b, {
-    Err: {
-        'Zero Division': Infinite,
-        _: NaN,
-    },
+c1: float = byinstanceof(c, {
+    ZerpDivision: Infinite,
     _: NaN,
 })
+
+c2: float = {
+    ZeroDivision: Infinite,
+}.get(typeof(c), NaN)
+
+c3: float = typeof(c) == ZeroDivision ? Infinite : NaN
 

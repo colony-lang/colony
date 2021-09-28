@@ -2,13 +2,17 @@
  * big integer
  */
 a: Integer = Integer('-10')
+a := Integer('-10')
 
 /*
  * big float
  */
 a: Float = Float('0.19', p=1999, e=36)
+a := Float('0.19', p=1999, e=36)
 
 /*
  * big decimal
  */
 a: Decimal = Decimal('-0.123', p=18)
+a := Decimal('-0.123', p=18)
+
