@@ -1,5 +1,5 @@
 
-__ctx__.on_error = (ctx: Ctx, error: Ere) -> None {
+__ctx__.on_error = (ctx: Ctx, error: Err) -> None {
     println('Context: {}, error: {}', ctx, error)
     0.0
 }
@@ -16,38 +16,37 @@ d: float = b / a
 
 // another idiomatic approach is to use `try` builtin function
 // try a / b, if it fails then return 0
-c: float = try(a / b, default=0.0)
+c: float = try(
+    () -> { a / b },
+    default=0.0
+)
 
-c: float = try(a / b, (error: Err) -> float {
-    Err(e) := error
-    
-    e == 'ZeroDivision' ? {
-        Infinite
-    } : {
-        NaN
+c: float = try(
+    () -> {
+        a / b
+    },
+    (err: Err) -> float {
+        isinstance(err, ZeroDivisionError) ? Infinite :
+        isinstance(err, Err) ? NaN : 0.0
     }
-})
+)
 
-c: float = try(a / b, (err) -> {
-    0.0
-})
+c: float = try(
+    () -> { a / b },
+    (err: Err) -> float { 0.0 }
+)
 
-// NOTE: idea
-c: Result[float, Error] = try(() -> {
+c: float = try(
+    () -> { a / b },
+    (err) -> { 0.0 }
+)
+
+c: Result[float, str] = try(() -> {
     1 / 0
 })
 
-c0: float = c.unwrap(0.0)
-c1: float = instanceof(c, ZerpDivision) ? Infinite : NaN
-
-c1: float = byinstanceof(c, {
-    ZerpDivision: Infinite,
-    _: NaN,
-})
-
-c2: float = {
-    ZeroDivision: Infinite,
-}.get(typeof(c), NaN)
-
-c3: float = typeof(c) == ZeroDivision ? Infinite : NaN
+c0: float = c.unwrap() // panics in case of error
+c1: float = c.unwrap(0.0) // tries to unwrap, if case it faile it returns `default` value
+c2: float = instanceof(c, ZerpDivisionError) ? Infinite : NaN
+c3: float = typeof(c) == ZeroDivisionError ? Infinite : NaN
 

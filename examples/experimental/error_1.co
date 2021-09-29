@@ -1,0 +1,51 @@
+
+//
+// example 1
+//
+f1 := (x: f32, y: f32) -> f32 | Result[f32, str] {
+    x / y
+}
+
+a: f32 | Result[f32, str] = f1(1.0, 0.0)
+
+b: f32 = isinstance(a, f32) ? a :
+         isisintace(a, Ok[f32]) a.unwrap() :
+         Infinite
+
+//
+// example 2
+// NOTE: idea
+//
+f2 := (x: f32, y: f32) -> f32? {
+    ZeroDivisionError()
+}
+
+a: f32? = f2(1.0, 0.0)
+
+b: f32 = f2(1.0, 0.0)
+    .match(Ok, (v) -> { v })
+    .match(ZeroDivisionError, (e) -> { Infinite })
+    .match(Err, (e) -> { NaN })
+    .default(NaN)
+
+//
+// example 3
+// NOTE: idea
+//
+T: type = Result[f32, str]
+T: type = Result[f32]
+T: type = f32?
+
+//
+//
+//
+f := (x: Result[f32], y: Result[f32]) -> Result[f32] -> {
+    z: Result[f32] = Ok[f32](x.unwrap() + y.unwrap())
+    z
+}
+
+f := (x: f32?, y: f32?) -> f32? {
+    z: f32? = x? + y?
+    z
+}
+
