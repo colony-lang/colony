@@ -8,33 +8,46 @@ f1 := (x: f32, y: f32) -> f32 | Result[f32, str] {
 
 a: f32 | Result[f32, str] = f1(1.0, 0.0)
 
-b: f32 = isinstance(a, f32) ? a :
-         isisintace(a, Ok[f32]) a.unwrap() :
+b: f32 = isinstanceof(a, f32) ? a :
+         isinstanceof(a, Ok[f32]) ? a.unwrap() :
          Infinite
 
 //
 // example 2
 // NOTE: idea
 //
-f2 := (x: f32, y: f32) -> f32? {
+f2 := (x: f32, y: f32) -> f32 | Result[f32, str] {
     ZeroDivisionError()
 }
 
-a: f32? = f2(1.0, 0.0)
+a: f32 | Result[f32, str] = f2(1.0, 0.0)
 
 b: f32 = f2(1.0, 0.0)
     .match(Ok, (v) -> { v })
     .match(ZeroDivisionError, (e) -> { Infinite })
     .match(Err, (e) -> { NaN })
-    .default(NaN)
+    .else(NaN)
 
-//
-// example 3
-// NOTE: idea
-//
-T: type = Result[f32, str]
-T: type = Result[f32]
-T: type = f32?
+c: f32 = f2(1.0, 0.0)
+    .of(f32, (v) -> { v })
+    .of(Ok, (v) -> { v })
+    .of(ZeroDivisionError, (e) -> { Infinite })
+    .of(Err, (e) -> { NaN })
+    .else(NaN)
+
+d: f32 = f2(1.0, 0.0)
+    .if(isinstanceof(a, f32), (v) -> { v })
+    .if(isinstanceof(a, Ok), (a) -> { a.unwrap() })
+    .if(isinstanceof(a, ZeroDivisionError), (a) -> { Infinite })
+    .if(isinstanceof(a, Err), (e) -> { NaN })
+    .else(NaN)
+
+e: f32 = f2(1.0, 0.0)
+    .of(f32)
+    .of(Ok)
+    .of(ZeroDivisionError, Infinite)
+    ,of(Err, NaN)
+    .else(NaN)
 
 //
 //
