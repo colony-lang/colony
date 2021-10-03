@@ -11,9 +11,31 @@ f2 := (x: f32, y: f32) -> Result[f32] {
     }
 }
 
+f3 := () -> i32 {
+    panic('Some undefined error')   // raises panic in a context
+    0                               // unreachable
+}
+
+//
 v0: Result[f32] = try(() -> { f1(1.0, 0.0) })
 v1: Result[f32] = try(f1, (1.0, 0.0))
 
+//
+v2: Result = try(f3)
+assert(!v2.is_ok())
+assert(v2.is_err())
+m2: str = v2.unwrap()
+m2 == 'Some undefined error'
+m2: i32 = v2.is_ok() ? v2.unwrap() : -1
+
+//
+v3: Result = try(f1, (0.0, 1.0))
+m3: f32 = v3.unwrap_or(NaN)
+
+//
+v4: f32 = try(f1, (0.0, 1.0)).unwrap_or(NaN)
+
+//
 a := match(try(f1, (1.0, 0,0)))
     .case(Ok[f32], (o) -> { o.unwrap() })
     .case(ZeroDivisionError, (o) -> { Infinite })
