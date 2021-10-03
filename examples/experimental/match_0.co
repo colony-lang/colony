@@ -1,25 +1,36 @@
 
-// NOTE: idea
-a: float = try(1 / 0, {
-    Err: {
-        'ZeroDivision': Infinite,
-        _: NaN,
-    },
-    _: NaN
-)
+f1 := (x: f32, y: f32) -> f32 {
+    x / y
+}
 
-// NOTE: idea
-b: Result[float, str] = Ok[float](1.0)
-c: Result[float, str] = Err[str]('Some Error')
+f2 := (x: f32, y: f32) -> Result[f32] {
+    y == 0 ? {
+        ZeroDivisionError()
+    } : {
+        Ok[f32](x / y)
+    }
+}
 
-d: float = match(b, {
-    Ok: {
-        1.0: -1.0,
-        _: NaN,
-    },
-    Err: {
-        'Some Error': NaN,
-    },
-    _: NaN,
-})
+v0: Result[f32] = try(() -> { f1(1.0, 0.0) })
+v1: Result[f32] = try(f1, (1.0, 0.0))
+
+a := match(try(f1, (1.0, 0,0)))
+    .case(Ok[f32], (o) -> { o.unwrap() })
+    .case(ZeroDivisionError, (o) -> { Infinite })
+    .default((o) -> { NaN })
+
+b := try_match(f1, (1.0, 0.0))
+    .case(Ok[f32], (o) -> { o.unwrap() })
+    .case(ZeroDivisionError, (o) -> { Infinite })
+    .default((o) -> { NaN })
+
+c := match(f2(1.0, 0.0))
+    .case(Ok[f32], (o) -> { o.unwrap() })
+    .case(ZeroDivisionError, (o) -> { Infinite })
+    .default((o) -> { NaN })
+
+d := match(f2(1.0, 0.0))
+    .case(Ok[f32])  // implicit unwrap
+    .case(ZeroDivisionError, Infinite)  // default non-callable value
+    .default(NaN)   // implicite value
 

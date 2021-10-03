@@ -1,0 +1,29 @@
+// in case of `y` being `0.0`, it will panic
+f1 := (x: f32, y: f32) -> f32 {
+    x / y
+}
+
+// `try` tries to execute function.
+// In case it fails, it will "catch" error.
+a: Result[f32] = try(() -> {
+    f1(1.0, 0.0)
+})
+
+
+
+b: f32 = a.match(Ok[f32], (o) -> { o.unwrap() })
+          .else(NaN)
+
+//
+c: f32 = try(() -> {
+    f1(1.0, 0.0)
+})
+    .match(Ok[f32], (o) -> { o.unwrap() })
+    .else(NaN)
+
+//
+d: f32 = try(f1, (1.0, 0.0)).match(Ok[f32]).else(NaN)
+
+//
+e: f32 = try(f1, (1.0, 0.0), match=Ok[f32], else=NaN)
+

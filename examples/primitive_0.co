@@ -87,26 +87,6 @@ a := {
 /*
  * function
  */
-/*
-sum: (a: i64, b: i64) -> i64 = (a: i64, b: i64) -> i64 {
-    a + b
-}
-
-sum := (a: i64, b: i64) -> i64 {
-    a + b
-}
-
-sum(10, 20) == 30
-
-// chained functions
-f0 := (a: i64) -> (b: i64) -> i64 {
-    (b: i64) -> i64 {
-        a + b
-    }
-}
-
-f0(10)(20) == 30
-*/
 
 // function variadic arguments and keywords arguments
 f0 := (a: i64, [args: list[i64]], {kwargs: dict[str, i64]}) -> i64 {
@@ -117,5 +97,5 @@ f0 := (a: i64, [args: list[i64]], {kwargs: dict[str, i64]}) -> i64 {
     )
 }
 
-f1 := i -> { i * 2 }
+f1 := (i) -> { i * 2 }
 a := range(10).map(f1)
