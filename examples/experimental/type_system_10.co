@@ -17,33 +17,20 @@ A(x, y) := c0
 B(z, w) := c1
 r := x + y + z + w
 
-// if/else ?:
-r: f32 = typeof(c0) == A ? {
-    A(x, y) := c0
-
-    x >= 0 && y >= 0 {
-        x + y
-    } : {
-        -x + -y
-    }
-} : typeof(c0) == B ? {
-    B(z, w) := c1
-    z + w
-} : {
-    -1.0
-}
-
-// match matching ??
-r: f32 = c0 ?? {
-    A(x, y) -> {
+// match
+r: f32 = match(c0)
+    .case(A, (o) -> {
+        A(x, y) := o
+        
         x >= 0 && y >= 0 {
             x + y
         } : {
             -x + -y
         }
-    },
-    B(z, w) -> {
+
+    })
+    .case(B, (o) -> {
+        B(z, w) := o
         z + w
-    },
-    _ -> -1.0
-}
+    })
+    .default(-1.0
