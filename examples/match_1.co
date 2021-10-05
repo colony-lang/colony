@@ -33,4 +33,5 @@ r: f32 = match(c0)
         B(z, w) := o
         z + w
     })
-    .default(-1.0
+    .default(-1.0)
+
