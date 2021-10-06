@@ -1,0 +1,50 @@
+//
+A := (
+    __name__: str = 'A',
+    __type__: type = type,
+    x: f32 = 0.0,
+)
+
+//
+B := (
+    __name__: str = 'B',
+    __type__: type: type,
+    y: f32 = 0.0,
+)
+
+//
+C := A | B
+
+//
+D := (
+    __name__: str = 'D',
+    __type__: type = type,
+    __bases__: list = [A, B],
+    x: f32 = 0.0,
+    y: f32 = 0.0,
+
+    __init__: fn = (self, x: f32, y: f32) -> Self {
+        self := (self.x := x)
+        self := (self.y := y)
+        self
+    },
+
+    __add__: fn = (self, other: Self) -> Self {
+        o: Self = Self(self.x + other.x, self.y + other.y)
+        o
+    },
+)
+
+//
+a0 := A(1.0)
+b0 := B(2.0)
+
+//
+c0: C = A(1.0)
+c1: C = B(2.0)
+
+//
+d0 := D(1.0, 2.0)
+d1 := D(2.0, 3.0)
+d2 := d0 + d1
+
