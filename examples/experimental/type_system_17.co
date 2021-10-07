@@ -1,0 +1,110 @@
+//
+// pseudo-code for object/type
+//
+
+object: type = (
+    __type__: type = type,
+    __name__: str = 'object',
+    __bases__: list = [],
+    __fields__: list[(attr: str, cls: type, value: object)] = [] // FIXME: find way to find it
+
+    __new__: fn = (cls, [args], {kwargs}) -> object {
+        self: object = (
+            __type__: type = cls,
+        )
+        
+        self
+    },
+
+    __init__: fn = (self, [args], {kwargs}) -> object {
+        // init self with args and kwargs
+        self
+    },
+)
+
+type: type = (
+    __type__: type = type,
+    __name__: str = 'type',
+    __bases__: list = [object],
+    __fields__: list[(attr: str, cls: type, value: object)] = [] // FIXME: ...
+
+    get_fields: fn = (cls, types: list[type]) -> list[(attr: str, cls: type, value: object)] {
+        // return list of (attr, type, value)
+    },
+
+    get_mro: fn = (cls, types: list[type]) -> list[type] -> {
+        // calc mro using C3 Linearization
+    },
+
+    __call__: fn = (cls, [args], {kwargs}) -> object {
+        self: cls = cls.__new__(cls, ...args, ...kwargs)
+        self: cls = cls.__init__(self, ...args, ...kwarsg)
+        self
+    },
+
+    __or__: fn = (cls, other: type) -> type {
+        res_cls: type = union[cls, other]
+        res_cls
+    },
+
+    __add__: fn = (cls, other: type) -> type {
+        res_cls: type = (
+            __type__: type = max(cls.__type__, other.__type__),
+            __bases__: list[type] = cls.get_mro(cls, [cls, other]),
+            ...cls.get_fields(cls, [cls, other])
+        )
+
+        res_cls
+    },
+)
+
+//
+//
+//
+
+//
+A := type + (
+    x: f32 = 0.0,
+)
+
+//
+B := type + (
+    y: f32 = 0.0,
+)
+
+//
+C := A | B
+
+//
+D := A + B + (
+    z: f32 = 0.0,
+
+    __init__: fn = (self, x: f32, y: f32, z: f32) -> D {
+        self := (self.x := x)
+        self := (self.y := y)
+        self := (self.z := z)
+    
+        // self := (((self.x := x).y := y).z := z)
+
+        self
+    },
+
+    __add__: fn = (self, other: D) -> D {
+        o := D(self.x + other.x, self.y + other.y, self.z + other.z)
+        o
+    },
+)
+
+//
+a0 := A(1.0)
+b0 := B(2.0)
+
+//
+c0: C = A(1.0)
+c1: C = B(2.0)
+
+//
+d0 := D(1.0, 2.0, 3.0)
+d1 := D(2.0, 3.0, 4.0)
+d2 := d0 + d1
+

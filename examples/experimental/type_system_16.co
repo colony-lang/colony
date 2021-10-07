@@ -1,25 +1,33 @@
 //
+// A: struct = (...)
 A := (
+    // optional
     __name__: str = 'A',
     __type__: type = type,
     x: f32 = 0.0,
 )
 
 //
+// B: struct = (...)
 B := (
+    // optional
     __name__: str = 'B',
     __type__: type: type,
     y: f32 = 0.0,
 )
 
 //
+// C: union = A | B
 C := A | B
 
 //
 D := (
+    // optional:
     __name__: str = 'D',
+    
     __type__: type = type,
     __bases__: list = [A, B],
+    
     x: f32 = 0.0,
     y: f32 = 0.0,
 
@@ -33,6 +41,27 @@ D := (
         o: Self = Self(self.x + other.x, self.y + other.y)
         o
     },
+)
+
+//
+E := A + B + (
+    // optiona:
+    __name__: str = 'E',
+    
+    // implicit:
+    // __type__: type = type,
+    
+    // implicit:
+    // __bases__: list = [A, B],
+    
+    z: f32 = 0.0,
+
+    __init__: fn = (self, x: f32, y: f32, z: f32) -> Self {
+        self := (self.x := x)
+        self := (self.y := y)
+        self := (self.z := z)
+        self
+    }
 )
 
 //
