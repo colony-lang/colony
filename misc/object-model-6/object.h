@@ -81,6 +81,7 @@ typedef enum co_own_t {
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "object_common.h"
 #include "ctx.h"
 #include "bytes.h"
 #include "str.h"
