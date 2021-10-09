@@ -2,13 +2,14 @@
 // pseudo-code for object/type
 //
 
-_FieldDef := (attr: str, cls: type, val: object)
+FieldDef: struct = (attr: str, cls: type, val: object)
 
 object: type = (
     __type__: type = type,
     __name__: str = 'object',
     __bases__: list = [],
-    __fields__: list[_FieldDef] = []
+    __type_params__: dict[str, list[type]] = {},
+    __fields__: list[_FieldDef] = [],
 
     __new__: fn = (cls, [args], {kwargs}) -> object {
         self: object = (
@@ -28,10 +29,11 @@ type: type = (
     __type__: type = type,
     __name__: str = 'type',
     __bases__: list = [object],
-    __fields__: list[(attr: str, cls: type, value: object)] = []
+    __type_params__: dict[str, list[type]] = {},
+    __fields__: list[(attr: str, cls: type, value: object)] = [],
 
-    get_fields: fn = (cls, types: list[type]) -> list[_FieldDef] {
-        // return list of _FieldDef
+    get_fields: fn = (cls, types: list[type]) -> list[FieldDef] {
+        // return list of FieldDef
         // all fields which are not `fn` nor `async` are considered "fields" of struct
      },
 
@@ -55,7 +57,7 @@ type: type = (
             __type__: type = max(cls.__type__, other.__type__),
             __name__: str = 'Union[{}, {}]'.format(cls, other),
             __bases__: list[type] = cls.get_mro(cls, [cls, other]),
-            __fields__: list[_FieldDef] = cls.get_fields(cls, [cls, other]),
+            __fields__: list[FieldDef] = cls.get_fields(cls, [cls, other]),
         )
 
         res
