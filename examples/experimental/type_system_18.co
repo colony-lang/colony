@@ -9,7 +9,7 @@ object: type = (
     __name__: str = 'object',
     __bases__: list = [],
     __type_params__: dict[str, list[type]] = {},
-    __fields__: list[_FieldDef] = [],
+    __fields__: list[FieldDef] = [],
 
     __new__: fn = (cls, [args], {kwargs}) -> object {
         self: object = (
