@@ -46,24 +46,24 @@ type: type = (
     },
 
     __or__: fn = (cls, other: type) -> type {
-        res_cls: type = union[cls, other]
-        res_cls
+        res: type = union[cls, other]
+        res
     },
 
     __add__: fn = (cls, other: type) -> type {
-        res_cls: type = (
+        res: type = (
             __type__: type = max(cls.__type__, other.__type__),
             __name__: str = 'Union[{}, {}]'.format(cls, other),
             __bases__: list[type] = cls.get_mro(cls, [cls, other]),
             __fields__: list[_FieldDef] = cls.get_fields(cls, [cls, other]),
         )
 
-        res_cls
+        res
     },
 
     __getitem__: fn = (cls, {type_params}) -> type {
-        res_cls = cls // FIXME: implement
-        res_cls
+        res := cls // FIXME: implement
+        res
     },
 )
 
@@ -100,8 +100,8 @@ D := A + B + (
     },
 
     __add__: fn = (self, other: D) -> D {
-        o := D(self.x + other.x, self.y + other.y, self.z + other.z)
-        o
+        res := D(self.x + other.x, self.y + other.y, self.z + other.z)
+        res
     },
 )
 
@@ -110,12 +110,12 @@ E := type[K=[str, bytes], V=[int, float]] + (
     __init__ := (self) -> self {
         self := (self.items := dict[K, V]())
         self
-    }
+    },
 
     set := (self, key: K, value: V) -> self {
         self := (...self, items=self.items[key, value])
         self
-    }
+    },
 )
 
 //
