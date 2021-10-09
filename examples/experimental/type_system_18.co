@@ -60,6 +60,11 @@ type: type = (
 
         res_cls
     },
+
+    __getitem__: fn = (cls, {type_params}) -> type {
+        res_cls = cls // FIXME: implement
+        res_cls
+    },
 )
 
 //
@@ -87,7 +92,8 @@ D := A + B + (
         self := (self.x := x)
         self := (self.y := y)
         self := (self.z := z)
-    
+        
+        // self := (...self, x=x, y=y, z=z)
         // self := (((self.x := x).y := y).z := z)
 
         self
@@ -97,6 +103,19 @@ D := A + B + (
         o := D(self.x + other.x, self.y + other.y, self.z + other.z)
         o
     },
+)
+
+//
+E := type[K=[str, bytes], V=[int, float]] + (
+    __init__ := (self) -> self {
+        self := (self.items := dict[K, V]())
+        self
+    }
+
+    set := (self, key: K, value: V) -> self {
+        self := (...self, items=self.items[key, value])
+        self
+    }
 )
 
 //
@@ -111,4 +130,10 @@ c1: C = B(2.0)
 d0 := D(1.0, 2.0, 3.0)
 d1 := D(2.0, 3.0, 4.0)
 d2 := d0 + d1
+
+//
+e0_0 = E[str, int]()
+s0_1 := e0_0.set('x', 10)
+s0_2 := e0_1.set('y', 20)
+z: int = s0_2.x + s0_2.y
 
