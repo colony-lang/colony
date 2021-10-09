@@ -23,18 +23,18 @@ typedef struct co_str_t {
 } co_str_t;
 
 /* (...) -> str */
-struct co_object_t *co_str_alloc(struct co_object_t *ctx, enum co_own_t own, size_t len, char *items, char *encoding);
+struct co_object_t co_str_alloc(struct co_object_t ctx, enum co_own_t own, size_t len, char *items, char *encoding);
 
 /* (cls: type, other: Option[object]=None) -> str */
-struct co_object_t *co_str_new(struct co_object_t *ctx, struct co_object_t *cls, struct co_object_t *other);
+struct co_object_t co_str_new(struct co_object_t ctx, struct co_object_t cls, struct co_object_t other);
 
 /* (self: str) -> None */
-struct co_object_t *co_str_free(struct co_object_t *ctx, struct co_object_t *self);
+struct co_object_t co_str_free(struct co_object_t ctx, struct co_object_t self);
 
 /* (self: str) -> bytes */
-struct co_object_t *co_str_encode(struct co_object_t *ctx, struct co_object_t *self);
+struct co_object_t co_str_encode(struct co_object_t ctx, struct co_object_t self);
 
 /* (self: str, other: str) -> str */
-struct co_object_t *co_str_add(struct co_object_t *ctx, struct co_object_t *self, struct co_object_t *other);
+struct co_object_t co_str_add(struct co_object_t ctx, struct co_object_t self, struct co_object_t other);
 
 #endif

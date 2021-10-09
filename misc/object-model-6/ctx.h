@@ -56,25 +56,25 @@ typedef struct co_ctx_t {
 } co_ctx_t;
 
 /* (parent: Option[Context]=None, ns: Option[Namespace]=None, on_message_cb: Option[fn[Callable, Result[str, str]]]=None) -> Context */
-struct co_object_t *co_ctx_new(struct co_object_t *ctx, struct co_object_t *parent, struct co_object_t *ns);
+struct co_object_t co_ctx_new(struct co_object_t ctx, struct co_object_t parent, struct co_object_t ns);
 
 /* (self: Context) -> None */
-struct co_object_t *co_ctx_free(struct co_object_t *ctx, struct co_object_t *self);
+struct co_object_t co_ctx_free(struct co_object_t ctx, struct co_object_t self);
 
 /* (self: Context, on_error_cb: fn[Callable, Result[object, str]]) -> Context */
-struct co_object_t *co_ctx_on_error(struct co_object_t *ctx, struct co_object_t *on_error_cb);
+struct co_object_t co_ctx_on_error(struct co_object_t ctx, struct co_object_t on_error_cb);
 
 /* (self: Context, error: object) -> Context */
-struct co_object_t *co_ctx_set_error(struct co_object_t *ctx, struct co_object_t *error);
+struct co_object_t co_ctx_set_error(struct co_object_t ctx, struct co_object_t error);
 
 /* (self: Context) -> object */
-struct co_object_t *co_ctx_get_error(struct co_object_t *ctx);
+struct co_object_t co_ctx_get_error(struct co_object_t ctx);
 
 /* (self: Context, on_message_cb: fn[Callable, Result[str, str]]) -> Context */
-struct co_object_t *co_ctx_on_message(struct co_object_t *ctx, struct co_object_t *self, struct co_object_t *on_message_cb);
+struct co_object_t co_ctx_on_message(struct co_object_t ctx, struct co_object_t self, struct co_object_t on_message_cb);
 
 /* (self: Context, message: str) -> Future[str] */
-struct co_object_t *co_ctx_post_message(struct co_object_t *ctx, struct co_object_t *self, struct co_object_t *message);
+struct co_object_t co_ctx_post_message(struct co_object_t ctx, struct co_object_t self, struct co_object_t message);
 
 /*
  * FIXME: finish implementation

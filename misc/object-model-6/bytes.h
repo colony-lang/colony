@@ -22,19 +22,19 @@ typedef struct co_bytes_t {
 } co_bytes_t;
 
 /* (...) -> bytes */
-struct co_object_t *co_bytes_alloc(struct co_object_t *ctx, enum co_own_t own, size_t len, char *items);
+struct co_object_t co_bytes_alloc(struct co_object_t ctx, enum co_own_t own, size_t len, char *items);
 
 /* (cls: type, other: Option[object]=None) -> bytes */
-struct co_object_t *co_bytes_new(struct co_object_t *ctx, struct co_object_t *cls, struct co_object_t *other);
+struct co_object_t co_bytes_new(struct co_object_t ctx, struct co_object_t cls, struct co_object_t other);
 
 /* (self: bytes) -> None */
-struct co_object_t *co_bytes_free(struct co_object_t *ctx, struct co_object_t *self);
+struct co_object_t co_bytes_free(struct co_object_t ctx, struct co_object_t self);
 
 /* (self: bytes) -> str */
-struct co_object_t *co_bytes_decode(struct co_object_t *ctx, struct co_object_t *self);
+struct co_object_t co_bytes_decode(struct co_object_t ctx, struct co_object_t self);
 
 /* (self: bytes, other: bytes) -> bytes */
-struct co_object_t *co_bytes_add(struct co_object_t *ctx, struct co_object_t *self, struct co_object_t *other);
+struct co_object_t co_bytes_add(struct co_object_t ctx, struct co_object_t self, struct co_object_t other);
 
 /*
 static struct co_type_t co_type_type;

@@ -138,43 +138,44 @@ typedef union co_kind_type_t {
 /*
  * GC - reference counter
  */
-void co_ref(struct co_object_t *ctx, struct co_object_t *self);
-void co_unref(struct co_object_t *ctx, struct co_object_t *self);
+void co_ref(struct co_object_t ctx, struct co_object_t self);
+void co_unref(struct co_object_t ctx, struct co_object_t self);
 
 /*
  * object
  */
 /* (...) -> object */
-struct co_object_t *co_object_alloc(struct co_object_t *ctx, union co_kind_type_t kt, union co_value_t v);
+struct co_object_t co_object_alloc(struct co_object_t ctx, union co_kind_type_t kt, union co_value_t v);
 
 /* (cls: type) -> Self */
-struct co_object_t *co_object_new(struct co_object_t *ctx, struct co_object_t *cls); 
+struct co_object_t co_object_new(struct co_object_t ctx, struct co_object_t cls); 
 
 /* (self: Self) -> None */
-struct co_object_t *co_object_free(struct co_object_t *ctx, struct co_object_t *self);
+struct co_object_t co_object_free(struct co_object_t ctx, struct co_object_t self);
 
 /* (self: Self) -> type */
-struct co_object_t *co_object_gettype(struct co_object_t *ctx, struct co_object_t *self);
+struct co_object_t co_object_gettype(struct co_object_t ctx, struct co_object_t self);
 
 /* (self: Self, attr: str) -> Result[object, str] */
-struct co_object_t *co_object_getattr(struct co_object_t *ctx, struct co_object_t *self, struct co_object_t *attr);
+struct co_object_t co_object_getattr(struct co_object_t ctx, struct co_object_t self, struct co_object_t attr);
 
 /* (self: Self, attr: str, value: object) -> Self */
-struct co_object_t *co_object_setattr(struct co_object_t *ctx, struct co_object_t *self, struct co_object_t *attr, struct co_object_t *value);
+struct co_object_t co_object_setattr(struct co_object_t ctx, struct co_object_t self, struct co_object_t attr, struct co_object_t value);
 
 /* (self: Self, attr: str) -> Self */
-struct co_object_t *co_object_delattr(struct co_object_t *ctx, struct co_object_t *self, struct co_object_t *attr);
+struct co_object_t co_object_delattr(struct co_object_t ctx, struct co_object_t self, struct co_object_t attr);
 
 /*
  * type
  */
 /* (cls: type, name: str, bases: list[type], attrs: NameSpace) -> Self */
-struct co_object_t *co_type_new(struct co_object_t *ctx, struct co_object_t *cls, struct co_object_t *name, struct co_object_t *bases, struct co_object_t *attrs);
+struct co_object_t co_type_new(struct co_object_t ctx, struct co_object_t cls, struct co_object_t name, struct co_object_t bases, struct co_object_t attrs);
 
 /* (self: Self) */
-struct co_object_t *co_type_free(struct co_object_t *ctx, struct co_object_t *self);
+struct co_object_t co_type_free(struct co_object_t ctx, struct co_object_t self);
 
 /* (self: type, args: Option[list[object]]=None, kwargs: Option[dict[str, object]]=None) -> Self */
-struct co_object_t *co_type_call(struct co_object_t *ctx, struct co_object_t *self, struct co_object_t *args, struct co_object_t *kwargs);
+struct co_object_t co_type_call(struct co_object_t ctx, struct co_object_t self, struct co_object_t args, struct co_object_t kwargs);
 
 #endif
+
