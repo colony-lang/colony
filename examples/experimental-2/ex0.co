@@ -1,0 +1,216 @@
+
+a: bool = true
+b: bool = false
+
+a: i8 = 1
+b: u16 = 1_000
+c: f32 = 1.1
+d: f64 = 111.111
+
+e: bytes = b'1234'
+f: str = '1234'
+
+ee: str = e.decode()
+ff: bytes = f.encode()
+
+//
+a: list[int] = [1, 2, 3, 4, 5]
+b: dict[str, f64] = {'x': 1.0, 'y': 2.0}
+b: dict[str, f64] = {.x: 1.0, .y: 2.0}
+
+c: set[int] = {1, 1, 1, 1, 2, 3, 4, 5}
+
+//
+a: list = [1, 1.1, 'abc']
+a0: list = a.append(false)
+x: int = a[0] // a.get(0)
+
+//
+f0: fn = (x: f32=0.0, y: f32=0.0) -> f32 {
+    x + y
+}
+
+//
+Point1: struct = (x: f32=0.0, y: f32=0.0)
+
+Point2: struct = (x: f32=0.0, y: f32=0.0)
+
+Point3: struct = (
+    x: f32=Point1.x + Point2.x,
+    y: f32=Point1.y + Point2.y,
+)
+
+//
+Point4: union = Point1 | Point2
+P: Point4 = (x: f32=0.0, y: f32=0.0)
+
+//
+A: type = (
+    __type__: type = type,
+    __name__: str = 'A',
+    __bases__: [object],
+    __type_params__: {},
+    __fields__: [
+        ['x', f32, 0.0],
+        ['y', f32, 0.0],
+    ],
+
+    __new__: fn = (cls: type, [args], {kwargs}) -> A {
+        self: A = (
+            __type__: type = A,
+            x: f32 = 0.0,
+            y: f32 = 0.0,
+        )
+
+        self
+    },
+
+    __init__: fn = (self, x: f32=0.0, y: f32=0.0) -> A {
+        self := (...self, x := x, y := y)
+        self
+    },
+    
+    __add__: fn = (self, other: A) -> A {
+        res := A(self.x + other.x, self.y + other.y)
+        res
+    },
+)
+
+a: A = (
+    __type__: type = A,
+    x: f32 = 0.0,
+    y: f32 = 0.0,
+)
+
+a0 := A(1.0, 2.0)
+a0.x == 1.0
+a0.y == 2.0
+
+a1 := A(2.0, 3.0)
+
+// a2 := a0.__type__.__add__(a0, a1)
+a2 := a0 + a1
+
+//
+//
+//
+A := type + (
+    x: f32 = 0.0,
+    y: f32 = 0.0,
+
+    __add__ := (self, other: A) -> A {
+        A(self.x + other.x, self.y + other.y)
+    }
+)
+
+a0 := A(1.0, 2.0)
+a1 := A(2.0, 3.0)
+a2 := a0 + a1
+
+//
+//
+//
+A := type + (
+    x: f32 = 0.0,
+)
+
+B := type + (
+    y: f32 = 0.0,
+)
+
+C := A | B
+
+c0: C = A(1.0)
+c1: C = B(2.0)
+
+D := A + B + (
+    // x: f32 = 0.0
+    // y: f32 = 0.0
+    z: f32 = 0.0,
+)
+
+d0 := D(1.0, 2.0, 3.0)
+
+//
+//
+//
+Dict := type[K:=[bytes, str], V:=[i32, f32]] + (
+    d: dict[K, V] = {},
+
+    add := (self, key: K, value: V) -> Dict {
+        res := Dict[K, V](d=self.d.set(key, value))
+        res
+    }
+)
+
+d0 := Dict[str, f32]()
+d1 := d0.add('12312', 1)
+
+a: list[int] = [1, 2, 3, 1]
+
+//
+// Result
+//
+
+Result: type = Ok | Err
+
+a0: Result[i32, str] = Ok[i32](1)
+a1: Result[i32, str] = Err[str]('Some error')
+
+a2: Result[f32] = Ok[f32](1.1)
+
+//
+// Option
+//
+
+Option: type = Some | None
+
+b0: Option[f32] = Some[f32](1.1)
+b1: Option[f32] = None
+
+//
+//
+//
+
+div: fn = (x: f32, y: f32) -> Result[f32] {
+    res := y == 0.0 ? {
+        Err(ZeroDivisionError)
+    } : {
+        Ok[f32](x / y)
+    }
+
+    res
+}
+
+z: Result[f32] = div(1.0, 0.0)
+
+z: f32 = z.match()
+    .case(Err, (o) -> { Infinite })
+    .case(Ok, (o) -> { o.unwrap() })
+    .default((o) -> { NaN })
+
+//
+//
+//
+
+div := (x: f32, y: f32) -> f32 {
+    x / y
+}
+
+z: Result[f32] = try(() -> {
+    div(1.0, 0.0)
+})
+
+z: Result[f32] = try(div, [1.0, 0.0])
+z: Result[f32] = try(div, [1.0], {.y: 0.0})
+z: Result[f32] = try(div, [], {.x: 1.0, .y: 0.0)
+
+//
+//
+//
+-1_i8
+1_u8
+32_u64 - 16_u64
+
+a: f64 = sum(range(0, 1_000_000).filter((n) -> { n % 2}).map((n) -> { n * 2.0_f64 })
+
