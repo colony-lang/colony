@@ -9,6 +9,70 @@ y: float = 3.3
 z: i8 = -7_i8
 w: u8 = 128_u8
 
+// tuple
+a := (0, 1, 2)
+a[0]
+a[1]
+a[2]
+a.__args__ = [0, 1, 2]
+a.__kwargs__ = {}
+a.__annotations__ = []
+a.__kwannotations__ = {}
+
+a := (x=0, y=1, z=2)
+a[0] == a.x == a['x']
+a[1] == a.y == a['y']
+a[2] == a.z == a['z']
+a.__args__ = []
+a.__kwargs__ = {.x: 0, .y: 1, .z: 2}
+a.__annotations__ = []
+a.__kwannotations__ = {}
+
+a := (0, 1, z=2)
+a[0]
+a[1]
+a[2] == a.z == a['z']
+a.__args__ = [0, 1]
+a.__kwargs__ = {.z: 2}
+a.__annotations__ = []
+a.__kwannotations__ = {}
+
+a := (x: int=0, y: int=1, z: int=2)
+a[0] == a.x == a['x']
+a[1] == a.y == a['y']
+a[2] == a.z == a['z']
+a.__args__ = []
+a.__kwargs__ = {.x: 0, .y: 1, .z: 2}
+a.__annotations__ = []
+a.__kwannotations__ = {.x: int, .y: int, .z: int}
+
+a := (0, 1, z: int =2)
+a[0]
+a[1]
+a[2] == a.z == a['z']
+a.__args__ = [0, 1]
+a.__kwargs__ = {.z: 2}
+a.__annotations__ = []
+a.__kwannotations__ = {.z: int}
+
+a := (_: int=0, _: int=1, z: int =2)
+a[0]
+a[1]
+a[2] == a.z == a['z']
+a.__args__ = [0, 1]
+a.__kwargs__ = {.z: 2}
+a.__annotations__ = [int, int]
+a.__kwannotations__ = {.z: int}
+
+a := (x: int, y: int, z: int)
+a[0] == a.x == a['x'] == int.default
+a[1] == a.y == a['y'] == int.default
+a[2] == a.z == a['z'] == int.default
+a.__args__ = []
+a.__kwargs__ = {.x: int.default, .y: int.default, .z: int.default}
+a.__annotations__ = []
+a.__kwannotations__ = {.x: int, .y: int, .z: int}
+
 // operations
 x := 1
 y := 2
@@ -16,10 +80,26 @@ y := 2
 z := x + y
 z := x::__type__::__add__(x, y)
 
-f := (x, y, z) -> { x + y + z }
+z := x - y
+z := x::__type__::__sub__(x, y)
+
+// functions
+// { ???
+inc := x: int -> int { x + 1 }
+dec := x: int -> int { x - 1 }
+
+r := inc 10
+r := inc::__type__::__call__(inc, 10)
+r == 11
+
+r := dec 10
+r := dec::__type__::__call__(dec, 10)
+r == 9
+// } ???
+
+f := (x, y, z, w) -> { x + y + z + w }
 r := f(1, 2, 3, w=4)
-r := f::__type__::__call__(f, [1, 2, 3], {.w: 4}) // ?
-r := f::__type__::__call__(f, TypedTuple(__args__=[1, 2, 3], __kwargs__={.w: 4})) // ?
+r := f::__type__::__call__(f, (1, 2, 3, w=4))
 
 // array
 a := [1, 2, 3]
@@ -39,33 +119,74 @@ b: dict[str, float] = {'x': 1.0, 'y': 2.0}
 c: dict[str, float] = {.x: 1.0, .y: 2.0}
 
 // struct
-A: type = struct(float, float)
-a0: A = A(1.0, 2.0)
-a1: A = A(2.0, 3.0)
-a2: A = A(a0[0] + a1[0], a0[1] + a1[1])
-
+A: type = struct(x: float, y: float)
 A: type = struct(x: float=0.0, y: float=0.0)
 a0: A = A(1.0, 2.0)
 a1: A = A(2.0, 3.0)
 a2: A = A(a0.x + a1.x, a0.y + a1.y)
 
-A: type = struct[T=union(int, float)](x: T=T.default, y: T=T.default)
+A: type = struct[T=int | float](x: T, y: T)
+A: type = struct[T=int | float](x: T=T.default, y: T=T.default)
 a0: A[int] = A(1, 2)
 a1: A[int] = A(2, 3)
 a2: A[int] = A(a0.x + a1.x, a0.y + a1.y)
 
-// {
-A: type = struct[T=union(int, float)](
-    x: T=T.default,
-    y: T=T.default,
+A: type = struct(
+    __name__ := 'A',
+    __bases__ := struct.__bases__ + [],
+    
+    x: int,
+    y: int,
+    z: int,
 
-    __type__: struct(
-        __add__ := (self: Self, other: Self) -> Self {
-            res: Self = Self(self.x + other.x, self.y + other.y)
-        },
-    )
+    __add__ := (self: Self, other: Self) -> Self {
+        res: Self = Self(self.x + other.x, self.y + other.y)
+    },
+
+    f1 := (self: Self) -> Self {
+        self
+    },
 )
-// }
+
+a0: A = A(1, 2, 3)
+a1: A = A(2, 3, 4)
+a2: A = a0 + a1
+
+A: type = struct[T=int | float](
+    __name__ := 'A',
+    __bases__ := struct.__bases__ + [],
+    
+    x: T = T.default,
+    y: T = T.default,
+    z: T = T.default,
+
+    __add__ := (self: Self, other: Self) -> Self {
+        res: Self = Self(self.x + other.x, self.y + other.y)
+    },
+
+    f1 := (self: Self) -> Self {
+        self
+    },
+)
+
+a0: A = A[float](1.0, 2.0, 3.0)
+a1: A = A[float](2.0, 3.0, 4.0)
+a2 := a0 + a1
+
+B := struct[U=int | float](
+    __bases__ := struct.__bases__ + [A],
+    u: U = U.default,
+)
+
+C := struct[V=int | float](
+    __bases__ := struct.__bases__ + [A],
+    v: V = V.default,
+)
+
+D := struct[V=int | float](
+    __bases__ := struct.__bases__ + [B, C],
+    w: W = W.default,
+)
 
 // union
 A: type = int | float
@@ -75,3 +196,4 @@ B: type = union[T=union(int, float)](array[T], dict[uint, T])
 b0: B[int] = [1, 2, 3]
 b1: B[int] = {0: 1, 1: 2, 2: 3}
 b0::__type__ == b1::__type__
+
