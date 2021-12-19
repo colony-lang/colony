@@ -1,0 +1,57 @@
+//
+// integers
+//
+x: i8 = 1i8
+y: i8 = 2_i8
+z := -3_i8
+
+//
+// array
+//
+a := [1, 2, 3, 4]
+a := array[int](1, 2, 3, 4)
+a: array = array[int](1, 2, 3, 4)
+a: array[int] = array[int](1, 2, 3, 4)
+
+//
+// dict
+//
+a := {'x': 0, 'y': 1}
+a: dict = {'x': 0, 'y': 1}
+a: dict[str, i32] = {'x': 0, 'y': 1}
+a: dict[str, i32] = dict[str, i32](x=0, y=1)
+
+//
+// struct
+//
+a := (1, 2, 3, 4)
+a: (i64, i64, i64, i64) = (1, 2, 3, 4)
+a: struct[i64, i64, i64, i64] = (1, 2, 3, 4)
+a := struct[i64, i64, i64, i64](1, 2, 3, 4)
+a: struct[i64, i64, i64, i64] = struct[i64, i64, i64, i64](1, 2, 3, 4)
+
+b := (1, 2.0, '-3.0')
+b: (i32, f32, str) = (1, 2.0, '-3.0')
+b: struct[i32, f32, str] = (1, 2.0, '-3.0')
+b := struct[i32, f32, str](1, 2.0, '-3.0')
+b: struct[i32, f32, str] = struct[i32, f32, str](1, 2.0, '-3.0')
+
+c := (x: i32=1, y: f32=2.0, z: str='-3.0')
+c: (x: i32, y: f32, z: str) = (x: i32=1, y: f32=2.0, z: str='-3.0')
+c: struct[x: i32, y: f32, z: str] = (x: i32=1, y: f32=2.0, z: str='-3.0')
+c := struct[x: i32, y: f32, z: str](x: i32=1, y: f32=2.0, z: str='-3.0')
+c: struct[x: i32, y: f32, z: str] = struct[x: i32, y: f32, z: str](x: i32=1, y: f32=2.0, z: str='-3.0')
+
+D := struct[x: i32=0, y: f32=0.0, z: str='']
+d0 := D(1, 2.0, '-3.0')
+d1 := D(2, 3.0, '-4.0')
+
+//
+// union
+//
+A := i32 | f32
+A: type = i32 | f32
+A: type = union[i32, f32]
+
+a0: A = 1
+a1: A = 2.0

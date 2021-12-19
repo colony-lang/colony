@@ -1,0 +1,77 @@
+// type aliases
+int: type = i64
+uint: type = u64
+float := f64
+
+// vars
+x: int = 123
+y: float = 3.3
+z: i8 = -7_i8
+w: u8 = 128_u8
+
+// operations
+x := 1
+y := 2
+
+z := x + y
+z := x::__type__::__add__(x, y)
+
+f := (x, y, z) -> { x + y + z }
+r := f(1, 2, 3, w=4)
+r := f::__type__::__call__(f, [1, 2, 3], {.w: 4}) // ?
+r := f::__type__::__call__(f, TypedTuple(__args__=[1, 2, 3], __kwargs__={.w: 4})) // ?
+
+// array
+a := [1, 2, 3]
+a: array[Any] = [1, 2, 3]
+
+b: array = [1, 2, 3]
+b: array[Any] = [1, 2, 3]
+
+c: array[int] = [1, 2, 3]
+
+// dict
+a := {'x': 1.0, 'y': 1.0}
+a: dict[Any, Any] = {'x': 1.0, 'y': 1.0}
+
+b: dict[str, float] = {'x': 1.0, 'y': 2.0}
+
+c: dict[str, float] = {.x: 1.0, .y: 2.0}
+
+// struct
+A: type = struct(float, float)
+a0: A = A(1.0, 2.0)
+a1: A = A(2.0, 3.0)
+a2: A = A(a0[0] + a1[0], a0[1] + a1[1])
+
+A: type = struct(x: float=0.0, y: float=0.0)
+a0: A = A(1.0, 2.0)
+a1: A = A(2.0, 3.0)
+a2: A = A(a0.x + a1.x, a0.y + a1.y)
+
+A: type = struct[T=union(int, float)](x: T=T.default, y: T=T.default)
+a0: A[int] = A(1, 2)
+a1: A[int] = A(2, 3)
+a2: A[int] = A(a0.x + a1.x, a0.y + a1.y)
+
+// {
+A: type = struct[T=union(int, float)](
+    x: T=T.default,
+    y: T=T.default,
+
+    __type__: struct(
+        __add__ := (self: Self, other: Self) -> Self {
+            res: Self = Self(self.x + other.x, self.y + other.y)
+        },
+    )
+)
+// }
+
+// union
+A: type = int | float
+A: type = union(int, float)
+
+B: type = union[T=union(int, float)](array[T], dict[uint, T])
+b0: B[int] = [1, 2, 3]
+b1: B[int] = {0: 1, 1: 2, 2: 3}
+b0::__type__ == b1::__type__
