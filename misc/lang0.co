@@ -33,55 +33,55 @@ a := (x=0, y=1, z=2)
 a[0] == a.x == a['x']
 a[1] == a.y == a['y']
 a[2] == a.z == a['z']
-a.__args__ = []
-a.__kwargs__ = {.x: 0, .y: 1, .z: 2}
-a.__annotations__ = []
-a.__kwannotations__ = {}
+a.__args__ == []
+a.__kwargs__ == {.x: 0, .y: 1, .z: 2}
+a.__annotations__ == []
+a.__kwannotations__ == {}
 
 a := (0, 1, z=2)
 a[0]
 a[1]
 a[2] == a.z == a['z']
-a.__args__ = [0, 1]
-a.__kwargs__ = {.z: 2}
-a.__annotations__ = []
-a.__kwannotations__ = {}
+a.__args__ == [0, 1]
+a.__kwargs__ == {.z: 2}
+a.__annotations__ == []
+a.__kwannotations__ == {}
 
 a := (x: int=0, y: int=1, z: int=2)
 a[0] == a.x == a['x']
 a[1] == a.y == a['y']
 a[2] == a.z == a['z']
-a.__args__ = []
-a.__kwargs__ = {.x: 0, .y: 1, .z: 2}
-a.__annotations__ = []
-a.__kwannotations__ = {.x: int, .y: int, .z: int}
+a.__args__ == []
+a.__kwargs__ == {.x: 0, .y: 1, .z: 2}
+a.__annotations__ == []
+a.__kwannotations__ == {.x: int, .y: int, .z: int}
 
 a := (0, 1, z: int =2)
 a[0]
 a[1]
 a[2] == a.z == a['z']
-a.__args__ = [0, 1]
-a.__kwargs__ = {.z: 2}
-a.__annotations__ = []
-a.__kwannotations__ = {.z: int}
+a.__args__ == [0, 1]
+a.__kwargs__ == {.z: 2}
+a.__annotations__ == []
+a.__kwannotations__ == {.z: int}
 
 a := (_: int=0, _: int=1, z: int =2)
 a[0]
 a[1]
 a[2] == a.z == a['z']
-a.__args__ = [0, 1]
-a.__kwargs__ = {.z: 2}
-a.__annotations__ = [int, int]
-a.__kwannotations__ = {.z: int}
+a.__args__ == [0, 1]
+a.__kwargs__ == {.z: 2}
+a.__annotations__ == [int, int]
+a.__kwannotations__ == {.z: int}
 
 a := (x: int, y: int, z: int)
 a[0] == a.x == a['x'] == int.default
 a[1] == a.y == a['y'] == int.default
 a[2] == a.z == a['z'] == int.default
-a.__args__ = []
-a.__kwargs__ = {.x: int.default, .y: int.default, .z: int.default}
-a.__annotations__ = []
-a.__kwannotations__ = {.x: int, .y: int, .z: int}
+a.__args__ == []
+a.__kwargs__ == {.x: int.default, .y: int.default, .z: int.default}
+a.__annotations__ == []
+a.__kwannotations__ == {.x: int, .y: int, .z: int}
 
 // operations
 x := 1
