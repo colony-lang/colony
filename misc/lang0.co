@@ -4,6 +4,16 @@ uint: type = u64
 float := f64
 
 // vars
+a := 123
+a: int = 123
+
+a: int
+a = 123
+
+a = 123
+a: Any = 123
+a := 123
+
 x: int = 123
 y: float = 3.3
 z: i8 = -7_i8
@@ -229,4 +239,21 @@ r := match(c, {
     A: (y) -> { y },
     B: (z) -> { z },
 })
+// } ??
+
+// { ??
+A := struct(x: int, y: int)
+B := struct(z: int, w: int)
+C := A | B
+c := B(2, 3)
+
+r := match(c, {
+    A: (x, y) -> { x + y },
+    B: (z, w) -> { z + w },
+})
+
+r := match(c)
+    .case(A, (y) -> { y })
+    .case(B, (z) -> { z })
+    .default(() -> { 0 })
 // } ??
