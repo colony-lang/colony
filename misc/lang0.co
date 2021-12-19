@@ -84,18 +84,18 @@ z := x - y
 z := x::__type__::__sub__(x, y)
 
 // functions
-// { ???
-inc := x: int -> int { x + 1 }
-dec := x: int -> int { x - 1 }
+// { ??
+inc := (x: int) -> int { x + 1 }
+dec := (x: int) -> int { x - 1 }
 
-r := inc 10
-r := inc::__type__::__call__(inc, 10)
+r := inc(10)
+r := inc::__type__::__call__(inc, (10,))
 r == 11
 
-r := dec 10
-r := dec::__type__::__call__(dec, 10)
+r := dec(10)
+r := dec::__type__::__call__(dec, (10,))
 r == 9
-// } ???
+// } ??
 
 f := (x, y, z, w) -> { x + y + z + w }
 r := f(1, 2, 3, w=4)
@@ -197,3 +197,36 @@ b0: B[int] = [1, 2, 3]
 b1: B[int] = {0: 1, 1: 2, 2: 3}
 b0::__type__ == b1::__type__
 
+// if/else
+a := 10 % 2 ? { true } : { false }
+
+// match
+
+// { ??
+A: type = int
+B: type = float
+C: type = A | B
+c: C = 1
+
+r := match(a, {
+    A: (v) -> { v },
+    B: (v) -> { v },
+})
+// } ??
+
+// { ??
+A := struct(x: int, y: int)
+B := struct(z: int, w: int)
+C := A | B
+c := B(2, 3)
+
+r := match(c, {
+    A: (x, y) -> { x + y },
+    B: (z, w) -> { z + w },
+})
+
+r := match(c, {
+    A: (y) -> { y },
+    B: (z) -> { z },
+})
+// } ??
