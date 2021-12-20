@@ -8,9 +8,8 @@ a := 123
 a: int = 123
 
 a: int
-a = 123
+a = 123 // because declared in previous line
 
-a = 123
 a: Any = 123
 a := 123
 
@@ -19,15 +18,38 @@ y: float = 3.3
 z: i8 = -7_i8
 w: u8 = 128_u8
 
+// array
+a := [1, 2, 3]
+a: array[Any] = [1, 2, 3]
+
+b: array = [1, 2, 3]
+b: array[Any] = [1, 2, 3]
+
+c: array[int] = [1, 2, 3]
+
+// dict
+a := {'x': 1.0, 'y': 1.0}
+a: dict[Any, Any] = {'x': 1.0, 'y': 1.0}
+
+b: dict[str, float] = {'x': 1.0, 'y': 2.0}
+
+c: dict[str, float] = {.x: 1.0, .y: 2.0}
+
 // tuple
+a := ()
+a.__args__ == []
+a.__kwargs__ == {}
+a.__annotations__ == []
+a.__kwannotations__ == {}
+
 a := (0, 1, 2)
 a[0]
 a[1]
 a[2]
-a.__args__ = [0, 1, 2]
-a.__kwargs__ = {}
-a.__annotations__ = []
-a.__kwannotations__ = {}
+a.__args__ == [0, 1, 2]
+a.__kwargs__ == {}
+a.__annotations__ == []
+a.__kwannotations__ == {}
 
 a := (x=0, y=1, z=2)
 a[0] == a.x == a['x']
@@ -65,7 +87,7 @@ a.__kwargs__ == {.z: 2}
 a.__annotations__ == []
 a.__kwannotations__ == {.z: int}
 
-a := (_: int=0, _: int=1, z: int =2)
+a := (_: int=0, _: int=1, z: int=2)
 a[0]
 a[1]
 a[2] == a.z == a['z']
@@ -83,7 +105,21 @@ a.__kwargs__ == {.x: int.default, .y: int.default, .z: int.default}
 a.__annotations__ == []
 a.__kwannotations__ == {.x: int, .y: int, .z: int}
 
-// operations
+// array functions
+a := []
+a := array::__call__(array, ())
+
+a := [1, 2, 3]
+a := array::__call__(array, (1, 2, 3))
+
+// dict functions
+a := {}
+a := dict::__call__(dict, ())
+
+a := {'x': 1, 'y': 2}
+a := dict::__call__(dict, (x:=1, y:=2))
+
+// operation
 x := 1
 y := 2
 
@@ -93,8 +129,7 @@ z := x::__type__::__add__(x, y)
 z := x - y
 z := x::__type__::__sub__(x, y)
 
-// functions
-// { ??
+// function
 inc := (x: int) -> int { x + 1 }
 dec := (x: int) -> int { x - 1 }
 
@@ -105,28 +140,19 @@ r == 11
 r := dec(10)
 r := dec::__type__::__call__(dec, (10,))
 r == 9
-// } ??
 
 f := (x, y, z, w) -> { x + y + z + w }
 r := f(1, 2, 3, w=4)
 r := f::__type__::__call__(f, (1, 2, 3, w=4))
 
-// array
-a := [1, 2, 3]
-a: array[Any] = [1, 2, 3]
+// function generics
+inc: fn((int,) int) = (x: int) -> int { x + 1 }
+inc := (x: int) -> int { x + 1 }
 
-b: array = [1, 2, 3]
-b: array[Any] = [1, 2, 3]
+inc: fn[T=int]((T,), T) = [T=int](x: T) -> T { x + 1 }
+inc := [T=int](x: T) -> T { x + 1 }
 
-c: array[int] = [1, 2, 3]
-
-// dict
-a := {'x': 1.0, 'y': 1.0}
-a: dict[Any, Any] = {'x': 1.0, 'y': 1.0}
-
-b: dict[str, float] = {'x': 1.0, 'y': 2.0}
-
-c: dict[str, float] = {.x: 1.0, .y: 2.0}
+inc: fn[T=int]((T,) T) = [T=int](x: T) -> T { x + 1 }
 
 // struct
 A: type = struct(x: float, y: float)
@@ -135,6 +161,7 @@ a0: A = A(1.0, 2.0)
 a1: A = A(2.0, 3.0)
 a2: A = A(a0.x + a1.x, a0.y + a1.y)
 
+// struct generics
 A: type = struct[T=int | float](x: T, y: T)
 A: type = struct[T=int | float](x: T=T.default, y: T=T.default)
 a0: A[int] = A(1, 2)
@@ -145,9 +172,9 @@ A: type = struct(
     __name__ := 'A',
     __bases__ := struct.__bases__ + [],
     
-    x: int,
-    y: int,
-    z: int,
+    x: int = int.default,
+    y: int = int.default,
+    z: int = int.default,
 
     __add__ := (self: Self, other: Self) -> Self {
         res: Self = Self(self.x + other.x, self.y + other.y)
@@ -161,6 +188,7 @@ A: type = struct(
 a0: A = A(1, 2, 3)
 a1: A = A(2, 3, 4)
 a2: A = a0 + a1
+a2: A = a0::__type__::__add__(a0, a1)
 
 A: type = struct[T=int | float](
     __name__ := 'A',
@@ -202,6 +230,7 @@ D := struct[V=int | float](
 A: type = int | float
 A: type = union(int, float)
 
+// union generics
 B: type = union[T=union(int, float)](array[T], dict[uint, T])
 b0: B[int] = [1, 2, 3]
 b1: B[int] = {0: 1, 1: 2, 2: 3}
@@ -211,24 +240,10 @@ b0::__type__ == b1::__type__
 a := 10 % 2 ? { true } : { false }
 
 // match
-
-// { ??
 A: type = int
 B: type = float
 C: type = A | B
 c: C = 1
-
-r := match(a, {
-    A: (v) -> { v },
-    B: (v) -> { v },
-})
-// } ??
-
-// { ??
-A := struct(x: int, y: int)
-B := struct(z: int, w: int)
-C := A | B
-c := B(2, 3)
 
 r := match(c, {
     A: (x, y) -> { x + y },
@@ -241,13 +256,6 @@ r := match(c, {
     B: (z) -> { z },
     _: () -> { 0 },
 })
-// } ??
-
-// { ??
-A := struct(x: int, y: int)
-B := struct(z: int, w: int)
-C := A | B
-c := B(2, 3)
 
 r := match(c, {
     A: (x, y) -> { x + y },
@@ -259,4 +267,26 @@ r := match(c)
     .case(A, (y) -> { y })
     .case(B, (z) -> { z })
     .default(() -> { 0 })
-// } ??
+
+// "loops"
+a := range(10)
+    .map((n) -> { n + 1})
+    .filter((n) -> { n % 2 })
+
+// option
+a: Option[int] = Some[int](1)
+a: Option[int] = None[int]
+
+r := match(a)
+    .case(Some, (v) -> { v })
+    .case(None, () -> { 0 })
+    .default(() -> { -1 })
+
+// result
+a: Result[V=int, E=str] = Ok[V](1)
+a: Result[V=int, E=str] = Err[E]('Some error')
+
+r := match(a)
+    .case(Ok, (v) -> { v })
+    .case(Err, (e) -> { 0 })
+    .default(() -> { -1 })
