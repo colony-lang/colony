@@ -1,0 +1,8 @@
+{ print } := import('io')
+
+fib := (n: int) -> int {
+    n <= 1 ? n : fib(n - 1) + fib(n - 2)
+}
+
+r := fib(10)
+print(r)
