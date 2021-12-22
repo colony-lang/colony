@@ -1,3 +1,22 @@
+// primtive types
+a: bool = true || false
+
+a: i8 = 1_i8
+a: i8 = -1_i8
+b: u8 = 255_u8
+b: i16 = 255_i16
+b: i32 = 255_i16
+b: i64 = 255_i16
+c: f32 = 1.1_f32
+c: f64 = 1.1_f64
+
+b: bytes = b'abc'
+s: str = 'abc'
+s: str = '
+    assadas
+    asdasd
+'
+
 // type aliases
 int: type = i64
 uint: type = u64
@@ -34,6 +53,21 @@ a: dict[Any, Any] = {'x': 1.0, 'y': 1.0}
 b: dict[str, float] = {'x': 1.0, 'y': 2.0}
 
 c: dict[str, float] = {.x: 1.0, .y: 2.0}
+
+// array functions
+a := []
+a := array::__call__(array, ())
+
+a := [1, 2, 3]
+a := array::__call__(array, (1, 2, 3))
+
+// dict functions
+a := {}
+a := dict::__call__(dict, ())
+
+a := {'x': 1, 'y': 2}
+a := {.x: 1, .y: 2}
+a := dict::__call__(dict, (x:=1, y:=2))
 
 // tuple
 a := ()
@@ -104,20 +138,6 @@ a.__kwannotations__ == {.x: int, .y: int, .z: int}
 a[0] == a.x == a['x'] == int.default
 a[1] == a.y == a['y'] == int.default
 a[2] == a.z == a['z'] == int.default
-
-// array functions
-a := []
-a := array::__call__(array, ())
-
-a := [1, 2, 3]
-a := array::__call__(array, (1, 2, 3))
-
-// dict functions
-a := {}
-a := dict::__call__(dict, ())
-
-a := {'x': 1, 'y': 2}
-a := dict::__call__(dict, (x:=1, y:=2))
 
 // operation
 x := 1
