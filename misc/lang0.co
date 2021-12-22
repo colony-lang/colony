@@ -1,3 +1,9 @@
+// import
+fp := import('fp')
+{ sum, len } := fp
+
+{ sum, len } := import('fp')
+
 // primtive types
 a: bool = true || false
 
@@ -11,10 +17,15 @@ c: f32 = 1.1_f32
 c: f64 = 1.1_f64
 
 b: bytes = b'abc'
+b: bytes = b'
+    abc
+    xyz
+'
+
 s: str = 'abc'
 s: str = '
-    assadas
-    asdasd
+    qwerty
+    asdf
 '
 
 // type aliases
@@ -37,14 +48,14 @@ y: float = 3.3
 z: i8 = -7_i8
 w: u8 = 128_u8
 
-// array
+// list
 a := [1, 2, 3]
-a: array[Any] = [1, 2, 3]
+a: list[Any] = [1, 2, 3]
 
-b: array = [1, 2, 3]
-b: array[Any] = [1, 2, 3]
+b: list = [1, 2, 3]
+b: list[Any] = [1, 2, 3]
 
-c: array[int] = [1, 2, 3]
+c: list[int] = [1, 2, 3]
 
 // dict
 a := {'x': 1.0, 'y': 1.0}
@@ -54,12 +65,14 @@ b: dict[str, float] = {'x': 1.0, 'y': 2.0}
 
 c: dict[str, float] = {.x: 1.0, .y: 2.0}
 
-// array functions
+// list functions
 a := []
-a := array::__call__(array, ())
+a := list::__call__(list, ())
 
 a := [1, 2, 3]
-a := array::__call__(array, (1, 2, 3))
+a := list::__call__(list, (1, 2, 3))
+
+[x, y, z] := a
 
 // dict functions
 a := {}
@@ -68,6 +81,8 @@ a := dict::__call__(dict, ())
 a := {'x': 1, 'y': 2}
 a := {.x: 1, .y: 2}
 a := dict::__call__(dict, (x:=1, y:=2))
+
+{ x, y } := a
 
 // tuple
 a := ()
@@ -165,6 +180,11 @@ f := (x, y, z, w) -> { x + y + z + w }
 r := f(1, 2, 3, w=4)
 r := f::__type__::__call__(f, (1, 2, 3, w=4))
 
+// functions args/kwargs
+f := (x, y, [args], {kwargs}) -> {
+    x + y + sum(args) + sum(kwargs.values())
+}
+
 // function generics
 inc: fn((int,) int) = (x: int) -> int { x + 1 }
 inc := (x: int) -> int { x + 1 }
@@ -251,7 +271,7 @@ A: type = int | float
 A: type = union(int, float)
 
 // union generics
-B: type = union[T=union(int, float)](array[T], dict[uint, T])
+B: type = union[T=union(int, float)](list[T], dict[uint, T])
 b0: B[int] = [1, 2, 3]
 b1: B[int] = {0: 1, 1: 2, 2: 3}
 b0::__type__ == b1::__type__
