@@ -154,6 +154,8 @@ a[0] == a.x == a['x'] == int.default
 a[1] == a.y == a['y'] == int.default
 a[2] == a.z == a['z'] == int.default
 
+a := [T=int|float, U=bytes|str](x: T, y: T, q: U, w: U)
+
 // operation
 x := 1
 y := 2
