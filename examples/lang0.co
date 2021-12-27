@@ -29,6 +29,7 @@ s: str = '
 '
 
 // type aliases
+Any: type = object
 int: type = i64
 uint: type = u64
 float = f64
@@ -155,6 +156,7 @@ a[1] == a.y == a['y'] == int.default
 a[2] == a.z == a['z'] == int.default
 
 a = [T=int|float, U=bytes|str](x: T, y: T, q: U, w: U)
+a = [T: type = int|float, U: type = bytes|str](x: T, y: T, q: U, w: U)
 
 // operation
 x = 1
@@ -183,7 +185,7 @@ r = f(1, 2, 3, w=4)
 r = f::__type__::__call__(f, (1, 2, 3, w=4))
 
 // functions args/kwargs
-f: fn((Any, Any, Args[Any], KwArgs[str, Any]), Any)
+f: fn((Any, Any, fn.args[Any], fn.kwargs[str, Any]), Any)
 f = (x, y, [args], {kwargs}) -> {
     x + y + sum(args) + sum(kwargs.values())
 }
@@ -233,7 +235,7 @@ a1: A = A(2, 3, 4)
 a2: A = a0 + a1
 a2: A = a0::__type__::__add__(a0, a1)
 
-A: type = struct[T=int | float](
+A: type = struct[T=int|float](
     __name__ = 'A',
     __bases__ = struct.__bases__ + [],
     
@@ -281,7 +283,7 @@ b1: B[int] = {0: 1, 1: 2, 2: 3}
 b0::__type__ == b1::__type__
 
 // if/else
-a := 10 % 2 ? { true } : { false }
+a: Any = 10 % 2 ? { true } : { false }
 
 // match
 A: type = int

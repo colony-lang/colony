@@ -7,6 +7,7 @@
 
 enum co_type_t;
 
+struct co_gc_t;
 struct co_bytes_t;
 struct co_str_t;
 struct co_struct_t;
@@ -59,6 +60,10 @@ typedef enum co_type_t {
     CO_TYPE_ERR,
     CO_TYPE_TYPE,
 } co_type_t;
+
+typedef struct co_gc_t {
+    size_t rc;
+} co_gc_t;
 
 typedef struct co_bytes_t {
     size_t rc;
@@ -134,11 +139,43 @@ typedef struct co_code_t {
 typedef struct co_fn_t {
     // NOTE: function can be defined with generics, and specialized with types for given generics
     size_t rc;
-    struct co_object_t *generics;   // tuple
-    struct co_object_t *params;     // tuple
+    struct co_object_t *params;     // tuple that can hold generics
     struct co_object_t *ret;
     struct co_code_t *code;
 } co_fn_t;
+
+typedef struct co_option_t {
+    size_t rc;
+    struct co_option_t *generics; // tuple
+} co_option_t;
+
+typedef struct co_some_t {
+    size_t rc;
+    struct co_option_t *generics; // tuple
+    struct co_option_t *v;
+} co_some_t;
+
+typedef struct co_none_t {
+    size_t rc;
+    struct co_option_t *generics; // tuple
+} co_none_t;
+
+typedef struct co_result_t {
+    size_t rc;
+    struct co_option_t *generics; // tuple
+} co_result_t;
+
+typedef struct co_ok_t {
+    size_t rc;
+    struct co_option_t *generics; // tuple
+    struct co_option_t *v;
+} co_ok_t;
+
+typedef struct co_err_t {
+    size_t rc;
+    struct co_option_t *generics; // tuple
+    struct co_option_t *e;
+} co_err_t;
 
 typedef union co_value_t {
     _Bool b;
@@ -159,12 +196,12 @@ typedef union co_value_t {
     struct co_tuple_t *tuple;
     struct co_code_t *code;
     struct co_fn_t *fn;
-    // struct co_option_t *option;
-    // struct co_some_t *some;
-    // struct co_none_t *none;
-    // struct co_result_t *result;
-    // struct co_ok_t *ok;
-    // struct co_err_t *err;
+    struct co_option_t *option;
+    struct co_some_t *some;
+    struct co_none_t *none;
+    struct co_result_t *result;
+    struct co_ok_t *ok;
+    struct co_err_t *err;
     struct co_object_t *type;
 } co_value_t;
 
@@ -172,5 +209,11 @@ typedef struct co_object_t {
     enum co_type_t t;
     union co_value_t v;
 } co_object_t;
+
+/*
+ * object
+ */
+size_t co_object_incref(struct co_ctx_t *ctx, struct co_object_t *self);
+size_t co_object_decref(struct co_ctx_t *ctx, struct co_object_t *self);
 
 #endif
