@@ -16,7 +16,9 @@ struct co_list_t;
 struct co_dict_entry_t;
 struct co_dict_t;
 struct co_tuple_t;
+struct co_block_t;
 struct co_code_t;
+enum co_fn_args_type_t;
 struct co_fn_t;
 struct co_option_t;
 struct co_some_t;
@@ -50,6 +52,7 @@ typedef enum co_type_t {
     CO_TYPE_LIST,
     CO_TYPE_DICT,
     CO_TYPE_TUPLE,
+    CO_TYPE_BLOCK,
     CO_TYPE_CODE,
     CO_TYPE_FN,
     CO_TYPE_OPTION,
@@ -130,15 +133,32 @@ typedef struct co_tuple_t {
     struct co_object_t *kwargs;
 } co_tuple_t;
 
+typedef struct co_block_t {
+    void *dummy;
+} co_block_t;
+
 typedef struct co_code_t {
     size_t rc;
     size_t len;
     char *items;
 } co_code_t;
 
+typedef enum co_fn_args_type_t {
+    CO_FN_ARGS_TYPE_NONE,
+    CO_FN_ARGS_TYPE_SELF,
+    CO_FN_ARGS_TYPE_SELF_C_VALUE,
+    CO_FN_ARGS_TYPE_SELF_ARGS,
+    CO_FN_ARGS_TYPE_SELF_KWARGS,
+    CO_FN_ARGS_TYPE_SELF_ARGS_KWARGS,
+    CO_FN_ARGS_TYPE_ARGS,
+    CO_FN_ARGS_TYPE_KWARGS,
+    CO_FN_ARGS_TYPE_ARGS_KWARGS,
+} co_fn_args_type_t;
+
 typedef struct co_fn_t {
     // NOTE: function can be defined with generics, and specialized with types for given generics
     size_t rc;
+    enum co_fn_args_type_t args_type;
     struct co_object_t *params;     // tuple that can hold generics
     struct co_object_t *ret;
     struct co_code_t *code;
@@ -191,9 +211,12 @@ typedef union co_value_t {
     double f64;
     struct co_bytes_t *bytes;
     struct co_str_t *str;
+    struct co_struct_t *struct_;
+    struct co_union_t *union_;
     struct co_list_t *list;
     struct co_dict_t *dict;
     struct co_tuple_t *tuple;
+    struct co_block_t *block;
     struct co_code_t *code;
     struct co_fn_t *fn;
     struct co_option_t *option;
@@ -210,10 +233,45 @@ typedef struct co_object_t {
     union co_value_t v;
 } co_object_t;
 
+
+
 /*
  * object
  */
-size_t co_object_incref(struct co_ctx_t *ctx, struct co_object_t *self);
-size_t co_object_decref(struct co_ctx_t *ctx, struct co_object_t *self);
+inline size_t co_object_incref(struct co_ctx_t *ctx, struct co_object_t *self);
+inline size_t co_object_decref(struct co_ctx_t *ctx, struct co_object_t *self);
+struct co_object_t *co_object_free(struct co_ctx_t *ctx, struct co_object_t *self);
+
+/*
+ * Result
+ */
+
+/*
+ * Ok
+ */
+
+/*
+ * Err
+ */
+
+/*
+ * Option
+ */
+
+/*
+ * Some
+ */
+
+/*
+ * None
+ */
+
+/*
+ * bool
+ */
+struct co_object_t *co_bool_new_with_c_bool(struct co_ctx_t *ctx, _Bool b);
+struct co_object_t *co_bool_new_with_bool(struct co_ctx_t *ctx, struct co_object_t *other);
+struct co_object_t *co_bool_new(struct co_ctx_t *ctx);
+struct co_object_t *co_bool_free(struct co_ctx_t *ctx, struct co_object_t *self);
 
 #endif
