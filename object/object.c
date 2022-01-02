@@ -187,3 +187,31 @@ struct co_object_t *co_object_free(struct co_ctx_t *ctx, struct co_object_t *sel
 
     return NULL;
 }
+
+/*
+ * Result
+ */
+
+/*
+ * Ok
+ */
+
+/*
+ * Err
+ */
+
+/*
+ * Option
+ */
+
+/*
+ * Some
+ */
+
+/*
+ * None
+ */
+
+/*
+ * bool
+ */

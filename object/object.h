@@ -164,22 +164,6 @@ typedef struct co_fn_t {
     struct co_code_t *code;
 } co_fn_t;
 
-typedef struct co_option_t {
-    size_t rc;
-    struct co_option_t *generics; // tuple
-} co_option_t;
-
-typedef struct co_some_t {
-    size_t rc;
-    struct co_option_t *generics; // tuple
-    struct co_option_t *v;
-} co_some_t;
-
-typedef struct co_none_t {
-    size_t rc;
-    struct co_option_t *generics; // tuple
-} co_none_t;
-
 typedef struct co_result_t {
     size_t rc;
     struct co_option_t *generics; // tuple
@@ -196,6 +180,22 @@ typedef struct co_err_t {
     struct co_option_t *generics; // tuple
     struct co_option_t *e;
 } co_err_t;
+
+typedef struct co_option_t {
+    size_t rc;
+    struct co_option_t *generics; // tuple
+} co_option_t;
+
+typedef struct co_some_t {
+    size_t rc;
+    struct co_option_t *generics; // tuple
+    struct co_option_t *v;
+} co_some_t;
+
+typedef struct co_none_t {
+    size_t rc;
+    struct co_option_t *generics; // tuple
+} co_none_t;
 
 typedef union co_value_t {
     _Bool b;
@@ -219,12 +219,12 @@ typedef union co_value_t {
     struct co_block_t *block;
     struct co_code_t *code;
     struct co_fn_t *fn;
-    struct co_option_t *option;
-    struct co_some_t *some;
-    struct co_none_t *none;
     struct co_result_t *result;
     struct co_ok_t *ok;
     struct co_err_t *err;
+    struct co_option_t *option;
+    struct co_some_t *some;
+    struct co_none_t *none;
     struct co_object_t *type;
 } co_value_t;
 
@@ -232,8 +232,6 @@ typedef struct co_object_t {
     enum co_type_t t;
     union co_value_t v;
 } co_object_t;
-
-
 
 /*
  * object
