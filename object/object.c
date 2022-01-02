@@ -134,10 +134,10 @@ inline size_t co_object_decref(struct co_ctx_t *ctx, struct co_object_t *self) {
 
     if (gc != NULL) {
         rc = --gc->rc;
-    }
-
-    if (rc == 0) {
-        co_object_free(ctx, self);
+        
+        if (rc == 0) {
+            co_object_free(ctx, self);
+        }
     }
 
     return rc;
