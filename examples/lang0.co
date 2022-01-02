@@ -60,11 +60,9 @@ c: list[int] = [1, 2, 3]
 
 // dict
 a = {'x': 1.0, 'y': 1.0}
-a: dict[Any, Any] = {'x': 1.0, 'y': 1.0}
-
-b: dict[str, float] = {'x': 1.0, 'y': 2.0}
-
-c: dict[str, float] = {.x: 1.0, .y: 2.0}
+a = {.x: 1.0, .y: 1.0}
+a: dict[Any, Any] = {.x: 1.0, .y: 1.0}
+b: dict[str, float] = {.x: 1.0, .y: 2.0}
 
 // list functions
 a = []
@@ -81,8 +79,10 @@ a = dict::__call__(dict, ())
 
 a = {'x': 1, 'y': 2}
 a = {.x: 1, .y: 2}
-a = dict::__call__(dict, (x:=1, y:=2))
-
+a = dict::__call__(dict, (x: str=1, y: str=2))
+a = dict::__call__(dict, (x=1, y=2))
+{ x } = a
+{ y } = a
 { x, y } = a
 
 // tuple
@@ -186,6 +186,7 @@ r = f::__type__::__call__(f, (1, 2, 3, w=4))
 
 // functions args/kwargs
 f: fn((Any, Any, fn.args[Any], fn.kwargs[str, Any]), Any)
+
 f = (x, y, [args], {kwargs}) -> {
     x + y + sum(args) + sum(kwargs.values())
 }

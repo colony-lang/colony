@@ -1,0 +1,183 @@
+fs = import('fs')
+fs: dict = import('fs')
+ffi_c_fs: dict[str, Any] = import('ffi/c/fs')
+
+{ File } = import('fs')
+{ FILE, fopen, fread, fwrite, fclose } = import('ffi/c/fs')
+
+//
+//
+//
+int: type = i64
+float: type = f64
+
+a: int = -111
+b: float = -1.1
+
+a: bool = true || false
+b: u8 = 1_u8
+c: i16 = -10_u8
+d: u32 = 100_u8
+e: i64 = -1000_u8
+f: f32 = -1.1_f32
+g: f64 = -2.2_f64
+
+//
+//
+//
+a = [1, 2, 3]
+a: list = [1, 2, 3]
+a: list[int] = [1, 2, 3]
+[ x, y, z ] = a
+
+b = {'x': 1, 'y': 2, 'z': 3}
+b = {.x: 1, .y: 2, .z: 3}
+b: dict = {.x: 1, .y: 2, .z: 3}
+b: dict[str, int] = {.x: 1, .y: 2, .z: 3}
+{ x, y, z } = b
+
+//
+//
+//
+f0 = (x, y, z) -> { x + y + z }
+r0 = f0(10, 20, 30)
+
+f0: fn = (x, y, z) -> { x + y + z }
+r0: int = f0(10, 20, 30)
+
+f0: fn = (x, y, z) -> int { x + y + z }
+r0: int = f0(10, 20, 30)
+
+f0: fn = (x: int, y: int, z: int) -> int { x + y + z }
+r0: int = f0(10, 20, 30)
+
+s0: type = (x: int, y: int, z: int)
+c0: block = int { x + y + z }
+f0: fn = s0 -> c0
+r0: int = f0(10, 20, 30)
+
+T: type = int | float
+S1: type = (x: T, y: T, z: T)
+c1: block = T { x + y + z }
+f1: fn = S1 -> c1
+r1: int = f1(10, 20, 30)
+
+f2: fn = fn[T=int|float](x: T, y: T, z: T) -> T { x + y + z }
+
+F2: type = fn[T=int|float]
+f2: fn = F2(x: T, y: T, z: T) -> T { x + y + z }
+
+T: type = int | float
+f2 = (x: T, y: T, z: T) -> T { x + y + z }
+f2: fn = (x: T, y: T, z: T) -> T { x + y + z }
+
+T: type = int | float
+F3: type = fn[T=T][(x: T, y: T, z: T), T]
+f3: F3 = (x: T, y: T, z: T) -> T { x + y + z }
+
+//
+//
+//
+S0: type = (x: int, y: int, z: int)
+S1: type = struct[T=int|float](x: T, y: T, z: T)
+
+U0: type = int | float
+U0: type = union(int, float)
+U1: type = union[T=int|float](list[T], dict[str, T])
+
+//
+//
+//
+A: type = struct[T=i32|f32](x: T)
+B: type = struct[T=i32|f32](y: T)
+
+C: type = struct[T=i32|f32](
+    __name__ = 'C',
+    __bases__ = [A, B],
+    
+    z: T,
+    
+    __init__ = (self: Self, x: T, y: T, z: T) -> Self {
+        self = Self(x, y, z)
+        self
+    },
+    
+    __add__ = (self: Self, other: Self) -> Self {
+        res: Self = Self(self.x + other.x, self.y + other.y)
+        res
+    },
+)
+
+D: type = struct[T=i32|f32](
+    __name__ = 'D',
+    __bases__ = [A, B],
+
+    w: T
+)
+
+E: type = C | D
+
+e0: E = C(1, 2, 3)
+e1: E = D(4)
+
+//
+//
+//
+
+// if/else
+a: Any = 10 % 2 ? { true } : { false }
+
+// match
+A: type = int
+B: type = float
+C: type = A | B
+c: C = 1
+
+r = match(c, {
+    A: (x, y) -> { x + y },
+    B: (z, w) -> { z + w },
+    _: () -> { 0 },
+})
+
+r = match(c, {
+    A: y -> { y },
+    B: z -> { z },
+    _: () -> { 0 },
+})
+
+r = match(c, {
+    A: (x, y) -> { x + y },
+    B: (z, w) -> { z + w },
+    _: () -> { 0 },
+})
+
+r = match(c)
+    .case(A, y -> { y })
+    .case(B, z -> { z })
+    .default(() -> { 0 })
+
+// range/map/filter/reduce/take_while/drop_while
+a = range(10)
+    .map(n -> { n + 1})
+    .filter(n -> { n % 2 })
+    .take_while(n -> { n % 3 })
+    .drop_while(n -> { n % 3 })
+    .reduce((acc, n) -> { acc + n }, 0)
+
+// option
+a: Option[int] = Some[int](1)
+a: Option[int] = None[int]
+
+r = match(a)
+    .case(Some, v -> { v })
+    .case(None, () -> { 0 })
+    .default(() -> { -1 })
+
+// result
+a: Result[V=int, E=str] = Ok[V](1)
+a: Result[V=int, E=str] = Err[E]('Some error')
+
+r = match(a)
+    .case(Ok, (v) -> { v })
+    .case(Err, (e) -> { 0 })
+    .default(() -> { -1 })
