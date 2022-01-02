@@ -145,5 +145,45 @@ inline size_t co_object_decref(struct co_ctx_t *ctx, struct co_object_t *self) {
 
 struct co_object_t *co_object_free(struct co_ctx_t *ctx, struct co_object_t *self) {
     // FIXME: implement me
+    switch (self->t) {
+        case CO_TYPE_BYTES:
+            break;
+        case CO_TYPE_STR:
+            break;
+        case CO_TYPE_STRUCT:
+            break;
+        case CO_TYPE_UNION:
+            break;
+        case CO_TYPE_LIST:
+            break;
+        case CO_TYPE_DICT:
+            break;
+        case CO_TYPE_TUPLE:
+            break;
+        case CO_TYPE_BLOCK:
+            break;
+        case CO_TYPE_CODE:
+            break;
+        case CO_TYPE_FN:
+            break;
+        case CO_TYPE_OPTION:
+            break;
+        case CO_TYPE_SOME:
+            break;
+        case CO_TYPE_NONE:
+            break;
+        case CO_TYPE_RESULT:
+            break;
+        case CO_TYPE_OK:
+            break;
+        case CO_TYPE_ERR:
+            break;
+        case CO_TYPE_TYPE:
+            break;
+        default:
+            free(self);
+            break;
+    }
+
     return NULL;
 }
