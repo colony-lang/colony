@@ -452,10 +452,78 @@ struct co_object_t co_i8_pow(struct co_ctx_t *ctx, struct co_object_t self, stru
 /*
  * u16
  */
+/* fn((ffi.c.uint16_t,), u16) */
+struct co_object_t co_u16_new_from_c_u16(struct co_ctx_t *ctx, uint16_t v);
+/* fn((u16,), Any) */
+struct co_object_t co_u16_free(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u16,), str) */
+struct co_object_t co_u16_repr(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u16,), int) */
+struct co_object_t co_u16_hash(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u16, u16), bool) */
+struct co_object_t co_u16_eq(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((u16, u16), bool) */
+struct co_object_t co_u16_lt(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((u16,), bool) */
+struct co_object_t co_u16_not(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u16, u16), u16) */
+struct co_object_t co_u16_and(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((u16, u16), u16) */
+struct co_object_t co_u16_or(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((u16, u16), u16) */
+struct co_object_t co_u16_xor(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((u16,), u16) */
+struct co_object_t co_u16_inv(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u16, u16), u16) */
+struct co_object_t co_u16_add(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((u16, u16), u16) */
+struct co_object_t co_u16_sub(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((u16, u16), u16) */
+struct co_object_t co_u16_mul(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((u16, u16), u16) */
+struct co_object_t co_u16_div(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((u16, u16), u16) */
+struct co_object_t co_u16_pow(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
 
 /*
  * i16
  */
+/* fn((ffi.c.int16_t,), i16) */
+struct co_object_t co_i16_new_from_c_i16(struct co_ctx_t *ctx, int16_t v);
+/* fn((i16,), Any) */
+struct co_object_t co_i16_free(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i16,), str) */
+struct co_object_t co_i16_repr(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i16,), int) */
+struct co_object_t co_i16_hash(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i16, i16), bool) */
+struct co_object_t co_i16_eq(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((i16, i16), bool) */
+struct co_object_t co_i16_lt(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((i16,), bool) */
+struct co_object_t co_i16_not(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i16, i16), i16) */
+struct co_object_t co_i16_and(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((i16, i16), i16) */
+struct co_object_t co_i16_or(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((i16, i16), i16) */
+struct co_object_t co_i16_xor(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((i16,), i16) */
+struct co_object_t co_i16_inv(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i16,), i16) */
+struct co_object_t co_i16_neg(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i16,), i16) */
+struct co_object_t co_i16_pos(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i16, i16), i16) */
+struct co_object_t co_i16_add(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((i16, i16), i16) */
+struct co_object_t co_i16_sub(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((i16, i16), i16) */
+struct co_object_t co_i16_mul(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((i16, i16), i16) */
+struct co_object_t co_i16_div(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((i16, i16), i16) */
+struct co_object_t co_i16_pow(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
 
 /*
  * u32
