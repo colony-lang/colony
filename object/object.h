@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <assert.h>
 
 enum co_type_t;
 
@@ -249,17 +250,22 @@ typedef struct co_object_t {
 } co_object_t;
 
 /*
+ * GC'ed object
+ */
+inline size_t co_object_incref(struct co_ctx_t *ctx, struct co_object_t self);
+inline size_t co_object_decref(struct co_ctx_t *ctx, struct co_object_t self);
+
+/*
  * object
  */
-inline size_t co_object_incref(struct co_ctx_t *ctx, struct co_object_t *self);
-inline size_t co_object_decref(struct co_ctx_t *ctx, struct co_object_t *self);
-struct co_object_t *co_object_free(struct co_ctx_t *ctx, struct co_object_t *self);
+struct co_object_t co_object_new_from_c_type_c_value(struct co_ctx_t *ctx, enum co_type_t t, union co_value_t v);
+struct co_object_t co_object_free(struct co_ctx_t *ctx, struct co_object_t self);
 
 /*
  * bytes
  */
-struct co_object_t *co_bytes_new_from_c_char(struct co_ctx_t *ctx, const char *value);
-struct co_object_t *co_bytes_new_from_bytes(struct co_ctx_t *ctx, struct co_object_t *other);
+struct co_object_t co_bytes_new_from_c_char(struct co_ctx_t *ctx, const char *value);
+struct co_object_t co_bytes_new_from_bytes(struct co_ctx_t *ctx, struct co_object_t other);
 
 /*
  * str
@@ -296,9 +302,9 @@ struct co_object_t *co_bytes_new_from_bytes(struct co_ctx_t *ctx, struct co_obje
 /*
  * bool
  */
-struct co_object_t *co_bool_new_from_c_bool(struct co_ctx_t *ctx, _Bool b);
-struct co_object_t *co_bool_new_from_bool(struct co_ctx_t *ctx, struct co_object_t *other);
-struct co_object_t *co_bool_new(struct co_ctx_t *ctx);
-struct co_object_t *co_bool_free(struct co_ctx_t *ctx, struct co_object_t *self);
+struct co_object_t co_bool_new_from_c_bool(struct co_ctx_t *ctx, _Bool b);
+struct co_object_t co_bool_new_from_bool(struct co_ctx_t *ctx, struct co_object_t *other);
+struct co_object_t co_bool_new(struct co_ctx_t *ctx);
+struct co_object_t co_bool_free(struct co_ctx_t *ctx, struct co_object_t *self);
 
 #endif
