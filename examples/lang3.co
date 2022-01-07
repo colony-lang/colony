@@ -1,6 +1,6 @@
 fs = import('fs')
-fs: Dict = import('fs')
-ffi_c_fs: Dict[str, Any] = import('ffi/c/fs')
+fs: dict = import('fs')
+ffi_c_fs: dict[str, Any] = import('ffi/c/fs')
 
 { File } = import('fs')
 { FILE, fopen, fread, fwrite, fclose } = import('ffi/c/fs')
@@ -23,35 +23,24 @@ f: f32 = -1.1_f32
 g: f64 = -2.2_f64
 
 //
-// Tuple
-//
-t = (0, 1.1, 'a') // ?
-t: Tuple = (0, 1.1, 'a')
-t: Tuple(int, float, str) = (0, 1.1, 'a')
-
-t = (x: int=0, y: float=1.1, z: str='a') // ?
-t: Tuple = (x: int=0, y: float=1.1, z: str='a')
-t: Tuple(x: int, y: float, z: str) = (x: int=0, y: float=1.1, z: str='a')
-
-//
-// List
+// list
 //
 a = [1, 2, 3]
-a: List = [1, 2, 3]
-a: List[int] = [1, 2, 3]
+a: list = [1, 2, 3]
+a: list[int] = [1, 2, 3]
 [ x, y, z ] = a
 
 //
-// Dict
+// dict
 //
 b = {'x': 1, 'y': 2, 'z': 3}
 b = {.x: 1, .y: 2, .z: 3}
-b: Dict = {.x: 1, .y: 2, .z: 3}
-b: Dict[str, int] = {.x: 1, .y: 2, .z: 3}
+b: dict = {.x: 1, .y: 2, .z: 3}
+b: dict[str, int] = {.x: 1, .y: 2, .z: 3}
 { x, y, z } = b
 
 //
-//
+// fn
 //
 f0 = (x, y, z) -> { x + y + z }
 r0 = f0(10, 20, 30)
@@ -65,6 +54,26 @@ r0: int = f0(10, 20, 30)
 f0: fn = (x: int, y: int, z: int) -> int { x + y + z }
 r0: int = f0(10, 20, 30)
 
+f0: fn((x: int, y: int, z: int), int) = (x: int, y: int, z: int) -> int { x + y + z }
+r0: int = f0(10, 20, 30)
+
+//
+// fn construction
+//
+s0: type = (x: int, y: int, z: int)
+c0: block = int { x + y + z }
+F0: fn((x: int, y: int, z: int), int)
+f0: F0 = s0 -> c0
+r0: int = f0(10, 20, 30)
+
+s1: type = (x: int, y: int, z: int)
+c1: block = int { x + y + z }
+f1: fn.build(s1, c1)
+r1: int = f1(10, 20, 30)
+
+//
+// params, block, fn
+//
 s0: type = (x: int, y: int, z: int)
 c0: block = int { x + y + z }
 f0: fn = s0 -> c0
@@ -97,7 +106,7 @@ S1: type = struct[T=int|float](x: T, y: T, z: T)
 
 U0: type = int | float
 U0: type = union(int, float)
-U1: type = union[T=int|float](List[T], Dict[str, T])
+U1: type = union[T=int|float](list[T], dict[str, T])
 
 //
 //

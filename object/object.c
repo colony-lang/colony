@@ -10,62 +10,78 @@ inline size_t co_object_incref(struct co_ctx_t *ctx, struct co_object_t *self) {
     switch (self->t) {
         case CO_TYPE_BYTES:
             gc = (struct co_gc_t*)(self->v.bytes);
+            rc = ++gc->rc;
             break;
         case CO_TYPE_STR:
             gc = (struct co_gc_t*)(self->v.str);
-            break;
-        case CO_TYPE_STRUCT:
-            gc = (struct co_gc_t*)(self->v.struct_);
-            break;
-        case CO_TYPE_UNION:
-            gc = (struct co_gc_t*)(self->v.union_);
-            break;
-        case CO_TYPE_LIST:
-            gc = (struct co_gc_t*)(self->v.list);
-            break;
-        case CO_TYPE_DICT:
-            gc = (struct co_gc_t*)(self->v.dict);
+            rc = ++gc->rc;
             break;
         case CO_TYPE_TUPLE:
             gc = (struct co_gc_t*)(self->v.tuple);
+            rc = ++gc->rc;
+            break;
+        case CO_TYPE_STRUCT:
+            gc = (struct co_gc_t*)(self->v.struct_);
+            rc = ++gc->rc;
+            break;
+        case CO_TYPE_UNION:
+            gc = (struct co_gc_t*)(self->v.union_);
+            rc = ++gc->rc;
+            break;
+        case CO_TYPE_LIST:
+            gc = (struct co_gc_t*)(self->v.list);
+            rc = ++gc->rc;
+            break;
+        case CO_TYPE_DICT:
+            gc = (struct co_gc_t*)(self->v.dict);
+            rc = ++gc->rc;
             break;
         case CO_TYPE_BLOCK:
             gc = (struct co_gc_t*)(self->v.block);
+            rc = ++gc->rc;
             break;
         case CO_TYPE_CODE:
             gc = (struct co_gc_t*)(self->v.code);
+            rc = ++gc->rc;
             break;
         case CO_TYPE_FN:
             gc = (struct co_gc_t*)(self->v.fn);
+            rc = ++gc->rc;
             break;
         case CO_TYPE_OPTION:
             gc = (struct co_gc_t*)(self->v.option);
+            rc = ++gc->rc;
             break;
         case CO_TYPE_SOME:
             gc = (struct co_gc_t*)(self->v.some);
+            rc = ++gc->rc;
             break;
         case CO_TYPE_NONE:
             gc = (struct co_gc_t*)(self->v.none);
+            rc = ++gc->rc;
             break;
         case CO_TYPE_RESULT:
             gc = (struct co_gc_t*)(self->v.result);
+            rc = ++gc->rc;
             break;
         case CO_TYPE_OK:
             gc = (struct co_gc_t*)(self->v.ok);
+            rc = ++gc->rc;
             break;
         case CO_TYPE_ERR:
             gc = (struct co_gc_t*)(self->v.err);
+            rc = ++gc->rc;
             break;
-        case CO_TYPE_TYPE:
-            gc = (struct co_gc_t*)(self->v.type);
+        case CO_TYPE_STATIC_TYPE:
+            gc = (struct co_gc_t*)(self->v.static_type);
+            rc = ++gc->rc;
+            break;
+        case CO_TYPE_DYNAMIC_TYPE:
+            gc = (struct co_gc_t*)(self->v.dynamic_type);
+            rc = ++gc->rc;
             break;
         default:
-            gc = NULL;
             break;
-    }
-
-    if (gc != NULL) {
-        rc = ++gc->rc;
     }
 
     return rc;
@@ -82,6 +98,9 @@ inline size_t co_object_decref(struct co_ctx_t *ctx, struct co_object_t *self) {
         case CO_TYPE_STR:
             gc = (struct co_gc_t*)(self->v.str);
             break;
+        case CO_TYPE_TUPLE:
+            gc = (struct co_gc_t*)(self->v.tuple);
+            break;
         case CO_TYPE_STRUCT:
             gc = (struct co_gc_t*)(self->v.struct_);
             break;
@@ -94,14 +113,11 @@ inline size_t co_object_decref(struct co_ctx_t *ctx, struct co_object_t *self) {
         case CO_TYPE_DICT:
             gc = (struct co_gc_t*)(self->v.dict);
             break;
-        case CO_TYPE_TUPLE:
-            gc = (struct co_gc_t*)(self->v.tuple);
+        case CO_TYPE_CODE:
+            gc = (struct co_gc_t*)(self->v.code);
             break;
         case CO_TYPE_BLOCK:
             gc = (struct co_gc_t*)(self->v.block);
-            break;
-        case CO_TYPE_CODE:
-            gc = (struct co_gc_t*)(self->v.code);
             break;
         case CO_TYPE_FN:
             gc = (struct co_gc_t*)(self->v.fn);
@@ -124,8 +140,11 @@ inline size_t co_object_decref(struct co_ctx_t *ctx, struct co_object_t *self) {
         case CO_TYPE_ERR:
             gc = (struct co_gc_t*)(self->v.err);
             break;
-        case CO_TYPE_TYPE:
-            gc = (struct co_gc_t*)(self->v.type);
+        case CO_TYPE_STATIC_TYPE:
+            gc = (struct co_gc_t*)(self->v.static_type);
+            break;
+        case CO_TYPE_DYNAMIC_TYPE:
+            gc = (struct co_gc_t*)(self->v.dynamic_type);
             break;
         default:
             gc = NULL;
@@ -160,9 +179,9 @@ struct co_object_t *co_object_free(struct co_ctx_t *ctx, struct co_object_t *sel
             break;
         case CO_TYPE_TUPLE:
             break;
-        case CO_TYPE_BLOCK:
-            break;
         case CO_TYPE_CODE:
+            break;
+        case CO_TYPE_BLOCK:
             break;
         case CO_TYPE_FN:
             break;
@@ -178,7 +197,9 @@ struct co_object_t *co_object_free(struct co_ctx_t *ctx, struct co_object_t *sel
             break;
         case CO_TYPE_ERR:
             break;
-        case CO_TYPE_TYPE:
+        case CO_TYPE_STATIC_TYPE:
+            break;
+        case CO_TYPE_DYNAMIC_TYPE:
             break;
         default:
             free(self);
@@ -214,4 +235,12 @@ struct co_object_t *co_object_free(struct co_ctx_t *ctx, struct co_object_t *sel
 
 /*
  * bool
+ */
+
+/*
+ * u8
+ */
+
+/*
+ * i8
  */

@@ -34,6 +34,7 @@ struct co_object_t;
 #include "../core/ctx.h"
 
 typedef enum co_type_t {
+    // primitive values
     CO_TYPE_BOOL,
     CO_TYPE_I8,
     CO_TYPE_U8,
@@ -45,15 +46,17 @@ typedef enum co_type_t {
     CO_TYPE_U64,
     CO_TYPE_F32,
     CO_TYPE_F64,
+
+    // GC'ed values
     CO_TYPE_BYTES,
     CO_TYPE_STR,
+    CO_TYPE_TUPLE,
     CO_TYPE_STRUCT,
     CO_TYPE_UNION,
     CO_TYPE_LIST,
     CO_TYPE_DICT,
-    CO_TYPE_TUPLE,
-    CO_TYPE_BLOCK,
     CO_TYPE_CODE,
+    CO_TYPE_BLOCK,
     CO_TYPE_FN,
     CO_TYPE_OPTION,
     CO_TYPE_SOME,
@@ -61,39 +64,59 @@ typedef enum co_type_t {
     CO_TYPE_RESULT,
     CO_TYPE_OK,
     CO_TYPE_ERR,
-    CO_TYPE_TYPE,
+    CO_TYPE_STATIC_TYPE,
+    CO_TYPE_DYNAMIC_TYPE,
 } co_type_t;
 
+#define CO_GC_HEAD size_t rc
+
 typedef struct co_gc_t {
-    size_t rc;
+    CO_GC_HEAD;
 } co_gc_t;
 
 typedef struct co_bytes_t {
-    size_t rc;
+    CO_GC_HEAD;
     size_t len;
     char *items;
 } co_bytes_t;
 
 typedef struct co_str_t {
-    size_t rc;
+    CO_GC_HEAD;
     size_t len;
     char *items;
 } co_str_t;
 
+typedef struct co_tuple_entry_t {
+    size_t index;
+    struct co_object_t *name;
+    struct co_object_t *type;
+    struct co_object_t *value;
+} co_tuple_entry_t;
+
+typedef struct co_tuple_t {
+    // NOTE: can be optimized to know if tuple representing generic, args, params
+    CO_GC_HEAD;
+    struct co_option_t *generics; // tuple
+    size_t len;
+    struct co_tuple_entry_t *items;
+    struct co_object_t *args;
+    struct co_object_t *kwargs;
+} co_tuple_t;
+
 typedef struct co_struct_t {
-    size_t rc;
+    CO_GC_HEAD;
     struct co_option_t *generics; // tuple
     struct co_option_t *fields; // tuple
 } co_struct_t;
 
 typedef struct co_union_t {
-    size_t rc;
+    CO_GC_HEAD;
     struct co_option_t *generics; // tuple
     struct co_option_t *types; // tuple
 } co_union_t;
 
 typedef struct co_list_t {
-    size_t rc;
+    CO_GC_HEAD;
     size_t cap;
     size_t len;
     struct co_option_t *item_type; // type
@@ -107,7 +130,7 @@ typedef struct co_dict_entry_t {
 } co_dict_entry_t;
 
 typedef struct co_dict_t {
-    size_t rc;
+    CO_GC_HEAD;
     size_t fill;
     size_t used;
     size_t mask;
@@ -116,36 +139,27 @@ typedef struct co_dict_t {
     struct co_dict_entry_t *entries;
 } co_dict_t;
 
-typedef struct co_tuple_entry_t {
-    size_t index;
-    struct co_object_t *name;
-    struct co_object_t *type;
-    struct co_object_t *value;
-} co_tuple_entry_t;
-
-typedef struct co_tuple_t {
-    // NOTE: can be optimized to know if tuple representing generic, args, params
-    size_t rc;
-    struct co_option_t *generics; // tuple
-    size_t len;
-    struct co_tuple_entry_t *items;
-    struct co_object_t *args;
-    struct co_object_t *kwargs;
-} co_tuple_t;
-
-typedef struct co_block_t {
-    void *dummy;
-} co_block_t;
-
 typedef struct co_code_t {
-    size_t rc;
+    CO_GC_HEAD;
     size_t len;
     char *items;
 } co_code_t;
 
+typedef struct co_block_t {
+    struct co_object_t *ret_type;   // type
+    struct co_object_t *code;       // code
+} co_block_t;
+
 typedef enum co_fn_args_type_t {
     CO_FN_ARGS_TYPE_NONE,
+    CO_FN_ARGS_TYPE_CLS,
+    CO_FN_ARGS_TYPE_CLS_VALUE,
+    CO_FN_ARGS_TYPE_CLS_C_VALUE,
+    CO_FN_ARGS_TYPE_CLS_ARGS,
+    CO_FN_ARGS_TYPE_CLS_KWARGS,
+    CO_FN_ARGS_TYPE_CLS_ARGS_KWARGS,
     CO_FN_ARGS_TYPE_SELF,
+    CO_FN_ARGS_TYPE_SELF_VALUE,
     CO_FN_ARGS_TYPE_SELF_C_VALUE,
     CO_FN_ARGS_TYPE_SELF_ARGS,
     CO_FN_ARGS_TYPE_SELF_KWARGS,
@@ -216,8 +230,8 @@ typedef union co_value_t {
     struct co_list_t *list;
     struct co_dict_t *dict;
     struct co_tuple_t *tuple;
-    struct co_block_t *block;
     struct co_code_t *code;
+    struct co_block_t *block;
     struct co_fn_t *fn;
     struct co_result_t *result;
     struct co_ok_t *ok;
@@ -225,7 +239,8 @@ typedef union co_value_t {
     struct co_option_t *option;
     struct co_some_t *some;
     struct co_none_t *none;
-    struct co_object_t *type;
+    struct co_object_t *static_type;
+    struct co_object_t *dynamic_type;
 } co_value_t;
 
 typedef struct co_object_t {
@@ -239,6 +254,20 @@ typedef struct co_object_t {
 inline size_t co_object_incref(struct co_ctx_t *ctx, struct co_object_t *self);
 inline size_t co_object_decref(struct co_ctx_t *ctx, struct co_object_t *self);
 struct co_object_t *co_object_free(struct co_ctx_t *ctx, struct co_object_t *self);
+
+/*
+ * bytes
+ */
+struct co_object_t *co_bytes_new_from_c_char(struct co_ctx_t *ctx, const char *value);
+struct co_object_t *co_bytes_new_from_bytes(struct co_ctx_t *ctx, struct co_object_t *other);
+
+/*
+ * str
+ */
+
+/*
+ * tuple
+ */
 
 /*
  * Result
@@ -267,8 +296,8 @@ struct co_object_t *co_object_free(struct co_ctx_t *ctx, struct co_object_t *sel
 /*
  * bool
  */
-struct co_object_t *co_bool_new_with_c_bool(struct co_ctx_t *ctx, _Bool b);
-struct co_object_t *co_bool_new_with_bool(struct co_ctx_t *ctx, struct co_object_t *other);
+struct co_object_t *co_bool_new_from_c_bool(struct co_ctx_t *ctx, _Bool b);
+struct co_object_t *co_bool_new_from_bool(struct co_ctx_t *ctx, struct co_object_t *other);
 struct co_object_t *co_bool_new(struct co_ctx_t *ctx);
 struct co_object_t *co_bool_free(struct co_ctx_t *ctx, struct co_object_t *self);
 
