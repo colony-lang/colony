@@ -3,8 +3,8 @@
 /*
  * GC'ed object
  */
-size_t co_object_incref(struct co_ctx_t *ctx, struct co_object_t self) {
-    size_t rc = -1;
+ssize_t co_object_incref(struct co_ctx_t *ctx, struct co_object_t self) {
+    ssize_t rc = -1;
     enum co_type_t t = self.t;
     union co_value_t v = self.v;
     struct co_gc_t *gc = NULL;
@@ -89,8 +89,8 @@ size_t co_object_incref(struct co_ctx_t *ctx, struct co_object_t self) {
     return rc;
 }
 
-size_t co_object_decref(struct co_ctx_t *ctx, struct co_object_t self) {
-    size_t rc = -1;
+ssize_t co_object_decref(struct co_ctx_t *ctx, struct co_object_t self) {
+    ssize_t rc = -1;
     enum co_type_t t = self.t;
     union co_value_t v = self.v;
     struct co_gc_t *gc = NULL;
