@@ -528,26 +528,218 @@ struct co_object_t co_i16_pow(struct co_ctx_t *ctx, struct co_object_t self, str
 /*
  * u32
  */
+/* fn((ffi.c.uint32_t,), u32) */
+struct co_object_t co_u32_new_from_c_u32(struct co_ctx_t *ctx, uint32_t v);
+/* fn((u32,), Any) */
+struct co_object_t co_u32_free(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u32,), str) */
+struct co_object_t co_u32_repr(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u32,), int) */
+struct co_object_t co_u32_hash(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u32, u32), bool) */
+struct co_object_t co_u32_eq(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((u32, u32), bool) */
+struct co_object_t co_u32_lt(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((u32,), bool) */
+struct co_object_t co_u32_not(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u32, u32), u32) */
+struct co_object_t co_u32_and(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((u32, u32), u32) */
+struct co_object_t co_u32_or(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((u32, u32), u32) */
+struct co_object_t co_u32_xor(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((u32,), u32) */
+struct co_object_t co_u32_inv(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u32, u32), u32) */
+struct co_object_t co_u32_add(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((u32, u32), u32) */
+struct co_object_t co_u32_sub(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((u32, u32), u32) */
+struct co_object_t co_u32_mul(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((u32, u32), u32) */
+struct co_object_t co_u32_div(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((u32, u32), u32) */
+struct co_object_t co_u32_pow(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
 
 /*
  * i32
  */
+/* fn((ffi.c.int32_t,), i32) */
+struct co_object_t co_i32_new_from_c_i32(struct co_ctx_t *ctx, int32_t v);
+/* fn((i32,), Any) */
+struct co_object_t co_i32_free(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i32,), str) */
+struct co_object_t co_i32_repr(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i32,), int) */
+struct co_object_t co_i32_hash(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i32, i32), bool) */
+struct co_object_t co_i32_eq(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((i32, i32), bool) */
+struct co_object_t co_i32_lt(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((i32,), bool) */
+struct co_object_t co_i32_not(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i32, i32), i32) */
+struct co_object_t co_i32_and(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((i32, i32), i32) */
+struct co_object_t co_i32_or(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((i32, i32), i32) */
+struct co_object_t co_i32_xor(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((i32,), i32) */
+struct co_object_t co_i32_inv(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i32,), i32) */
+struct co_object_t co_i32_neg(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i32,), i32) */
+struct co_object_t co_i32_pos(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i32, i32), i32) */
+struct co_object_t co_i32_add(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((i32, i32), i32) */
+struct co_object_t co_i32_sub(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((i32, i32), i32) */
+struct co_object_t co_i32_mul(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((i32, i32), i32) */
+struct co_object_t co_i32_div(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((i32, i32), i32) */
+struct co_object_t co_i32_pow(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
 
 /*
  * u64
  */
+/* fn((ffi.c.uint64_t,), u64) */
+struct co_object_t co_u64_new_from_c_u64(struct co_ctx_t *ctx, uint64_t v);
+/* fn((u64,), Any) */
+struct co_object_t co_u64_free(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u64,), str) */
+struct co_object_t co_u64_repr(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u64,), int) */
+struct co_object_t co_u64_hash(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u64, u64), bool) */
+struct co_object_t co_u64_eq(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((u64, u64), bool) */
+struct co_object_t co_u64_lt(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((u64,), bool) */
+struct co_object_t co_u64_not(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u64, u64), u64) */
+struct co_object_t co_u64_and(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((u64, u64), u64) */
+struct co_object_t co_u64_or(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((u64, u64), u64) */
+struct co_object_t co_u64_xor(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((u64,), u64) */
+struct co_object_t co_u64_inv(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u64, u64), u64) */
+struct co_object_t co_u64_add(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((u64, u64), u64) */
+struct co_object_t co_u64_sub(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((u64, u64), u64) */
+struct co_object_t co_u64_mul(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((u64, u64), u64) */
+struct co_object_t co_u64_div(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((u64, u64), u64) */
+struct co_object_t co_u64_pow(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
 
 /*
  * i64
  */
+/* fn((ffi.c.int64_t,), i64) */
+struct co_object_t co_i64_new_from_c_i64(struct co_ctx_t *ctx, int64_t v);
+/* fn((i64,), Any) */
+struct co_object_t co_i64_free(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i64,), str) */
+struct co_object_t co_i64_repr(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i64,), int) */
+struct co_object_t co_i64_hash(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i64, i64), bool) */
+struct co_object_t co_i64_eq(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((i64, i64), bool) */
+struct co_object_t co_i64_lt(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((i64,), bool) */
+struct co_object_t co_i64_not(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i64, i64), i64) */
+struct co_object_t co_i64_and(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((i64, i64), i64) */
+struct co_object_t co_i64_or(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((i64, i64), i64) */
+struct co_object_t co_i64_xor(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((i64,), i64) */
+struct co_object_t co_i64_inv(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i64,), i64) */
+struct co_object_t co_i64_neg(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i64,), i64) */
+struct co_object_t co_i64_pos(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i64, i64), i64) */
+struct co_object_t co_i64_add(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((i64, i64), i64) */
+struct co_object_t co_i64_sub(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((i64, i64), i64) */
+struct co_object_t co_i64_mul(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((i64, i64), i64) */
+struct co_object_t co_i64_div(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((i64, i64), i64) */
+struct co_object_t co_i64_pow(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
 
 /*
  * f32
  */
+/* fn((ffi.c.float,), f32) */
+struct co_object_t co_f32_new_from_c_f32(struct co_ctx_t *ctx, float v);
+/* fn((f32,), Any) */
+struct co_object_t co_f32_free(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((f32,), str) */
+struct co_object_t co_f32_repr(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((f32,), int) */
+struct co_object_t co_f32_hash(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((f32, f32), bool) */
+struct co_object_t co_f32_eq(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((f32, f32), bool) */
+struct co_object_t co_f32_lt(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((f32,), bool) */
+struct co_object_t co_f32_not(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((f32,), f32) */
+struct co_object_t co_f32_neg(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((f32,), f32) */
+struct co_object_t co_f32_pos(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((f32, f32), f32) */
+struct co_object_t co_f32_add(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((f32, f32), f32) */
+struct co_object_t co_f32_sub(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((f32, f32), f32) */
+struct co_object_t co_f32_mul(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((f32, f32), f32) */
+struct co_object_t co_f32_div(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((f32, f32), f32) */
+struct co_object_t co_f32_pow(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
 
 /*
  * f64
  */
+/* fn((ffi.c.float,), f64) */
+struct co_object_t co_f64_new_from_c_f64(struct co_ctx_t *ctx, float v);
+/* fn((f64,), Any) */
+struct co_object_t co_f64_free(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((f64,), str) */
+struct co_object_t co_f64_repr(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((f64,), int) */
+struct co_object_t co_f64_hash(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((f64, f64), bool) */
+struct co_object_t co_f64_eq(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((f64, f64), bool) */
+struct co_object_t co_f64_lt(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((f64,), bool) */
+struct co_object_t co_f64_not(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((f64,), f64) */
+struct co_object_t co_f64_neg(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((f64,), f64) */
+struct co_object_t co_f64_pos(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((f64, f64), f64) */
+struct co_object_t co_f64_add(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((f64, f64), f64) */
+struct co_object_t co_f64_sub(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((f64, f64), f64) */
+struct co_object_t co_f64_mul(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((f64, f64), f64) */
+struct co_object_t co_f64_div(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((f64, f64), f64) */
+struct co_object_t co_f64_pow(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
 
 #endif
 
