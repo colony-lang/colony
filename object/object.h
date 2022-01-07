@@ -741,5 +741,36 @@ struct co_object_t co_f64_div(struct co_ctx_t *ctx, struct co_object_t self, str
 /* fn((f64, f64), f64) */
 struct co_object_t co_f64_pow(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
 
-#endif
+/*
+ * struct
+ */
 
+/*
+ * union
+ */
+
+/*
+ * list
+ */
+
+/*
+ * dict
+ */
+
+/*
+ * block
+ */
+
+/*
+ * code
+ */
+
+/*
+ * fn
+ */
+
+/*
+ * static_type
+ */
+
+#endif
