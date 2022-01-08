@@ -75,7 +75,7 @@ ssize_t co_object_incref(struct co_ctx_t *ctx, struct co_object_t self) {
             rc = ++gc->rc;
             break;
         case CO_TYPE_OBJECT:
-            gc = (struct co_gc_t*)(v.o);
+            gc = (struct co_gc_t*)(v.obj);
             rc = ++gc->rc;
             break;
         default:
@@ -141,7 +141,7 @@ ssize_t co_object_decref(struct co_ctx_t *ctx, struct co_object_t self) {
             gc = (struct co_gc_t*)(v.err);
             break;
         case CO_TYPE_OBJECT:
-            gc = (struct co_gc_t*)(v.o);
+            gc = (struct co_gc_t*)(v.obj);
             break;
         default:
             gc = NULL;

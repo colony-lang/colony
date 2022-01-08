@@ -36,36 +36,36 @@ struct co_object_t;
 
 typedef enum co_type_t {
     // primitive values
-    CO_TYPE_BOOL,
-    CO_TYPE_U8,
-    CO_TYPE_I8,
-    CO_TYPE_U16,
-    CO_TYPE_I16,
-    CO_TYPE_U32,
-    CO_TYPE_I32,
-    CO_TYPE_U64,
-    CO_TYPE_I64,
-    CO_TYPE_F32,
-    CO_TYPE_F64,
+    CO_TYPE_BOOL = 1,
+    CO_TYPE_U8 = 2,
+    CO_TYPE_I8 = 3,
+    CO_TYPE_U16 = 4,
+    CO_TYPE_I16 = 5,
+    CO_TYPE_U32 = 6,
+    CO_TYPE_I32 = 7,
+    CO_TYPE_U64 = 8,
+    CO_TYPE_I64 = 9,
+    CO_TYPE_F32 = 10,
+    CO_TYPE_F64 = 11,
 
     // GC'ed values
-    CO_TYPE_BYTES,
-    CO_TYPE_STR,
-    CO_TYPE_TUPLE,
-    CO_TYPE_STRUCT,
-    CO_TYPE_UNION,
-    CO_TYPE_LIST,
-    CO_TYPE_DICT,
-    CO_TYPE_CODE,
-    CO_TYPE_BLOCK,
-    CO_TYPE_FN,
-    CO_TYPE_OPTION,
-    CO_TYPE_SOME,
-    CO_TYPE_NONE,
-    CO_TYPE_RESULT,
-    CO_TYPE_OK,
-    CO_TYPE_ERR,
-    CO_TYPE_OBJECT,
+    CO_TYPE_BYTES = 20,
+    CO_TYPE_STR = 21,
+    CO_TYPE_TUPLE = 30,
+    CO_TYPE_STRUCT = 31,
+    CO_TYPE_UNION = 32,
+    CO_TYPE_LIST = 40,
+    CO_TYPE_DICT = 41,
+    CO_TYPE_CODE = 50,
+    CO_TYPE_BLOCK = 51,
+    CO_TYPE_FN = 52,
+    CO_TYPE_OPTION = 60,
+    CO_TYPE_SOME = 61,
+    CO_TYPE_NONE = 62,
+    CO_TYPE_RESULT = 63,
+    CO_TYPE_OK = 64,
+    CO_TYPE_ERR = 65,
+    CO_TYPE_OBJECT = 66,
 } co_type_t;
 
 #define CO_GC_HEAD ssize_t rc
@@ -150,6 +150,7 @@ typedef struct co_block_t {
     struct co_object_t *code;       // code
 } co_block_t;
 
+// ?
 typedef enum co_fn_args_type_t {
     CO_FN_ARGS_TYPE_NONE,
     CO_FN_ARGS_TYPE_CLS,
@@ -239,7 +240,7 @@ typedef union co_value_t {
     struct co_option_t *option;
     struct co_some_t *some;
     struct co_none_t *none;
-    struct co_object_t *o;
+    struct co_object_t *obj;
 } co_value_t;
 
 typedef struct co_object_t {
@@ -282,6 +283,28 @@ struct co_object_t co_bool_and(struct co_ctx_t *ctx, struct co_object_t self, st
 struct co_object_t co_bool_or(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
 /* fn((bool, bool), bool) */
 struct co_object_t co_bool_xor(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((bool,), bool) */
+struct co_object_t co_bool_as_bool(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((bool,), u8) */
+struct co_object_t co_bool_as_u8(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((bool,), i8) */
+struct co_object_t co_bool_as_i8(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((bool,), u16) */
+struct co_object_t co_bool_as_u16(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((bool,), i16) */
+struct co_object_t co_bool_as_i16(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((bool,), u32) */
+struct co_object_t co_bool_as_u32(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((bool,), i32) */
+struct co_object_t co_bool_as_i32(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((bool,), u64) */
+struct co_object_t co_bool_as_u64(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((bool,), i64) */
+struct co_object_t co_bool_as_i64(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((bool,), f32) */
+struct co_object_t co_bool_as_f32(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((bool,), f64) */
+struct co_object_t co_bool_as_f64(struct co_ctx_t *ctx, struct co_object_t self);
 
 /*
  * u8
@@ -318,6 +341,28 @@ struct co_object_t co_u8_mul(struct co_ctx_t *ctx, struct co_object_t self, stru
 struct co_object_t co_u8_div(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
 /* fn((u8, u8), u8) */
 struct co_object_t co_u8_pow(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((u8,), bool) */
+struct co_object_t co_u8_as_bool(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u8,), u8) */
+struct co_object_t co_u8_as_u8(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u8,), i8) */
+struct co_object_t co_u8_as_i8(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u8,), u16) */
+struct co_object_t co_u8_as_u16(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u8,), i16) */
+struct co_object_t co_u8_as_i16(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u8,), u32) */
+struct co_object_t co_u8_as_u32(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u8,), i32) */
+struct co_object_t co_u8_as_i32(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u8,), u64) */
+struct co_object_t co_u8_as_u64(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u8,), i64) */
+struct co_object_t co_u8_as_i64(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u8,), f32) */
+struct co_object_t co_u8_as_f32(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u8,), f64) */
+struct co_object_t co_u8_as_f64(struct co_ctx_t *ctx, struct co_object_t self);
 
 /*
  * i8
@@ -358,7 +403,28 @@ struct co_object_t co_i8_mul(struct co_ctx_t *ctx, struct co_object_t self, stru
 struct co_object_t co_i8_div(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
 /* fn((i8, i8), i8) */
 struct co_object_t co_i8_pow(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
-
+/* fn((i8,), bool) */
+struct co_object_t co_i8_as_bool(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i8,), u8) */
+struct co_object_t co_i8_as_u8(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i8,), i8) */
+struct co_object_t co_i8_as_i8(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i8,), u16) */
+struct co_object_t co_i8_as_u16(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i8,), i16) */
+struct co_object_t co_i8_as_i16(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i8,), u32) */
+struct co_object_t co_i8_as_u32(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i8,), i32) */
+struct co_object_t co_i8_as_i32(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i8,), u64) */
+struct co_object_t co_i8_as_u64(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i8,), i64) */
+struct co_object_t co_i8_as_i64(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i8,), f32) */
+struct co_object_t co_i8_as_f32(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i8,), f64) */
+struct co_object_t co_i8_as_f64(struct co_ctx_t *ctx, struct co_object_t self);
 /*
  * u16
  */
@@ -394,6 +460,28 @@ struct co_object_t co_u16_mul(struct co_ctx_t *ctx, struct co_object_t self, str
 struct co_object_t co_u16_div(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
 /* fn((u16, u16), u16) */
 struct co_object_t co_u16_pow(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((u16,), bool) */
+struct co_object_t co_u16_as_bool(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u16,), u8) */
+struct co_object_t co_u16_as_u8(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u16,), i8) */
+struct co_object_t co_u16_as_i8(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u16,), u16) */
+struct co_object_t co_u16_as_u16(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u16,), i16) */
+struct co_object_t co_u16_as_i16(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u16,), u32) */
+struct co_object_t co_u16_as_u32(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u16,), i32) */
+struct co_object_t co_u16_as_i32(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u16,), u64) */
+struct co_object_t co_u16_as_u64(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u16,), i64) */
+struct co_object_t co_u16_as_i64(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u16,), f32) */
+struct co_object_t co_u16_as_f32(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u16,), f64) */
+struct co_object_t co_u16_as_f64(struct co_ctx_t *ctx, struct co_object_t self);
 
 /*
  * i16
@@ -434,6 +522,28 @@ struct co_object_t co_i16_mul(struct co_ctx_t *ctx, struct co_object_t self, str
 struct co_object_t co_i16_div(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
 /* fn((i16, i16), i16) */
 struct co_object_t co_i16_pow(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((i16,), bool) */
+struct co_object_t co_i16_as_bool(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i16,), u8) */
+struct co_object_t co_i16_as_u8(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i16,), i8) */
+struct co_object_t co_i16_as_i8(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i16,), u16) */
+struct co_object_t co_i16_as_u16(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i16,), i16) */
+struct co_object_t co_i16_as_i16(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i16,), u32) */
+struct co_object_t co_i16_as_u32(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i16,), i32) */
+struct co_object_t co_i16_as_i32(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i16,), u64) */
+struct co_object_t co_i16_as_u64(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i16,), i64) */
+struct co_object_t co_i16_as_i64(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i16,), f32) */
+struct co_object_t co_i16_as_f32(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i16,), f64) */
+struct co_object_t co_i16_as_f64(struct co_ctx_t *ctx, struct co_object_t self);
 
 /*
  * u32
@@ -470,6 +580,28 @@ struct co_object_t co_u32_mul(struct co_ctx_t *ctx, struct co_object_t self, str
 struct co_object_t co_u32_div(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
 /* fn((u32, u32), u32) */
 struct co_object_t co_u32_pow(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((u32,), bool) */
+struct co_object_t co_u32_as_bool(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u32,), u8) */
+struct co_object_t co_u32_as_u8(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u32,), i8) */
+struct co_object_t co_u32_as_i8(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u32,), u16) */
+struct co_object_t co_u32_as_u16(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u32,), i16) */
+struct co_object_t co_u32_as_i16(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u32,), u32) */
+struct co_object_t co_u32_as_u32(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u32,), i32) */
+struct co_object_t co_u32_as_i32(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u32,), u64) */
+struct co_object_t co_u32_as_u64(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u32,), i64) */
+struct co_object_t co_u32_as_i64(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u32,), f32) */
+struct co_object_t co_u32_as_f32(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u32,), f64) */
+struct co_object_t co_u32_as_f64(struct co_ctx_t *ctx, struct co_object_t self);
 
 /*
  * i32
@@ -510,6 +642,28 @@ struct co_object_t co_i32_mul(struct co_ctx_t *ctx, struct co_object_t self, str
 struct co_object_t co_i32_div(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
 /* fn((i32, i32), i32) */
 struct co_object_t co_i32_pow(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((i32,), bool) */
+struct co_object_t co_i32_as_bool(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i32,), u8) */
+struct co_object_t co_i32_as_u8(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i32,), i8) */
+struct co_object_t co_i32_as_i8(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i32,), u16) */
+struct co_object_t co_i32_as_u16(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i32,), i16) */
+struct co_object_t co_i32_as_i16(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i32,), u32) */
+struct co_object_t co_i32_as_u32(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i32,), i32) */
+struct co_object_t co_i32_as_i32(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i32,), u64) */
+struct co_object_t co_i32_as_u64(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i32,), i64) */
+struct co_object_t co_i32_as_i64(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i32,), f32) */
+struct co_object_t co_i32_as_f32(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i32,), f64) */
+struct co_object_t co_i32_as_f64(struct co_ctx_t *ctx, struct co_object_t self);
 
 /*
  * u64
@@ -546,6 +700,28 @@ struct co_object_t co_u64_mul(struct co_ctx_t *ctx, struct co_object_t self, str
 struct co_object_t co_u64_div(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
 /* fn((u64, u64), u64) */
 struct co_object_t co_u64_pow(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((u64,), bool) */
+struct co_object_t co_u64_as_bool(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u64,), u8) */
+struct co_object_t co_u64_as_u8(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u64,), i8) */
+struct co_object_t co_u64_as_i8(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u64,), u16) */
+struct co_object_t co_u64_as_u16(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u64,), i16) */
+struct co_object_t co_u64_as_i16(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u64,), u32) */
+struct co_object_t co_u64_as_u32(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u64,), i32) */
+struct co_object_t co_u64_as_i32(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u64,), u64) */
+struct co_object_t co_u64_as_u64(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u64,), i64) */
+struct co_object_t co_u64_as_i64(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u64,), f32) */
+struct co_object_t co_u64_as_f32(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((u64,), f64) */
+struct co_object_t co_u64_as_f64(struct co_ctx_t *ctx, struct co_object_t self);
 
 /*
  * i64
@@ -586,6 +762,28 @@ struct co_object_t co_i64_mul(struct co_ctx_t *ctx, struct co_object_t self, str
 struct co_object_t co_i64_div(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
 /* fn((i64, i64), i64) */
 struct co_object_t co_i64_pow(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((i64,), bool) */
+struct co_object_t co_i64_as_bool(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i64,), u8) */
+struct co_object_t co_i64_as_u8(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i64,), i8) */
+struct co_object_t co_i64_as_i8(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i64,), u16) */
+struct co_object_t co_i64_as_u16(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i64,), i16) */
+struct co_object_t co_i64_as_i16(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i64,), u32) */
+struct co_object_t co_i64_as_u32(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i64,), i32) */
+struct co_object_t co_i64_as_i32(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i64,), u64) */
+struct co_object_t co_i64_as_u64(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i64,), i64) */
+struct co_object_t co_i64_as_i64(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i64,), f32) */
+struct co_object_t co_i64_as_f32(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((i64,), f64) */
+struct co_object_t co_i64_as_f64(struct co_ctx_t *ctx, struct co_object_t self);
 
 /*
  * f32
@@ -618,6 +816,28 @@ struct co_object_t co_f32_mul(struct co_ctx_t *ctx, struct co_object_t self, str
 struct co_object_t co_f32_div(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
 /* fn((f32, f32), f32) */
 struct co_object_t co_f32_pow(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((f32,), bool) */
+struct co_object_t co_f32_as_bool(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((f32,), u8) */
+struct co_object_t co_f32_as_u8(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((f32,), i8) */
+struct co_object_t co_f32_as_i8(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((f32,), u16) */
+struct co_object_t co_f32_as_u16(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((f32,), i16) */
+struct co_object_t co_f32_as_i16(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((f32,), u32) */
+struct co_object_t co_f32_as_u32(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((f32,), i32) */
+struct co_object_t co_f32_as_i32(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((f32,), u64) */
+struct co_object_t co_f32_as_u64(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((f32,), i64) */
+struct co_object_t co_f32_as_i64(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((f32,), f32) */
+struct co_object_t co_f32_as_f32(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((f32,), f64) */
+struct co_object_t co_f32_as_f64(struct co_ctx_t *ctx, struct co_object_t self);
 
 /*
  * f64
@@ -650,6 +870,28 @@ struct co_object_t co_f64_mul(struct co_ctx_t *ctx, struct co_object_t self, str
 struct co_object_t co_f64_div(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
 /* fn((f64, f64), f64) */
 struct co_object_t co_f64_pow(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((f64,), bool) */
+struct co_object_t co_f64_as_bool(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((f64,), u8) */
+struct co_object_t co_f64_as_u8(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((f64,), i8) */
+struct co_object_t co_f64_as_i8(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((f64,), u16) */
+struct co_object_t co_f64_as_u16(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((f64,), i16) */
+struct co_object_t co_f64_as_i16(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((f64,), u32) */
+struct co_object_t co_f64_as_u32(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((f64,), i32) */
+struct co_object_t co_f64_as_i32(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((f64,), u64) */
+struct co_object_t co_f64_as_u64(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((f64,), i64) */
+struct co_object_t co_f64_as_i64(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((f64,), f32) */
+struct co_object_t co_f64_as_f32(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((f64,), f64) */
+struct co_object_t co_f64_as_f64(struct co_ctx_t *ctx, struct co_object_t self);
 
 /*
  * bytes
