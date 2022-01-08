@@ -37,14 +37,14 @@ struct co_object_t;
 typedef enum co_type_t {
     // primitive values
     CO_TYPE_BOOL,
-    CO_TYPE_I8,
     CO_TYPE_U8,
-    CO_TYPE_I16,
+    CO_TYPE_I8,
     CO_TYPE_U16,
-    CO_TYPE_I32,
+    CO_TYPE_I16,
     CO_TYPE_U32,
-    CO_TYPE_I64,
+    CO_TYPE_I32,
     CO_TYPE_U64,
+    CO_TYPE_I64,
     CO_TYPE_F32,
     CO_TYPE_F64,
 
@@ -65,8 +65,7 @@ typedef enum co_type_t {
     CO_TYPE_RESULT,
     CO_TYPE_OK,
     CO_TYPE_ERR,
-    CO_TYPE_STATIC_TYPE,
-    CO_TYPE_DYNAMIC_TYPE,
+    CO_TYPE_OBJECT,
 } co_type_t;
 
 #define CO_GC_HEAD ssize_t rc
@@ -214,14 +213,14 @@ typedef struct co_none_t {
 
 typedef union co_value_t {
     _Bool b;
-    int8_t i8;
     uint8_t u8;
-    int16_t i16;
+    int8_t i8;
     uint16_t u16;
-    int32_t i32;
+    int16_t i16;
     uint32_t u32;
-    int64_t i64;
+    int32_t i32;
     uint64_t u64;
+    int64_t i64;
     float f32;
     double f64;
     struct co_bytes_t *bytes;
@@ -240,8 +239,7 @@ typedef union co_value_t {
     struct co_option_t *option;
     struct co_some_t *some;
     struct co_none_t *none;
-    struct co_object_t *static_type;
-    struct co_object_t *dynamic_type;
+    struct co_object_t *o;
 } co_value_t;
 
 typedef struct co_object_t {
@@ -260,94 +258,6 @@ inline ssize_t co_object_decref(struct co_ctx_t *ctx, struct co_object_t self);
  */
 struct co_object_t co_object_new_from_c_type_c_value(struct co_ctx_t *ctx, enum co_type_t t, union co_value_t v);
 struct co_object_t co_object_free(struct co_ctx_t *ctx, struct co_object_t self);
-
-/*
- * bytes
- */
-/* fn((ffi.c.size_t, ffi.c.Pointer(ffi.c.char)), bytes) */
-struct co_object_t co_bytes_new_from_c_len_c_char(struct co_ctx_t *ctx, size_t len, char *value);
-/* fn((bytes,), Any) */
-struct co_object_t co_bytes_free(struct co_ctx_t *ctx, struct co_object_t self);
-/* fn((bytes,), str) */
-struct co_object_t co_bytes_repr(struct co_ctx_t *ctx, struct co_object_t self);
-/* fn((bytes,), int) */
-struct co_object_t co_bytes_hash(struct co_ctx_t *ctx, struct co_object_t self);
-/* fn((bytes, bytes), bool) */
-struct co_object_t co_bytes_eq(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
-/* fn((bytes, bytes), bool) */
-struct co_object_t co_bytes_lt(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
-/* fn((bytes, int), bytes) */
-struct co_object_t co_bytes_get(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t index);
-/* fn((bytes, int, int), bytes) */
-struct co_object_t co_bytes_getslice(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t begin, struct co_object_t end);
-/* fn((bytes, bytes), bytes) */
-struct co_object_t co_bytes_add(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
-/* fn((bytes, bytes), bool) */
-struct co_object_t co_bytes_find(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
-/* fn((bytes, bytes), int) */
-struct co_object_t co_bytes_index(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
-/* fn((bytes, list[Any]), bytes) */
-struct co_object_t co_bytes_format(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t values);
-/* fn((bytes,), str) */
-struct co_object_t co_bytes_decode(struct co_ctx_t *ctx, struct co_object_t self);
-
-/*
- * str
- */
-/* fn((ffi.c.size_t, ffi.c.Pointer(ffi.c.char)), str) */
-struct co_object_t co_str_new_from_c_len_c_char(struct co_ctx_t *ctx, size_t len, char *value);
-/* fn((str,), Any) */
-struct co_object_t co_str_free(struct co_ctx_t *ctx, struct co_object_t self);
-/* fn((str,), str) */
-struct co_object_t co_str_repr(struct co_ctx_t *ctx, struct co_object_t self);
-/* fn((str,), int) */
-struct co_object_t co_str_hash(struct co_ctx_t *ctx, struct co_object_t self);
-/* fn((str, str), bool) */
-struct co_object_t co_str_eq(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
-/* fn((str, str), bool) */
-struct co_object_t co_str_lt(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
-/* fn((str, int), str) */
-struct co_object_t co_str_get(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t index);
-/* fn((str, int, int), str) */
-struct co_object_t co_str_getslice(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t begin, struct co_object_t end);
-/* fn((str, str), str) */
-struct co_object_t co_str_add(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
-/* fn((str, str), bool) */
-struct co_object_t co_str_find(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
-/* fn((str, str), int) */
-struct co_object_t co_str_index(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
-/* fn((str, list[Any]), str) */
-struct co_object_t co_str_format(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t values);
-/* fn((str,), bytes) */
-struct co_object_t co_str_encode(struct co_ctx_t *ctx, struct co_object_t self);
-
-/*
- * tuple
- */
-
-/*
- * Result
- */
-
-/*
- * Ok
- */
-
-/*
- * Err
- */
-
-/*
- * Option
- */
-
-/*
- * Some
- */
-
-/*
- * None
- */
 
 /*
  * bool
@@ -742,6 +652,70 @@ struct co_object_t co_f64_div(struct co_ctx_t *ctx, struct co_object_t self, str
 struct co_object_t co_f64_pow(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
 
 /*
+ * bytes
+ */
+/* fn((ffi.c.size_t, ffi.c.Pointer(ffi.c.char)), bytes) */
+struct co_object_t co_bytes_new_from_c_len_c_char(struct co_ctx_t *ctx, size_t len, char *value);
+/* fn((bytes,), Any) */
+struct co_object_t co_bytes_free(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((bytes,), str) */
+struct co_object_t co_bytes_repr(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((bytes,), int) */
+struct co_object_t co_bytes_hash(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((bytes, bytes), bool) */
+struct co_object_t co_bytes_eq(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((bytes, bytes), bool) */
+struct co_object_t co_bytes_lt(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((bytes, int), bytes) */
+struct co_object_t co_bytes_get(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t index);
+/* fn((bytes, int, int), bytes) */
+struct co_object_t co_bytes_getslice(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t begin, struct co_object_t end);
+/* fn((bytes, bytes), bytes) */
+struct co_object_t co_bytes_add(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((bytes, bytes), bool) */
+struct co_object_t co_bytes_find(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((bytes, bytes), int) */
+struct co_object_t co_bytes_index(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((bytes, list[Any]), bytes) */
+struct co_object_t co_bytes_format(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t values);
+/* fn((bytes,), str) */
+struct co_object_t co_bytes_decode(struct co_ctx_t *ctx, struct co_object_t self);
+
+/*
+ * str
+ */
+/* fn((ffi.c.size_t, ffi.c.Pointer(ffi.c.char)), str) */
+struct co_object_t co_str_new_from_c_len_c_char(struct co_ctx_t *ctx, size_t len, char *value);
+/* fn((str,), Any) */
+struct co_object_t co_str_free(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((str,), str) */
+struct co_object_t co_str_repr(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((str,), int) */
+struct co_object_t co_str_hash(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((str, str), bool) */
+struct co_object_t co_str_eq(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((str, str), bool) */
+struct co_object_t co_str_lt(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((str, int), str) */
+struct co_object_t co_str_get(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t index);
+/* fn((str, int, int), str) */
+struct co_object_t co_str_getslice(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t begin, struct co_object_t end);
+/* fn((str, str), str) */
+struct co_object_t co_str_add(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((str, str), bool) */
+struct co_object_t co_str_find(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((str, str), int) */
+struct co_object_t co_str_index(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((str, list[Any]), str) */
+struct co_object_t co_str_format(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t values);
+/* fn((str,), bytes) */
+struct co_object_t co_str_encode(struct co_ctx_t *ctx, struct co_object_t self);
+
+/*
+ * tuple
+ */
+
+/*
  * struct
  */
 
@@ -758,11 +732,11 @@ struct co_object_t co_f64_pow(struct co_ctx_t *ctx, struct co_object_t self, str
  */
 
 /*
- * block
+ * code
  */
 
 /*
- * code
+ * block
  */
 
 /*
@@ -770,7 +744,27 @@ struct co_object_t co_f64_pow(struct co_ctx_t *ctx, struct co_object_t self, str
  */
 
 /*
- * static_type
+ * Option
+ */
+
+/*
+ * Some
+ */
+
+/*
+ * None
+ */
+
+/*
+ * Result
+ */
+
+/*
+ * Ok
+ */
+
+/*
+ * Err
  */
 
 #endif

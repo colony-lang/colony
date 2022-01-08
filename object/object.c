@@ -74,12 +74,8 @@ ssize_t co_object_incref(struct co_ctx_t *ctx, struct co_object_t self) {
             gc = (struct co_gc_t*)(v.err);
             rc = ++gc->rc;
             break;
-        case CO_TYPE_STATIC_TYPE:
-            gc = (struct co_gc_t*)(v.static_type);
-            rc = ++gc->rc;
-            break;
-        case CO_TYPE_DYNAMIC_TYPE:
-            gc = (struct co_gc_t*)(v.dynamic_type);
+        case CO_TYPE_OBJECT:
+            gc = (struct co_gc_t*)(v.o);
             rc = ++gc->rc;
             break;
         default:
@@ -144,11 +140,8 @@ ssize_t co_object_decref(struct co_ctx_t *ctx, struct co_object_t self) {
         case CO_TYPE_ERR:
             gc = (struct co_gc_t*)(v.err);
             break;
-        case CO_TYPE_STATIC_TYPE:
-            gc = (struct co_gc_t*)(v.static_type);
-            break;
-        case CO_TYPE_DYNAMIC_TYPE:
-            gc = (struct co_gc_t*)(v.dynamic_type);
+        case CO_TYPE_OBJECT:
+            gc = (struct co_gc_t*)(v.o);
             break;
         default:
             gc = NULL;
@@ -218,9 +211,7 @@ struct co_object_t co_object_free(struct co_ctx_t *ctx, struct co_object_t self)
             break;
         case CO_TYPE_ERR:
             break;
-        case CO_TYPE_STATIC_TYPE:
-            break;
-        case CO_TYPE_DYNAMIC_TYPE:
+        case CO_TYPE_OBJECT:
             break;
         default:
             break;
