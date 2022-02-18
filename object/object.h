@@ -6,6 +6,8 @@
 #include <stdint.h>
 #include <assert.h>
 
+#define CO_GC_HEAD ssize_t rc
+
 enum co_type_t;
 
 struct co_gc_t;
@@ -35,7 +37,7 @@ struct co_object_t;
 #include "../core/ctx.h"
 
 typedef enum co_type_t {
-    // primitive values
+    // primitive types
     CO_TYPE_BOOL = 1,
     CO_TYPE_U8 = 2,
     CO_TYPE_I8 = 3,
@@ -48,7 +50,7 @@ typedef enum co_type_t {
     CO_TYPE_F32 = 10,
     CO_TYPE_F64 = 11,
 
-    // GC'ed values
+    // GC'ed types
     CO_TYPE_BYTES = 20,
     CO_TYPE_STR = 21,
     CO_TYPE_TUPLE = 30,
@@ -68,8 +70,6 @@ typedef enum co_type_t {
     CO_TYPE_OBJECT = 66,
 } co_type_t;
 
-#define CO_GC_HEAD ssize_t rc
-
 typedef struct co_gc_t {
     CO_GC_HEAD;
 } co_gc_t;
@@ -88,45 +88,45 @@ typedef struct co_str_t {
 
 typedef struct co_tuple_entry_t {
     size_t index;
-    struct co_object_t *name;
-    struct co_object_t *type;
-    struct co_object_t *value;
+    struct co_object_t *name;       // None[str] | str
+    struct co_object_t *type;       // None[str] | str | type
+    struct co_object_t *value;      // None[Any] | Any
 } co_tuple_entry_t;
 
+// NOTE: can be optimized to know if tuple representing generic, args, params
 typedef struct co_tuple_t {
-    // NOTE: can be optimized to know if tuple representing generic, args, params
     CO_GC_HEAD;
-    struct co_option_t *generics; // tuple
+    struct co_option_t *generics;   // None[tuple] | tuple
     size_t len;
     struct co_tuple_entry_t *items;
-    struct co_object_t *args;
-    struct co_object_t *kwargs;
+    struct co_object_t *args;       // None[list] | list
+    struct co_object_t *kwargs;     // None[dict] | dict
 } co_tuple_t;
 
 typedef struct co_struct_t {
     CO_GC_HEAD;
-    struct co_option_t *generics; // tuple
-    struct co_option_t *fields; // tuple
+    struct co_option_t *generics;   // None[tuple] | tuple
+    struct co_option_t *fields;     // tuple
 } co_struct_t;
 
 typedef struct co_union_t {
     CO_GC_HEAD;
-    struct co_option_t *generics; // tuple
-    struct co_option_t *types; // tuple
+    struct co_option_t *generics;   // None[tuple] | tuple
+    struct co_option_t *types;      // tuple
 } co_union_t;
 
 typedef struct co_list_t {
     CO_GC_HEAD;
     size_t cap;
     size_t len;
-    struct co_option_t *item_type; // type
+    struct co_option_t *item_type;  // None[type] | type
     struct co_option_t *items;
 } co_list_t;
 
 typedef struct co_dict_entry_t {
     ssize_t hash;
-    struct co_object_t *key;
-    struct co_object_t *value;
+    struct co_object_t *key;        // Any
+    struct co_object_t *value;      // Any
 } co_dict_entry_t;
 
 typedef struct co_dict_t {
@@ -134,8 +134,8 @@ typedef struct co_dict_t {
     size_t fill;
     size_t used;
     size_t mask;
-    struct co_option_t *key_type;       // type
-    struct co_option_t *value_type;     // type
+    struct co_option_t *key_type;       // None[type] | type
+    struct co_option_t *value_type;     // None[type] | type
     struct co_dict_entry_t *entries;
 } co_dict_t;
 
@@ -146,11 +146,14 @@ typedef struct co_code_t {
 } co_code_t;
 
 typedef struct co_block_t {
-    struct co_object_t *ret_type;   // type
+    CO_GC_HEAD;
+    struct co_object_t *ret_type;   // None[type] | type
     struct co_object_t *code;       // code
 } co_block_t;
 
 // ?
+// ARGS naming vs regular args ??
+// KWARGS naming vs regular kwargs ??
 typedef enum co_fn_args_type_t {
     CO_FN_ARGS_TYPE_NONE,
     CO_FN_ARGS_TYPE_CLS,
@@ -170,49 +173,50 @@ typedef enum co_fn_args_type_t {
     CO_FN_ARGS_TYPE_ARGS_KWARGS,
 } co_fn_args_type_t;
 
+// NOTE: function can be defined with generics, and specialized with types for given generics
 typedef struct co_fn_t {
-    // NOTE: function can be defined with generics, and specialized with types for given generics
-    size_t rc;
+    CO_GC_HEAD;
     enum co_fn_args_type_t args_type;
-    struct co_object_t *params;     // tuple that can hold generics
+    struct co_object_t *params;     // tuple, can include generics
     struct co_object_t *ret;
     struct co_code_t *code;
 } co_fn_t;
 
 typedef struct co_result_t {
-    size_t rc;
+    CO_GC_HEAD;
     struct co_option_t *generics; // tuple
 } co_result_t;
 
 typedef struct co_ok_t {
-    size_t rc;
+    CO_GC_HEAD;
     struct co_option_t *generics; // tuple
     struct co_option_t *v;
 } co_ok_t;
 
 typedef struct co_err_t {
-    size_t rc;
+    CO_GC_HEAD;
     struct co_option_t *generics; // tuple
     struct co_option_t *e;
 } co_err_t;
 
 typedef struct co_option_t {
-    size_t rc;
+    CO_GC_HEAD;
     struct co_option_t *generics; // tuple
 } co_option_t;
 
 typedef struct co_some_t {
-    size_t rc;
+    CO_GC_HEAD;
     struct co_option_t *generics; // tuple
     struct co_option_t *v;
 } co_some_t;
 
 typedef struct co_none_t {
-    size_t rc;
+    CO_GC_HEAD;
     struct co_option_t *generics; // tuple
 } co_none_t;
 
 typedef union co_value_t {
+    // primitive values
     _Bool b;
     uint8_t u8;
     int8_t i8;
@@ -224,6 +228,8 @@ typedef union co_value_t {
     int64_t i64;
     float f32;
     double f64;
+
+    // GC'ed values
     struct co_bytes_t *bytes;
     struct co_str_t *str;
     struct co_struct_t *struct_;
@@ -257,14 +263,14 @@ inline ssize_t co_object_decref(struct co_ctx_t *ctx, struct co_object_t self);
 /*
  * object
  */
-struct co_object_t co_object_new_from_c_type_c_value(struct co_ctx_t *ctx, enum co_type_t t, union co_value_t v);
+struct co_object_t co_object_new_from_raw(struct co_ctx_t *ctx, enum co_type_t t, union co_value_t v);
 struct co_object_t co_object_free(struct co_ctx_t *ctx, struct co_object_t self);
 
 /*
  * bool
  */
 /* fn((ffi.c._Bool,), bool) */
-struct co_object_t co_bool_new_from_c_bool(struct co_ctx_t *ctx, _Bool b);
+struct co_object_t co_bool_new_from_raw(struct co_ctx_t *ctx, _Bool b);
 /* fn((bool,), Any) */
 struct co_object_t co_bool_free(struct co_ctx_t *ctx, struct co_object_t self);
 /* fn((bool,), str) */
@@ -310,7 +316,7 @@ struct co_object_t co_bool_as_f64(struct co_ctx_t *ctx, struct co_object_t self)
  * u8
  */
 /* fn((ffi.c.uint8_t,), u8) */
-struct co_object_t co_u8_new_from_c_u8(struct co_ctx_t *ctx, uint8_t v);
+struct co_object_t co_u8_new_from_raw(struct co_ctx_t *ctx, uint8_t v);
 /* fn((u8,), Any) */
 struct co_object_t co_u8_free(struct co_ctx_t *ctx, struct co_object_t self);
 /* fn((u8,), str) */
@@ -368,7 +374,7 @@ struct co_object_t co_u8_as_f64(struct co_ctx_t *ctx, struct co_object_t self);
  * i8
  */
 /* fn((ffi.c.int8_t,), i8) */
-struct co_object_t co_i8_new_from_c_i8(struct co_ctx_t *ctx, int8_t v);
+struct co_object_t co_i8_new_from_raw(struct co_ctx_t *ctx, int8_t v);
 /* fn((i8,), Any) */
 struct co_object_t co_i8_free(struct co_ctx_t *ctx, struct co_object_t self);
 /* fn((i8,), str) */
@@ -429,7 +435,7 @@ struct co_object_t co_i8_as_f64(struct co_ctx_t *ctx, struct co_object_t self);
  * u16
  */
 /* fn((ffi.c.uint16_t,), u16) */
-struct co_object_t co_u16_new_from_c_u16(struct co_ctx_t *ctx, uint16_t v);
+struct co_object_t co_u16_new_from_raw(struct co_ctx_t *ctx, uint16_t v);
 /* fn((u16,), Any) */
 struct co_object_t co_u16_free(struct co_ctx_t *ctx, struct co_object_t self);
 /* fn((u16,), str) */
@@ -487,7 +493,7 @@ struct co_object_t co_u16_as_f64(struct co_ctx_t *ctx, struct co_object_t self);
  * i16
  */
 /* fn((ffi.c.int16_t,), i16) */
-struct co_object_t co_i16_new_from_c_i16(struct co_ctx_t *ctx, int16_t v);
+struct co_object_t co_i16_new_from_raw(struct co_ctx_t *ctx, int16_t v);
 /* fn((i16,), Any) */
 struct co_object_t co_i16_free(struct co_ctx_t *ctx, struct co_object_t self);
 /* fn((i16,), str) */
@@ -549,7 +555,7 @@ struct co_object_t co_i16_as_f64(struct co_ctx_t *ctx, struct co_object_t self);
  * u32
  */
 /* fn((ffi.c.uint32_t,), u32) */
-struct co_object_t co_u32_new_from_c_u32(struct co_ctx_t *ctx, uint32_t v);
+struct co_object_t co_u32_new_from_raw(struct co_ctx_t *ctx, uint32_t v);
 /* fn((u32,), Any) */
 struct co_object_t co_u32_free(struct co_ctx_t *ctx, struct co_object_t self);
 /* fn((u32,), str) */
@@ -607,7 +613,7 @@ struct co_object_t co_u32_as_f64(struct co_ctx_t *ctx, struct co_object_t self);
  * i32
  */
 /* fn((ffi.c.int32_t,), i32) */
-struct co_object_t co_i32_new_from_c_i32(struct co_ctx_t *ctx, int32_t v);
+struct co_object_t co_i32_new_from_raw(struct co_ctx_t *ctx, int32_t v);
 /* fn((i32,), Any) */
 struct co_object_t co_i32_free(struct co_ctx_t *ctx, struct co_object_t self);
 /* fn((i32,), str) */
@@ -669,7 +675,7 @@ struct co_object_t co_i32_as_f64(struct co_ctx_t *ctx, struct co_object_t self);
  * u64
  */
 /* fn((ffi.c.uint64_t,), u64) */
-struct co_object_t co_u64_new_from_c_u64(struct co_ctx_t *ctx, uint64_t v);
+struct co_object_t co_u64_new_from_raw(struct co_ctx_t *ctx, uint64_t v);
 /* fn((u64,), Any) */
 struct co_object_t co_u64_free(struct co_ctx_t *ctx, struct co_object_t self);
 /* fn((u64,), str) */
@@ -727,7 +733,7 @@ struct co_object_t co_u64_as_f64(struct co_ctx_t *ctx, struct co_object_t self);
  * i64
  */
 /* fn((ffi.c.int64_t,), i64) */
-struct co_object_t co_i64_new_from_c_i64(struct co_ctx_t *ctx, int64_t v);
+struct co_object_t co_i64_new_from_raw(struct co_ctx_t *ctx, int64_t v);
 /* fn((i64,), Any) */
 struct co_object_t co_i64_free(struct co_ctx_t *ctx, struct co_object_t self);
 /* fn((i64,), str) */
@@ -789,7 +795,7 @@ struct co_object_t co_i64_as_f64(struct co_ctx_t *ctx, struct co_object_t self);
  * f32
  */
 /* fn((ffi.c.float,), f32) */
-struct co_object_t co_f32_new_from_c_f32(struct co_ctx_t *ctx, float v);
+struct co_object_t co_f32_new_from_raw(struct co_ctx_t *ctx, float v);
 /* fn((f32,), Any) */
 struct co_object_t co_f32_free(struct co_ctx_t *ctx, struct co_object_t self);
 /* fn((f32,), str) */
@@ -843,7 +849,7 @@ struct co_object_t co_f32_as_f64(struct co_ctx_t *ctx, struct co_object_t self);
  * f64
  */
 /* fn((ffi.c.float,), f64) */
-struct co_object_t co_f64_new_from_c_f64(struct co_ctx_t *ctx, float v);
+struct co_object_t co_f64_new_from_raw(struct co_ctx_t *ctx, float v);
 /* fn((f64,), Any) */
 struct co_object_t co_f64_free(struct co_ctx_t *ctx, struct co_object_t self);
 /* fn((f64,), str) */
@@ -897,7 +903,7 @@ struct co_object_t co_f64_as_f64(struct co_ctx_t *ctx, struct co_object_t self);
  * bytes
  */
 /* fn((ffi.c.size_t, ffi.c.Pointer(ffi.c.char)), bytes) */
-struct co_object_t co_bytes_new_from_c_len_c_char(struct co_ctx_t *ctx, size_t len, char *value);
+struct co_object_t co_bytes_new_from_raw(struct co_ctx_t *ctx, size_t len, char *value);
 /* fn((bytes,), Any) */
 struct co_object_t co_bytes_free(struct co_ctx_t *ctx, struct co_object_t self);
 /* fn((bytes,), str) */
@@ -927,7 +933,7 @@ struct co_object_t co_bytes_decode(struct co_ctx_t *ctx, struct co_object_t self
  * str
  */
 /* fn((ffi.c.size_t, ffi.c.Pointer(ffi.c.char)), str) */
-struct co_object_t co_str_new_from_c_len_c_char(struct co_ctx_t *ctx, size_t len, char *value);
+struct co_object_t co_str_new_from_raw(struct co_ctx_t *ctx, size_t len, char *value);
 /* fn((str,), Any) */
 struct co_object_t co_str_free(struct co_ctx_t *ctx, struct co_object_t self);
 /* fn((str,), str) */
@@ -956,6 +962,32 @@ struct co_object_t co_str_encode(struct co_ctx_t *ctx, struct co_object_t self);
 /*
  * tuple
  */
+/* fn((...), tuple) */
+struct co_object_t co_tuple_new_from_raw(struct co_ctx_t *ctx, struct co_option_t *generics, size_t len, struct co_tuple_entry_t *items, struct co_object_t *args, struct co_object_t *kwargs);
+/* fn((type,), tuple) */
+struct co_object_t co_tuple_new_from_entries(struct co_ctx_t *ctx, struct co_option_t *cls);
+/* fn((tuple,), Any) */
+struct co_object_t co_tuple_free(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((tuple,), str) */
+struct co_object_t co_tuple_repr(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((tuple,), int) */
+struct co_object_t co_tuple_hash(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((tuple, str), bool) */
+struct co_object_t co_tuple_eq(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((tuple, str), bool) */
+struct co_object_t co_tuple_lt(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t other);
+/* fn((tuple, Any), Any) */
+struct co_object_t co_tuple_get(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t key_or_index);
+/* fn((tuple, Any, Any), tuple) */
+struct co_object_t co_tuple_set(struct co_ctx_t *ctx, struct co_object_t self, struct co_object_t key_or_index);
+/* fn((tuple,), list[tuple[Any, Any, Any]]) */
+struct co_object_t co_tuple_get_entries(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((tuple,), list[Any]]) */
+struct co_object_t co_tuple_get_keys(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((tuple,), list[Any]]) */
+struct co_object_t co_tuple_get_types(struct co_ctx_t *ctx, struct co_object_t self);
+/* fn((tuple,), list[Any]]) */
+struct co_object_t co_tuple_get_values(struct co_ctx_t *ctx, struct co_object_t self);
 
 /*
  * struct

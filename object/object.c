@@ -162,7 +162,7 @@ ssize_t co_object_decref(struct co_ctx_t *ctx, struct co_object_t self) {
 /*
  * object
  */
-struct co_object_t co_object_new_from_c_type_c_value(struct co_ctx_t *ctx, enum co_type_t t, union co_value_t v) {
+struct co_object_t co_object_new_from_raw(struct co_ctx_t *ctx, enum co_type_t t, union co_value_t v) {
     struct co_object_t self;
     size_t rc = -1;
 

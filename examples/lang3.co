@@ -60,13 +60,13 @@ r0: int = f0(10, 20, 30)
 //
 // fn construction
 //
-s0: type = (x: int, y: int, z: int)
+s0: tuple = (x: int, y: int, z: int)
 c0: block = int { x + y + z }
 F0: fn((x: int, y: int, z: int), int)
 f0: F0 = s0 -> c0
 r0: int = f0(10, 20, 30)
 
-s1: type = (x: int, y: int, z: int)
+s1: tuple = (x: int, y: int, z: int)
 c1: block = int { x + y + z }
 f1: fn.build(s1, c1)
 r1: int = f1(10, 20, 30)
@@ -74,13 +74,13 @@ r1: int = f1(10, 20, 30)
 //
 // params, block, fn
 //
-s0: type = (x: int, y: int, z: int)
+s0: tuple = (x: int, y: int, z: int)
 c0: block = int { x + y + z }
 f0: fn = s0 -> c0
 r0: int = f0(10, 20, 30)
 
 T: type = int | float
-S1: type = (x: T, y: T, z: T)
+S1: tuple = (x: T, y: T, z: T)
 c1: block = T { x + y + z }
 f1: fn = S1 -> c1
 r1: int = f1(10, 20, 30)
@@ -101,7 +101,7 @@ f3: F3 = (x: T, y: T, z: T) -> T { x + y + z }
 //
 //
 //
-S0: type = (x: int, y: int, z: int)
+S0: tuple = (x: int, y: int, z: int)
 S1: type = struct[T=int|float](x: T, y: T, z: T)
 
 U0: type = int | float
