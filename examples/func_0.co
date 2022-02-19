@@ -1,0 +1,73 @@
+/*
+ * function
+ */
+
+// dynamic function
+f0 := (a, b) -> {
+    a + b
+}
+
+// typed function
+f0 := (a: i64, b: i64) -> int {
+    a + b
+}
+
+// inplace type for function
+f0: fn((i64, i64), i64) = (a: i64, b: i64) -> int {
+    a + b
+}
+
+// separate function type defined/declared and then function defined using it
+F: type = fn((i64, i64), i64)
+
+f0: F = (a, b) -> {
+    a + b
+}
+
+f0: F = (a: i64, b: i64) -> int {
+    a + b
+}
+
+// typed function used by map
+F1: type = fn((int,), int)
+f1: F1 = (i) -> { i * 2 }
+a := range(10).map(f1)
+
+// lambda function used by map
+a := range(10).map((i) -> { i * 2 })
+
+// typed function variadic arguments and keywords arguments
+f0 := (a: i64, [args: list[i64]], {kwargs: dict[str, i64]}) -> i64 {
+    c: i64 = (
+        a +
+        args.reduce(0, (acc: i64, n: i64) -> i64 { acc + n }) +
+        kwargs.items().reduce(0, (acc: i64, item: (k: str, v: i64)) -> i64 { acc + item.v })
+    )
+}
+
+// typed function variadic arguments and keywords arguments
+F0: type = fn((i64, [args: list[i64]], {kwargs: dict[str, i64]}), i64)
+
+f0: F0 = (a: i64, [args: list[i64]], {kwargs: dict[str, i64]}) -> i64 {
+    c: i64 = (
+        a +
+        args.reduce(0, (acc: i64, n: i64) -> i64 { acc + n }) +
+        kwargs.items().reduce(0, (acc: i64, item: (k: str, v: i64)) -> i64 { acc + item.v })
+    )
+}
+
+// typed function variadic arguments and keywords arguments
+F0: type = fn((i64, [args: list[i64]], {kwargs: dict[str, i64]}), i64)
+
+f0: F0 = (a, [args], {kwargs}) -> {
+    c: i64 = (
+        a +
+        args.reduce(0, (acc: i64, n: i64) -> i64 { acc + n }) +
+        kwargs.items().reduce(0, (acc: i64, item: (k: str, v: i64)) -> i64 { acc + item.v })
+    )
+}
+
+// dynamic function variadic arguments and keywords arguments
+f = (x, y, [args], {kwargs}) -> {
+    x + y + sum(args) + sum(kwargs.values())
+}

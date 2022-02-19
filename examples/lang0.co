@@ -16,13 +16,17 @@ b: i64 = 255_i16
 c: f32 = 1.1_f32
 c: f64 = 1.1_f64
 
+// bytes
 b: bytes = b'abc'
+
 b: bytes = b'
     abc
     xyz
 '
 
+// str
 s: str = 'abc'
+
 s: str = '
     qwerty
     asdf
