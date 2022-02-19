@@ -1,0 +1,101 @@
+/*
+ * bool
+ */
+a: bool = true
+b: bool = false
+
+/*
+ * int
+ */
+a: i8 = -127
+a: i8 = 128
+
+b: u8 = 255_u8
+b: u8 = 256_u8 // 256 % u8.MAX => 0_u8
+
+c: i16 = -1_i16
+c: u16 = 1_u16
+
+d: i32 = -1_i32
+d: u32 = 1_u32
+
+e: i64 = -1_i64
+e: i64 = -1
+e: u64 = 1_u64
+e: u64 = 1
+int: type = i64
+
+f := 0
+f += 1
+f -= 1
+
+/*
+ * float
+ */
+a: f32 = -0.1_f32
+
+b: f64 = -0.1_f64
+b: float = -0.1
+float: type = f64
+
+/*
+ * bytes
+ * array of u8 integers aka chars
+ */
+a: bytes = b'\x00\x01abc'
+b: bytes = b"\x00\x01abc"
+
+/*
+ * str
+ * unicode, utf-8 encoded
+ */
+a: str = 'Hello world'
+b: str = "Hello world"
+
+/*
+ * list
+ */
+a: list[int] = [0, 1, 2]
+a := a.append(3)
+
+a := [0, 1, 2]
+a := a.append(3)
+
+/*
+ * dict
+ */
+a: dict[object, object] = {
+    '1': 123,
+    '2': 234,
+}
+
+a: object = {
+    '1': 123,
+    '2': 234,
+}
+
+a: dict[str, int] = {
+    '1': 123,
+    '2': 234,
+}
+
+a := {
+    '1': 123,
+    '2': 234,
+}
+
+/*
+ * function
+ */
+
+// function variadic arguments and keywords arguments
+f0 := (a: i64, [args: list[i64]], {kwargs: dict[str, i64]}) -> i64 {
+    c: i64 = (
+        a +
+        args.reduce(0, (acc: i64, n: i64) -> i64 { acc + n }) +
+        kwargs.items().reduce(0, (acc: i64, item: (k: str, v: i64)) -> i64 { acc + item.v })
+    )
+}
+
+f1 := (i) -> { i * 2 }
+a := range(10).map(f1)

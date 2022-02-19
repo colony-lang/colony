@@ -1,0 +1,342 @@
+// import
+fp = import('fp')
+{ sum, len } = fp
+
+{ sum, len } = import('fp')
+
+// primtive types
+a: bool = true || false
+
+a: i8 = 1_i8
+a: i8 = -1_i8
+b: u8 = 255_u8
+b: i16 = 255_i16
+b: i32 = 255_i16
+b: i64 = 255_i16
+c: f32 = 1.1_f32
+c: f64 = 1.1_f64
+
+b: bytes = b'abc'
+b: bytes = b'
+    abc
+    xyz
+'
+
+s: str = 'abc'
+s: str = '
+    qwerty
+    asdf
+'
+
+// type aliases
+Any: type = object
+int: type = i64
+uint: type = u64
+float = f64
+
+// vars
+a = 123
+a: int = 123
+
+a: int
+a = 123 // because declared in previous line
+
+a: Any = 123
+a = 123
+
+x: int = 123
+y: float = 3.3
+z: i8 = -7_i8
+w: u8 = 128_u8
+
+// list
+a = [1, 2, 3]
+a: list[Any] = [1, 2, 3]
+
+b: list = [1, 2, 3]
+b: list[Any] = [1, 2, 3]
+
+c: list[int] = [1, 2, 3]
+
+// dict
+a = {'x': 1.0, 'y': 1.0}
+a = {.x: 1.0, .y: 1.0}
+a: dict[Any, Any] = {.x: 1.0, .y: 1.0}
+b: dict[str, float] = {.x: 1.0, .y: 2.0}
+
+// list functions
+a = []
+a = list::__call__(list, ())
+
+a = [1, 2, 3]
+a = list::__call__(list, (1, 2, 3))
+
+[x, y, z] = a
+
+// dict functions
+a = {}
+a = dict::__call__(dict, ())
+
+a = {'x': 1, 'y': 2}
+a = {.x: 1, .y: 2}
+a = dict::__call__(dict, (x: str=1, y: str=2))
+a = dict::__call__(dict, (x=1, y=2))
+{ x } = a
+{ y } = a
+{ x, y } = a
+
+// tuple
+a = ()
+a.__args__ == []
+a.__kwargs__ == {}
+a.__annotations__ == []
+a.__kwannotations__ == {}
+
+a = (0, 1, 2)
+a.__args__ == [0, 1, 2]
+a.__kwargs__ == {}
+a.__annotations__ == []
+a.__kwannotations__ == {}
+a[0]
+a[1]
+a[2]
+
+a = (x=0, y=1, z=2)
+a.__args__ == []
+a.__kwargs__ == {.x: 0, .y: 1, .z: 2}
+a.__annotations__ == []
+a.__kwannotations__ == {}
+a[0] == a.x == a['x']
+a[1] == a.y == a['y']
+a[2] == a.z == a['z']
+
+a = (0, 1, z=2)
+a.__args__ == [0, 1]
+a.__kwargs__ == {.z: 2}
+a.__annotations__ == []
+a.__kwannotations__ == {}
+a[0]
+a[1]
+a[2] == a.z == a['z']
+
+a = (x: int=0, y: int=1, z: int=2)
+a.__args__ == []
+a.__kwargs__ == {.x: 0, .y: 1, .z: 2}
+a.__annotations__ == []
+a.__kwannotations__ == {.x: int, .y: int, .z: int}
+a[0] == a.x == a['x']
+a[1] == a.y == a['y']
+a[2] == a.z == a['z']
+
+a = (0, 1, z: int =2)
+a.__args__ == [0, 1]
+a.__kwargs__ == {.z: 2}
+a.__annotations__ == []
+a.__kwannotations__ == {.z: int}
+a[0]
+a[1]
+a[2] == a.z == a['z']
+
+a = (_: int=0, _: int=1, z: int=2)
+a.__args__ == [0, 1]
+a.__kwargs__ == {.z: 2}
+a.__annotations__ == [int, int]
+a.__kwannotations__ == {.z: int}
+a[0]
+a[1]
+a[2] == a.z == a['z']
+
+a = (x: int, y: int, z: int)
+a.__args__ == []
+a.__kwargs__ == {.x: int.default, .y: int.default, .z: int.default}
+a.__annotations__ == []
+a.__kwannotations__ == {.x: int, .y: int, .z: int}
+a[0] == a.x == a['x'] == int.default
+a[1] == a.y == a['y'] == int.default
+a[2] == a.z == a['z'] == int.default
+
+a = [T=int|float, U=bytes|str](x: T, y: T, q: U, w: U)
+a = [T: type = int|float, U: type = bytes|str](x: T, y: T, q: U, w: U)
+
+// operation
+x = 1
+y = 2
+
+z = x + y
+z = x::__type__::__add__(x, y)
+
+z = x - y
+z = x::__type__::__sub__(x, y)
+
+// function
+inc: fn = (x: int) -> int { x + 1 }
+dec = (x: int) -> int { x - 1 }
+
+r = inc(10)
+r = inc::__type__::__call__(inc, (10,))
+r == 11
+
+r = dec(10)
+r = dec::__type__::__call__(dec, (10,))
+r == 9
+
+f = (x, y, z, w) -> { x + y + z + w }
+r = f(1, 2, 3, w=4)
+r = f::__type__::__call__(f, (1, 2, 3, w=4))
+
+// functions args/kwargs
+f: fn((Any, Any, fn.args[Any], fn.kwargs[str, Any]), Any)
+
+f = (x, y, [args], {kwargs}) -> {
+    x + y + sum(args) + sum(kwargs.values())
+}
+
+// function generics
+inc: fn((int,) int) = (x: int) -> int { x + 1 }
+inc = (x: int) -> int { x + 1 }
+
+inc: fn[T=int]((T,), T) = [T=int](x: T) -> T { x + 1 }
+inc = [T=int](x: T) -> T { x + 1 }
+
+inc: fn[T=int]((T,) T) = [T=int](x: T) -> T { x + 1 }
+
+// struct
+A: type = struct(x: float, y: float)
+A: type = struct(x: float=0.0, y: float=0.0)
+a0: A = A(1.0, 2.0)
+a1: A = A(2.0, 3.0)
+a2: A = A(a0.x + a1.x, a0.y + a1.y)
+
+// struct generics
+A: type = struct[T=int | float](x: T, y: T)
+A: type = struct[T=int | float](x: T=T.default, y: T=T.default)
+a0: A[int] = A(1, 2)
+a1: A[int] = A(2, 3)
+a2: A[int] = A(a0.x + a1.x, a0.y + a1.y)
+
+A: type = struct(
+    __name__ = 'A',
+    __bases__ = struct.__bases__ + [],
+    
+    x: int = int.default,
+    y: int = int.default,
+    z: int = int.default,
+
+    __add__ = (self: Self, other: Self) -> Self {
+        res: Self = Self(self.x + other.x, self.y + other.y)
+    },
+
+    f1 = (self: Self) -> Self {
+        self
+    },
+)
+
+a0: A = A(1, 2, 3)
+a1: A = A(2, 3, 4)
+a2: A = a0 + a1
+a2: A = a0::__type__::__add__(a0, a1)
+
+A: type = struct[T=int|float](
+    __name__ = 'A',
+    __bases__ = struct.__bases__ + [],
+    
+    x: T = T.default,
+    y: T = T.default,
+    z: T = T.default,
+
+    __add__ = (self: Self, other: Self) -> Self {
+        res: Self = Self(self.x + other.x, self.y + other.y)
+    },
+
+    f1 = (self: Self) -> Self {
+        self
+    },
+)
+
+a0: A = A[float](1.0, 2.0, 3.0)
+a1: A = A[float](2.0, 3.0, 4.0)
+a2 = a0 + a1
+
+B = struct[U=int | float](
+    __bases__ := struct.__bases__ + [A],
+    u: U = U.default,
+)
+
+C = struct[V=int | float](
+    __bases__ := struct.__bases__ + [A],
+    v: V = V.default,
+)
+
+D = struct[V=int | float](
+    __bases__ := struct.__bases__ + [B, C],
+    w: W = W.default,
+)
+
+// union
+A: type = int | float
+A: type = union(int, float)
+A: type = union[T: type=int|float](T, T)
+
+// union generics
+B: type = union[T=union(int, float)](list[T], dict[uint, T])
+b0: B[int] = [1, 2, 3]
+b1: B[int] = {0: 1, 1: 2, 2: 3}
+b0::__type__ == b1::__type__
+
+// if/else
+a: Any = 10 % 2 ? { true } : { false }
+
+// match
+A: type = int
+B: type = float
+C: type = A | B
+c: C = 1
+
+r = match(c, {
+    A: (x, y) -> { x + y },
+    B: (z, w) -> { z + w },
+    _: () -> { 0 },
+})
+
+r = match(c, {
+    A: (y) -> { y },
+    B: (z) -> { z },
+    _: () -> { 0 },
+})
+
+r = match(c, {
+    A: (x, y) -> { x + y },
+    B: (z, w) -> { z + w },
+    _: () -> { 0 },
+})
+
+r = match(c)
+    .case(A, (y) -> { y })
+    .case(B, (z) -> { z })
+    .default(() -> { 0 })
+
+// range/map/filter/reduce/take_while/drop_while
+a = range(10)
+    .map((n) -> { n + 1})
+    .filter((n) -> { n % 2 })
+    .take_while((n) -> { n % 3 })
+    .drop_while((n) -> { n % 3 })
+    .reduce((acc, n) -> { acc + n }, 0)
+
+// option
+a: Option[int] = Some[int](1)
+a: Option[int] = None[int]
+
+r = match(a)
+    .case(Some, (v) -> { v })
+    .case(None, () -> { 0 })
+    .default(() -> { -1 })
+
+// result
+a: Result[V=int, E=str] = Ok[V](1)
+a: Result[V=int, E=str] = Err[E]('Some error')
+
+r = match(a)
+    .case(Ok, (v) -> { v })
+    .case(Err, (e) -> { 0 })
+    .default(() -> { -1 })
