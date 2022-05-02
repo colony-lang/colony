@@ -1,0 +1,5 @@
+// list
+a: list = []
+b: list = [true, 1, -2.0]
+c: list[int] = [1, 2, 3]
+d: list[str] = ['x', 'y', 'z']

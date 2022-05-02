@@ -3,7 +3,7 @@
  */
 
 // usual way
-inc := (x: int)-> int { x + 1 }
+inc := (x: int) -> int { x + 1 }
 
 // build function out of params tuple and code object
 inc := (x: int) -> (int { x + 1 })

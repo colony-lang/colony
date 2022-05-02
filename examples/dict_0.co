@@ -1,0 +1,5 @@
+// dict
+a: dict = {}
+b: dict = {'x': 1, 'y': 2}
+c: dict = {.x: 1, .y: 2}
+d: dict[str, float] = {'x': 1.0, 'y': 2.0}
