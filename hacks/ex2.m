@@ -21,18 +21,37 @@ a: str = 'abc'          // str
 a := 'abc'              // str
 
 //
+// type
+//
+I64: type = i64
+F64: type = f64
+
+//
 // tuple
 //
-P := (x: f64=0.0, y: f64=0.0)
+P: type = (x: f64=0.0, y: f64=0.0)          // type, has :=
+p: P = P(1.0, 2.0)
+p: tuple = P(1.0, 2.0)
+p: tuple = (1.0, 2.0)                       // tuple, hasn't :=
+
 p0: P = P(1.0, 2.0)
-p1: P = P(2.0,)
-p2: P = P(p0.x + p1.x, p0.y + p1.y)
-p2 := P(p0.x + p1.x, p0.y + p1.y)
+p1: tuple = (2.0, 3.0)                      // tuple, hasn't :=
+p2: P = P(p0.x + p1[0], p0.y + p2[1])
 
 P := (x: f64, y: f64, z: f64)
 p0 := P(1.0, 2.0, 3.0)
 p1 := P(1.0, 2.0, 3.0)
 p2 := P(p0.x + p1.x, p0.y + p1.y, p0.z + p1.z)
+
+P: type = (x: f64=0.0, y: f64=0.0)
+p: P = P(1.0, 2.0)
+p: tuple = P(1.0, 2.0)                      // P.__base__.has(tuple)
+p: tuple = (1.0, 2.0)
+
+// p0: tuple = (x: f64=0.0, y: f64=0.0).__type__.__call__(1.0, 2.0)
+p0: tuple = (x: f64=0.0, y: f64=0.0)(1.0, 2.0)
+p1: tuple = (x: f64=0.0, y: f64=0.0)(1.0)
+p2: tuple = (x: f64=0.0, y: f64=0.0)()
 
 //
 // function
@@ -45,14 +64,50 @@ f := (x: f64, y: f64) -> f64 -> {
 a := f(1.0, 2.0)
 
 //
+// function closure
+//
+f := (x: i64, y: i64) -> i64 -> {
+    g := (x: f64, y: f64) -> i64 -> {
+        h := (r: f64) -> i64 -> {
+            r: i64 = r.to_i64()
+        }
+
+        r: i64 = h(x + y)
+    }
+
+    r: i64 = g(x.to_f64(), y.to_f64())
+}
+
+r: i64 = f(1, 2)
+r == 3
+
+//
 // object/type
 //
-P := (
+type.__type__ == type
+type.__base__ == [object]
+
+object.__type__ == type
+object.__base__ == []
+
+tuple.__type__ == type
+tuple.__base__ == [object]
+
+struct.__type__ == type     // ??
+struct.__base__ == [type]   // ??
+
+union.__type__ == type
+union.__base__ == [type]
+
+generic.__type__ == type
+generic.__base__ == [object]
+
+P: type = (
     x: f64 = 0.0,
     y: f64 = 0.0,
     __type__ := (
-        // __type__ := tuple,
-        __base__ := [object],
+        __type__ := type,
+        __base__ := [tuple],
         __name__ := 'P',
         __add__ := (self, other: P) -> P -> {
             P(self.x + other.x, self.y + other.y)
@@ -60,21 +115,34 @@ P := (
     ),
 )
 
-P := (
+P: type = (
     x: f64 = 0.0,
     y: f64 = 0.0,
-    __type__ := type('P', [object],
-        __add__ := (self, other: P) -> P -> {
+    __type__ := type(
+        __type__ = type,
+        __base__ = [tuple],
+        __name__ = 'P',
+        __add__ = (self, other: P) -> P -> {
             P(self.x + other.x, self.y + other.y)
         },
     ),
 )
 
-P := (
+P: type = (
+    x: f64 = 0.0,
+    y: f64 = 0.0,
+    __type__ := type(type, [tuple], 'P',
+        __add__ = (self, other: P) -> P -> {
+            P(self.x + other.x, self.y + other.y)
+        },
+    ),
+)
+
+P: type = (
     x: f64 = 0.0,
     y: f64 = 0.0,
     __type__ := type(
-        __add__ := (self, other: P) -> P -> {
+        __add__ = (self, other: P) -> P -> {
             P(self.x + other.x, self.y + other.y)
         },
     ),
@@ -82,5 +150,60 @@ P := (
 
 p0 := P(1.0, 2.0, 3.0)
 p1 := P(1.0, 2.0, 3.0)
-// p2 := p0.__type__.__add__(p0, p1)
+// p2 := p0::__type__::__add__(p0, p1)
 p2 := p0 + p1
+
+//
+// union
+//
+U: union = i64 | f64
+U: type = i64 | f64
+
+//
+// generic
+//
+G: type = <X:=Number, Y:=Number, R:=Number>
+g: G = G<i64, i64, f64>
+g: generic = G<i64, i64, f64>
+g: generic = <i64, i64, f64>
+g: generic = <1, 2, 3, 4>
+
+//
+// generic tuple
+//
+P: type = <T:=i64 | f64> -> (x: T=T.default, y: T=T.default)
+p0: P = P<i64>(1, 2)
+p1: P = P<i64>(1, 2)
+
+//
+// generic function
+//
+G: type = <X: type=i64 | f64, Y: type=i64 | f64, R: type=i64 | f64>
+
+f := G -> (x: X, y: Y) -> R -> {
+    r: R = x + y
+}
+
+f := <X: type=i64 | f64, Y: type=i64 | f64, R: type=i64 | f64> -> (x: X, y: Y) -> R -> {
+    r: R = x + y
+}
+
+r := f<i64, i64, i64>(1, 2)
+
+//
+// generic type
+//
+G: type = <X: type=i64 | f64, Y: type=i64 | f64, R: type=i64 | f64>
+
+P: type = G -> (
+    x: X = X.default,
+    y: Y = Y.default,
+    __type__ := type(
+        __add__ = (self, other: P) -> P -> {
+            P(self.x + other.x, self.y + other.y)
+        },
+        sum = (self) -> R -> {
+            r: R = self.x + self.y
+        }
+    ),
+)
