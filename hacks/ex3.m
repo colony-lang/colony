@@ -16,9 +16,13 @@ a := 255_u8             // u8
 
 a: bytes = b'abc'       // bytes
 a := b'abc'             // bytes
+a: bytes = b"abc"       // bytes
+a := b"abc"             // bytes
 
 a: str = 'abc'          // str
 a := 'abc'              // str
+a: str = "abc"          // str
+a := "abc"              // str
 
 //
 // type
@@ -234,3 +238,33 @@ f := <...G0, ...G1, ...G2> -> (x: X, y: Y) -> R -> {
 
 r := f<f64, f64, f64>(1.0, 2.0)
 r == 3.0
+
+//
+// Option
+//
+None := ()
+
+Some := <V:=type> -> (
+    v: V,
+)
+
+Option: type = <V:=type> -> (None | Some<V>)
+
+o0: Option = None()
+o1: Option = Some<i64>(1)
+
+//
+// Result
+//
+Ok := <V:=type> -> (
+    v: V,
+)
+
+Err := <E:=type> -> (
+    e: E,
+)
+
+Result: type = <V:=type, E:=type> -> (Ok<V> | Err<E>)
+
+r0 := Ok<i64>(1)
+r1 := Err<str>("Some error")
