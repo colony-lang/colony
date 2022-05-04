@@ -45,7 +45,7 @@ p2 := P(p0.x + p1.x, p0.y + p1.y, p0.z + p1.z)
 
 P: type = (x: f64=0.0, y: f64=0.0)
 p: P = P(1.0, 2.0)
-p: tuple = P(1.0, 2.0)                      // P.__base__.has(tuple)
+p: tuple = P(1.0, 2.0)                      // P.__bases__.has(tuple)
 p: tuple = (1.0, 2.0)
 
 // p0: tuple = (x: f64=0.0, y: f64=0.0).__type__.__call__(1.0, 2.0)
@@ -85,29 +85,26 @@ r == 3
 // object/type
 //
 type.__type__ == type
-type.__base__ == [object]
+type.__bases__ == [object]
 
 object.__type__ == type
-object.__base__ == []
+object.__bases__ == []
 
 tuple.__type__ == type
-tuple.__base__ == [object]
-
-struct.__type__ == type     // ??
-struct.__base__ == [type]   // ??
+tuple.__bases__ == [object]
 
 union.__type__ == type
-union.__base__ == [type]
+union.__bases__ == [type]
 
 generic.__type__ == type
-generic.__base__ == [object]
+generic.__bases__ == [object]
 
 P: type = (
     x: f64 = 0.0,
     y: f64 = 0.0,
     __type__ := (
         __type__ := type,
-        __base__ := [tuple],
+        __bases__ := [tuple],
         __name__ := 'P',
         __add__ := (self, other: P) -> P -> {
             P(self.x + other.x, self.y + other.y)
@@ -120,7 +117,7 @@ P: type = (
     y: f64 = 0.0,
     __type__ := type(
         __type__ = type,
-        __base__ = [tuple],
+        __bases__ = [tuple],
         __name__ = 'P',
         __add__ = (self, other: P) -> P -> {
             P(self.x + other.x, self.y + other.y)
@@ -152,6 +149,33 @@ p0 := P(1.0, 2.0, 3.0)
 p1 := P(1.0, 2.0, 3.0)
 // p2 := p0::__type__::__add__(p0, p1)
 p2 := p0 + p1
+
+//
+// struct 1 ??
+//
+struct.__type__ == type
+struct.__bases__ == [type]
+
+trait.__type__ == type
+trait.__bases__ == [type]
+
+Add: type = trait(
+    __add__ := (self, other: Self) -> Self -> {
+        Self(self.x + other.x, self.y + other.y)
+    },
+)
+
+Sub: type = trait(
+    __sub__ := (self, other: Self) -> Self -> {
+        Self(self.x - other.x, self.y - other.y)
+    },
+)
+
+S: type = struct(
+    __bases__ := [Add, Sub], // ??
+    x: f64 = 0.0,
+    y: f64 = 0.0,
+)
 
 //
 // union
