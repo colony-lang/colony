@@ -54,11 +54,19 @@ p1: tuple = (x: f64=0.0, y: f64=0.0)(1.0)
 p2: tuple = (x: f64=0.0, y: f64=0.0)()
 
 //
+// generic
+//
+G: type = <X:=type, Y:=type, R:=type>
+g: G = G<i64, i64, f64>
+g: generic = G<i64, i64, f64>
+g: generic = <i64, i64, f64>
+g: generic = <1, 2, 3, 4>
+
+//
 // function
 //
 f := (x: f64, y: f64) -> f64 -> {
     r: f64 = x + y
-    r
 }
 
 a := f(1.0, 2.0)
@@ -163,16 +171,6 @@ U: union = i64 | f64
 U: type = i64 | f64
 
 //
-// generic
-//
-Number: type = i64 | f64
-G: type = <X:=Number, Y:=Number, R:=Number>
-g: G = G<i64, i64, f64>
-g: generic = G<i64, i64, f64>
-g: generic = <i64, i64, f64>
-g: generic = <1, 2, 3, 4>
-
-//
 // generic tuple
 //
 P: type = <T:=i64 | f64> -> (x: T=T.default, y: T=T.default)
@@ -213,7 +211,7 @@ P: struct = G -> (
 )
 
 //
-// composition
+// generics composition
 //
 G0: type = <X: type=i64 | f64>
 G1: type = <Y: type=i64 | f64>
@@ -223,5 +221,16 @@ f := G0 -> G1 -> G2 -> (x: X, y: Y) -> R -> {
     r: R = x + y
 }
 
+f := (G0 -> G1 -> G2) -> (x: X, y: Y) -> R -> {
+    r: R = x + y
+}
+
 r := f<f64><f64><f64>(1.0, 2.0)
+r == 3.0
+
+f := <...G0, ...G1, ...G2> -> (x: X, y: Y) -> R -> {
+    r: R = x + y
+}
+
+r := f<f64, f64, f64>(1.0, 2.0)
 r == 3.0
