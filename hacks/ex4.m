@@ -30,6 +30,9 @@ a := "abc"              // str
 I64: type = i64
 F64: type = f64
 
+x: I64 = 1
+r: F64 = 2.0
+
 //
 // union type
 //
