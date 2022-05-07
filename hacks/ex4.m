@@ -132,6 +132,31 @@ f := <...G0, ...G1> -> (x: T, y: T) -> R -> {
 a := f<f64, f64>(1.0, 2.0)
 
 //
+// parameterized function 5
+//
+G0 := <T:=i64 | f64>
+G1 := <R:=i64 | f64>
+
+f := (G0 & G1) -> (x: T, y: T) -> R -> {
+    r: R = x + y
+}
+
+a := f<f64, f64>(1.0, 2.0)
+
+//
+// parameterized function 6
+//
+G0 := <T:=i64 | f64>
+G1 := <R:=i64 | f64>
+G := G0 & G1
+
+f := G -> (x: T, y: T) -> R -> {
+    r: R = x + y
+}
+
+a := f<f64, f64>(1.0, 2.0)
+
+//
 // user-defined struct
 //
 P: struct = (
