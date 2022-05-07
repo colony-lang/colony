@@ -284,7 +284,6 @@ d0: dict = {"x": 1, "y": 2}
 d0: dict = dict({"x": 1, "y": 2})
 d0: dict<str, i64> = {"x": 1, "y": 2}
 d0: dict<str, i64> = dict<str, i64>({"x": 1, "y": 2})
-d0 := {.x: 1, .y: 2}
 
 x: i64 = d0['x']
 y: i64 = d0['y']
