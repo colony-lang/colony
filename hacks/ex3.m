@@ -60,11 +60,11 @@ p2: tuple = (x: f64=0.0, y: f64=0.0)()
 //
 // generic
 //
-G: type = <X:=type, Y:=type, R:=type>
-g: G = G<i64, i64, f64>
-g: generic = G<i64, i64, f64>
-g: generic = <i64, i64, f64>
-g: generic = <1, 2, 3, 4>
+G: type = <X:=type, Y:=type, R:=type>       // type, has :=
+g: G = G<i64, i64, f64>                     // G
+g: generic = G<i64, i64, f64>               // generic (instance)
+g: generic = <i64, i64, f64>                // generic (instance)
+g: generic = <1, 2, 3, 4>                   // generic, hasn't :=
 
 //
 // function
@@ -224,6 +224,9 @@ G2: type = <R: type=i64 | f64>
 f := G0 -> G1 -> G2 -> (x: X, y: Y) -> R -> {
     r: R = x + y
 }
+
+r := f<f64><f64><f64>(1.0, 2.0)
+r == 3.0
 
 f := (G0 -> G1 -> G2) -> (x: X, y: Y) -> R -> {
     r: R = x + y
