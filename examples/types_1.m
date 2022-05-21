@@ -195,7 +195,7 @@ s1 := p1::__type__::sum(p1)
 //
 // import / if / recursion
 //
-{ print } := import('io')
+{ print } := import("io")
 
 fib := (n: int) -> int {
     n <= 1 ? n : fib(n - 1) + fib(n - 2)
@@ -262,7 +262,7 @@ r1 := Err<str>("Some error")
 a: Any = 10 % 2 ? { true } : { false }
 
 //
-// match 1
+// match / numbers / union
 //
 A: type = int
 B: type = float
@@ -279,10 +279,10 @@ r = match(c, {
 r = match(c)
     .case(A, y -> { y })
     .case(B, z -> { z })
-    .default(_ -> { 0 })
+    .default(() -> { 0 })
 
 //
-// match 2
+// match / struct / union
 //
 A: struct = (
     x: f64 = 0.0,
@@ -305,7 +305,7 @@ r = match(c, {
 r = match(c)
     .case(A, (x, y) -> { y })
     .case(B, (z, w) -> { z })
-    .default(_ -> { 0 })
+    .default(() -> { 0 })
 
 //
 // range/map/filter/reduce/take_while/drop_while
@@ -318,18 +318,18 @@ a = range(10)
     .reduce((acc, n) -> { acc + n }, 0)
 
 //
-// option
+// Option / match
 //
 a: Option<int> = Some<int>(1)
 a: Option<int> = None<int>
 
 r = match(a)
     .case(Some, v -> { v })
-    .case(None, _ -> { 0 })
-    .default(_ -> { -1 })
+    .case(None, () -> { 0 })
+    .default(() -> { -1 })
 
 //
-// result
+// Result / match
 //
 a: Result<V=int, E=str> = Ok<V>(1)
 a: Result<V=int, E=str> = Err<E>('Some error')
