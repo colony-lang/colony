@@ -278,13 +278,13 @@ C: type = A | B
 c: C = 1
 c: C = 1.1
 
-r = match(c, {
+r := match(c, {
     A: (y) -> { y },
     B: (z) -> { z },
     _: () -> { 0 },
 })
 
-r = match(c)
+r := match(c)
     .case(A, (y) -> { y })
     .case(B, (z) -> { z })
     .default(() -> { 0 })
@@ -305,13 +305,13 @@ B: struct = (
 C: union = A | B;
 C: type = A | B
 
-r = match(c, {
+r := match(c, {
     A: (x, y) -> { x + y },
     B: (z, w) -> { z + w },
     _: () -> { 0 },
 })
 
-r = match(c)
+r := match(c)
     .case(A, (x, y) -> { y })
     .case(B, (z, w) -> { z })
     .default(() -> { 0 })
@@ -319,7 +319,7 @@ r = match(c)
 //
 // range / map / filter / reduce / take_while / drop_while
 //
-a = range(10)
+a := range(10)
     .map((n) -> { n + 1 })
     .filter((n) -> { n % 2 })
     .take_while((n) -> { n % 3 })
@@ -332,7 +332,7 @@ a = range(10)
 a: Option<int> = None
 a: Option<int> = Some<int>(1)
 
-r = match(a)
+r := match(a)
     .case(Some, (v) -> { v })
     .case(None, () -> { 0 })
     .default(() -> { -1 })
@@ -343,7 +343,7 @@ r = match(a)
 a: Result<V=int, E=str> = Ok<V>(1)
 a: Result<V=int, E=str> = Err<E>('Some error')
 
-r = match(a)
+r := match(a)
     .case(Ok, (v) -> { v })
     .case(Err, (e) -> { 0 })
     .default(() -> { -1 })
