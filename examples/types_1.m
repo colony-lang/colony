@@ -201,7 +201,7 @@ s1 := p1::__type__::sum(p1)
 //
 { print } := import("io")
 
-fib := (n: int) -> int {
+fib := (n: int) -> int -> {
     n <= 1 ? n : fib(n - 1) + fib(n - 2)
 }
 
@@ -341,7 +341,7 @@ r := match(a)
 // Result / match
 //
 a: Result<V=int, E=str> = Ok<V>(1)
-a: Result<V=int, E=str> = Err<E>('Some error')
+a: Result<V=int, E=str> = Err<E>("Some error")
 
 r := match(a)
     .case(Ok, (v) -> { v })
