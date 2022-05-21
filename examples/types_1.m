@@ -84,6 +84,9 @@ p1: P = P<i64>(2, 3)
 p0: P<i64> = P<i64>(1, 2)
 p0: P<object> = P<i64>(1, 2)
 
+p0: P<i64> = P<i64>(1)
+p0: P<object> = P<i64>()
+
 //
 // function
 //
