@@ -36,8 +36,8 @@ r: F64 = 2.0
 //
 // union type
 //
-U: type = i64 | f64;
 U: union = i64 | f64;
+U: type = i64 | f64
 
 //
 // struct type
@@ -76,6 +76,7 @@ y := g[1]
 //
 // parameterized struct type
 //
+P: parameterized_struct = <T:=i64 | f64> -> (x: T=T.default, y: T=T.default)
 P: type = <T:=i64 | f64> -> (x: T=T.default, y: T=T.default)
 p0: P = P<i64>(1, 2)
 p1: P = P<i64>(2, 3)
@@ -193,7 +194,7 @@ s0 := p0::__type__::sum(p0)
 s1 := p1::__type__::sum(p1)
 
 //
-// import / if / recursion
+// import / if-else / recursion
 //
 { print } := import("io")
 
@@ -237,14 +238,15 @@ o1 := Some<i64>(1)
 //
 // Result
 //
-Ok := <V:=type> -> (
-    v: V,
-)
+Ok: parameterized_struct = <V:=type> -> (v: V)
+Ok: type = <V:=type> -> (v: V)
+Ok := <V:=type> -> (v: V)
 
-Err := <E:=type> -> (
-    e: E,
-)
+Err: parameterized_struct = <E:=type> -> (e: E)
+Err: type = <E:=type> -> (e: E)
+Err := <E:=type> -> (e: E)
 
+Result: union = <V:=type, E:=type> -> (Ok<V> | Err<E>);
 Result: type = <V:=type, E:=type> -> (Ok<V> | Err<E>)
 
 r0: Result<i64, str> = Ok<i64>(1)
@@ -257,7 +259,7 @@ r0 := Ok<i64>(1)
 r1 := Err<str>("Some error")
 
 //
-// if/else
+// if-else
 //
 a: Any = 10 % 2 ? { true } : { false }
 
@@ -266,19 +268,22 @@ a: Any = 10 % 2 ? { true } : { false }
 //
 A: type = int
 B: type = float
+
+C: union = A | B;
 C: type = A | B
+
 c: C = 1
 c: C = 1.1
 
 r = match(c, {
-    A: y -> { y },
-    B: z -> { z },
+    A: (y) -> { y },
+    B: (z) -> { z },
     _: () -> { 0 },
 })
 
 r = match(c)
-    .case(A, y -> { y })
-    .case(B, z -> { z })
+    .case(A, (y) -> { y })
+    .case(B, (z) -> { z })
     .default(() -> { 0 })
 
 //
@@ -294,6 +299,7 @@ B: struct = (
     w: f64 = 0.0,
 )
 
+C: union = A | B;
 C: type = A | B
 
 r = match(c, {
@@ -308,23 +314,23 @@ r = match(c)
     .default(() -> { 0 })
 
 //
-// range/map/filter/reduce/take_while/drop_while
+// range / map / filter / reduce / take_while / drop_while
 //
 a = range(10)
-    .map(n -> { n + 1 })
-    .filter(n -> { n % 2 })
-    .take_while(n -> { n % 3 })
-    .drop_while(n -> { n % 3 })
+    .map((n) -> { n + 1 })
+    .filter((n) -> { n % 2 })
+    .take_while((n) -> { n % 3 })
+    .drop_while((n) -> { n % 3 })
     .reduce((acc, n) -> { acc + n }, 0)
 
 //
 // Option / match
 //
+a: Option<int> = None
 a: Option<int> = Some<int>(1)
-a: Option<int> = None<int>
 
 r = match(a)
-    .case(Some, v -> { v })
+    .case(Some, (v) -> { v })
     .case(None, () -> { 0 })
     .default(() -> { -1 })
 
