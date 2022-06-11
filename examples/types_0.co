@@ -213,18 +213,6 @@ s0 := p0::__type__::sum(p0)
 s1 := p1::__type__::sum(p1)
 
 //
-// import / if-else / recursion
-//
-{ print } := import("io")
-
-fib := (n: int) -> int -> {
-    n <= 1 ? n : fib(n - 1) + fib(n - 2)
-}
-
-r := fib(10)
-print(r)
-
-//
 // Option
 //
 NoneType: type = (
@@ -367,3 +355,15 @@ r := match(a)
     .case(Ok, (v) -> { v })
     .case(Err, (e) -> { 0 })
     .default(() -> { -1 })
+
+//
+// import / if-else / recursion
+//
+{ print } := import("io")
+
+fib := (n: int) -> int -> {
+    n <= 1 ? n : fib(n - 1) + fib(n - 2)
+}
+
+r := fib(10)
+print(r)
