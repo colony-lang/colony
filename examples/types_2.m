@@ -42,53 +42,66 @@ U: type = i64 | f64
 //
 // struct type
 //
-P: struct = (x: f64=0.0, y: f64=0.0)        // struct, has :=
-P: type = (x: f64=0.0, y: f64=0.0)          // struct is subtype of type, has :=
-P: object = (x: f64=0.0, y: f64=0.0)        // struct is subtype of type, has :=
+P: struct = (x: f64=0.0, y: f64=0.0)        // struct
+P: type = (x: f64=0.0, y: f64=0.0)          // struct is subtype of type
+P: object = (x: f64=0.0, y: f64=0.0)        // struct is subtype of type
 p: P = P(1.0, 2.0)                          // P
 p: P = P(x=1.0, y=2.0)                      // P
 x := p.x
 y := p.y
 
-p: tuple = (1.0, 2.0, 3.0, 4.0)             // tuple, hasn't :=
-p: object = (1.0, 2.0, 3.0, 4.0)            // tuple is subtupe of object, hasn't :=
+//
+// list
+//
+p: list = [1.0, 2.0, 3.0, 4.0]              // list
+p: list<f64> = [1.0, 2.0, 3.0, 4.0]         // list<f64>
+p: object = [1.0, 2.0, 3.0, 4.0]            // list is subtupe of object
 x := p[0]
 y := p[1]
 
 //
+// dict
+//
+p: dict = {1: 2.0, 3: 4.0}                  // dict
+p: dict<i64, f64> = {1: 2.0, 3: 4.0}        // dict<i64, f64>
+p: object = {1: 2.0, 3: 4.0}                // dict is subtupe of object
+x := p[1]
+y := p[3]
+
+//
 // generic struct
 //
-G: generic_struct = <X:=type, Y:=type, R:=type>     // generic_type, has :=
-G: type = <X:=type, Y:=type, R:=type>               // generic_type is subtype of type, has :=
-G: object = <X:=type, Y:=type, R:=type>             // generic_type is subtype of type, has :=
+G: generic_struct = <X:=type, Y:=type, R:=type>     // generic_struct
+G: type = <X:=type, Y:=type, R:=type>               // generic_struct is subtype of type
+G: object = <X:=type, Y:=type, R:=type>             // generic_struct is subtype of type
 g: G = G<i64, i64, f64>                             // G
 g: G = G<X=i64, Y=i64, R=f64>                       // G
 X := G.X
 Y := G.Y
 
 //
-// generic tuple
-//
-g: generic_tuple = <i64, i64, f64>          // generic_tuple, hasn't :=
-g: generic_tuple = <1, 2, 3, 4>             // generic_tuple, hasn't :=
-g: object = <1, 2, 3, 4>                    // generic_tuple is subtype of object, hasn't :=
-x := g[0]
-y := g[1]
-
-//
 // parameterized struct type
 //
-P: parameterized_struct = <T:=i64 | f64> -> (x: T=T.default, y: T=T.default)
+P: param_struct = <T:=i64 | f64> -> (x: T=T.default, y: T=T.default)
 P: type = <T:=i64 | f64> -> (x: T=T.default, y: T=T.default)
 P: object = <T:=i64 | f64> -> (x: T=T.default, y: T=T.default)
 p0: P = P<i64>(1, 2)
 p1: P = P<i64>(2, 3)
 
-p0: P<i64> = P<i64>(1, 2)
-p0: P<object> = P<i64>(1, 2)
+//
+// parameterized function type
+//
+F: param_fn = <T:=i64 | f64> -> (x: T=T.default, y: T=T.default) -> T
+F: type = <T:=i64 | f64> -> (x: T=T.default, y: T=T.default) -> T
+F: object = <T:=i64 | f64> -> (x: T=T.default, y: T=T.default) -> T
 
-p0: P<i64> = P<i64>(1)
-p0: P<object> = P<i64>()
+f: F = <T:=i64 | f64> -> (x: T=T.default, y: T=T.default) -> T -> { x + y }
+f: F = F -> { x + y }
+f: fn = F -> { x + y }
+f: object = F -> { x + y }
+
+r0: i64 = f<i64>(1, 2)
+r1: i64 = f<i64>(2, 3)
 
 //
 // function
@@ -244,11 +257,11 @@ o1 := Some<i64>(1)
 //
 // Result
 //
-Ok: parameterized_struct = <V:=type> -> (v: V)
+Ok: param_struct = <V:=type> -> (v: V)
 Ok: type = <V:=type> -> (v: V)
 Ok := <V:=type> -> (v: V)
 
-Err: parameterized_struct = <E:=type> -> (e: E)
+Err: param_struct = <E:=type> -> (e: E)
 Err: type = <E:=type> -> (e: E)
 Err := <E:=type> -> (e: E)
 
@@ -320,9 +333,9 @@ r := match(c)
     .default(() -> { 0 })
 
 //
-// range / map / filter / reduce / take_while / drop_while
+// loop
 //
-a := range(10)
+a = range(0, 1_000_000, 3)
     .map((n) -> { n + 1 })
     .filter((n) -> { n % 2 })
     .take_while((n) -> { n % 3 })

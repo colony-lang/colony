@@ -179,12 +179,14 @@ r = match(c)
     .case(B, z -> { z })
     .default(_ -> { 0 })
 
-// range/map/filter/reduce/take_while/drop_while
-a = range(10)
-    .map(n -> { n + 1})
-    .filter(n -> { n % 2 })
-    .take_while(n -> { n % 3 })
-    .drop_while(n -> { n % 3 })
+//
+// loop
+//
+a = range(0, 1_000_000, 3)
+    .map((n) -> { n + 1 })
+    .filter((n) -> { n % 2 })
+    .take_while((n) -> { n % 3 })
+    .drop_while((n) -> { n % 3 })
     .reduce((acc, n) -> { acc + n }, 0)
 
 // option
