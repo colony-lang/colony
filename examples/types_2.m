@@ -280,7 +280,8 @@ r1 := Err<str>("Some error")
 //
 // if-else
 //
-a: Any = 10 % 2 ? { true } : { false }
+r: object = 10 % 2 ? { true } : { false }
+r := 10 % 2 ? { true } : { false }
 
 //
 // match / numbers / union
@@ -335,12 +336,15 @@ r := match(c)
 //
 // loop
 //
-a = range(0, 1_000_000, 3)
+a := range(0, 1_000_000, 3)
     .map((n) -> { n + 1 })
     .filter((n) -> { n % 2 })
     .take_while((n) -> { n % 3 })
     .drop_while((n) -> { n % 3 })
     .reduce((acc, n) -> { acc + n }, 0)
+
+b := range(0, 1_000_000, 3)
+    .each((n) -> f64 -> { n / 2 })
 
 //
 // Option / match
