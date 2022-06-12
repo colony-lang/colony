@@ -1,0 +1,13 @@
+
+// ???
+last_i: int = loop(0, (i: int) -> int -> {
+    i < 10 ? {
+        // pass
+    } : {
+        break()
+    }
+
+    i += 1
+})
+
+last_i == 10
