@@ -230,11 +230,11 @@ None: NoneType = (
     __type__ := NoneType
 )
 
-Some: param_struct = <V:=type> -> (
+Some: param_struct = <V: type=type> -> (
     v: V,
 )
 
-Option: type = <V:=type> -> (NoneType | Some<V>)
+Option: type = <V: type=type> -> (NoneType | Some<V>)
 
 // NOTE:
 //  typeof(None) == NoneType
@@ -254,16 +254,16 @@ o1 := Some<i64>(1)
 //
 // Result
 //
-Ok: param_struct = <V:=type> -> (v: V)
-Ok: type = <V:=type> -> (v: V)
-Ok := <V:=type> -> (v: V)
+Ok: param_struct = <V: type=type> -> (v: V)
+Ok: type = <V: type=type> -> (v: V)
+Ok := <V: type=type> -> (v: V)
 
-Err: param_struct = <E:=type> -> (e: E)
-Err: type = <E:=type> -> (e: E)
-Err := <E:=type> -> (e: E)
+Err: param_struct = <E: type=str> -> (e: E)
+Err: type = <E: type=str> -> (e: E)
+Err := <E: type=str> -> (e: E)
 
-Result: union = <V:=type, E:=type> -> (Ok<V> | Err<E>);
-Result: type = <V:=type, E:=type> -> (Ok<V> | Err<E>)
+Result: union = <V: type=type, E: type=str> -> (Ok<V> | Err<E>);
+Result: type = <V: type=type, E: type=str> -> (Ok<V> | Err<E>)
 
 r0: Result<i64, str> = Ok<i64>(1)
 r0: Result = Ok<i64>(1)
@@ -378,10 +378,12 @@ b := range(0, 1_000_000, 3)
     .each((n) -> f64 -> { n / 2 })
 
 //
-// loop func
+// loop func / break / continue
 //
 loop(0, (i) -> {
-    i >= 10 ? { break() } : {}
+    i >= 10 ? { break() } :
+    i % 2 ? { continue() } : {}
+    
     print(i)
     i + 1
 })
@@ -389,7 +391,7 @@ loop(0, (i) -> {
 //
 // while func
 //
-while(0, (i) -> { i < 10 }, {
+while(0, (i) -> { i < 10 }, (i) -> {
     print(i)
     i + 1
 })
@@ -424,6 +426,62 @@ r := match(a)
     .default(() -> { -1 })
 
 //
+// recursion
+//
+fib := (n: int) -> int -> {
+    n <= 1 ? n : fib(n - 1) + fib(n - 2)
+}
+
+r := fib(10)
+
+//
+// Result / Ok / Err / unwrap
+//
+div: Result = (x: f64, y: f64) -> Result[f64, str] -> {
+    r := y == 0 ? {
+        Err<str>("ZeroDivisionError")
+    } : {
+        z := x / y
+        Ok<f64>(z)
+    }
+}
+
+r := div(1.0, 2.0).unwrap()             // can panic
+r := div(1.0, 2.0).unwrap_or(inf)       // cannot panic
+
+//
+// try func
+//
+div: f64 = (x: f64, y: f64) -> f64 -> {
+    r := x / y
+}
+
+r: Result<f64, str> = try(div(1.0, 2.0))
+r: Result<f64, str> = try(div(1.0, 2.0), Error)
+r: Result<f64, str> = try(div(1.0, 2.0), ZeroDivisionError)
+
+r: Result = try(div(1.0, 2.0))
+r: Result = try(div(1.0, 2.0), Error)
+r: Result = try(div(1.0, 2.0), ZeroDivisionError)
+
+r := try(div(1.0, 2.0))
+r := try(div(1.0, 2.0), Error)
+r := try(div(1.0, 2.0), ZeroDivisionError)
+
+//
+// try block func
+//
+f1 := () -> { 0 }
+f2 := () -> { 1 }
+f3 := () -> { 2 }
+
+r := try(() -> {
+    f1()
+    f2()
+    f3()
+})
+
+//
 // import / destruction
 //
 io := import("io")
@@ -434,10 +492,6 @@ io := import("io")
 
 { print } := import("io")
 
-// recursion
-fib := (n: int) -> int -> {
-    n <= 1 ? n : fib(n - 1) + fib(n - 2)
-}
-
-r := fib(10)
-print(r)
+print(1)
+print({'a': 1.0})
+print(['a', 1.0])
