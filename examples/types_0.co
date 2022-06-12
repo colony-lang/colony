@@ -378,7 +378,7 @@ b := range(0, 1_000_000, 3)
     .each((n) -> f64 -> { n / 2 })
 
 //
-// loop func / break / continue
+// loop func / break / continue ???
 //
 loop(0, (i) -> {
     i >= 10 ? { break() } :
@@ -389,7 +389,7 @@ loop(0, (i) -> {
 })
 
 //
-// while func
+// while func ???
 //
 while(0, (i) -> { i < 10 }, (i) -> {
     print(i)
@@ -397,7 +397,7 @@ while(0, (i) -> { i < 10 }, (i) -> {
 })
 
 //
-// for func
+// for func ???
 //
 for(0, (i) -> { i < 10 }, (i) -> { i + 1 }, (i) -> {
     print(i)
@@ -497,7 +497,25 @@ print({'a': 1.0})
 print(['a', 1.0])
 
 //
-// event loop / yield / async / await_all
+// generator ???
+//
+f0 := (b: int, e: int, s: int) -> generator<int> -> {
+    g := loop(b, (i) -> {
+        i < e ? {
+            v := yield<Option<int>>(i)
+        } : {
+            break()
+        }
+    })
+
+    g
+}
+
+g0: generator<int> = f0(0, 10, 2)
+g0, v := g0.next(None)
+
+//
+// event loop / yield / async / await_all ???
 //
 { sum } := import("fp")
 { EventLoop } := import("concurrent")
@@ -521,7 +539,7 @@ results := await_all(coros)
 results == [1, 5, 9, 13, 17]
 
 //
-// event loop / yield / async / await 1
+// event loop / yield / async / await 1 ???
 //
 { sum } := import("fp")
 { EventLoop } := import("concurrent")
@@ -549,7 +567,7 @@ results := coros.map((coro) -> {
 results == [1, 5, 9, 13, 17]
 
 //
-// event loop / yield / async / await 2
+// event loop / yield / async / await 2 ???
 //
 { sum } := import("fp")
 { EventLoop } := import("concurrent")
@@ -573,3 +591,24 @@ results := range(0, 10, 2)
 
 results == [1, 5, 9, 13, 17]
 
+//
+// event loop / yield / async / await 3 ???
+//
+{ sum } := import("fp")
+{ await, async } := import("concurrent")
+
+f0 := async((b: int, e: int) -> int -> {
+    yield()
+    r: = sum(range(b, e))
+    r
+})
+
+results := range(0, 10, 2)
+    .map((i) -> {
+        f0(i, i + 2)
+    })
+    .map((coro) -> {
+        await(coro)
+    })
+
+results == [1, 5, 9, 13, 17]
