@@ -424,10 +424,17 @@ r := match(a)
     .default(() -> { -1 })
 
 //
-// import / if-else / recursion
+// import / destruction
 //
+io := import("io")
+print := io.print
+
+io := import("io")
+{ print } := io
+
 { print } := import("io")
 
+// recursion
 fib := (n: int) -> int -> {
     n <= 1 ? n : fib(n - 1) + fib(n - 2)
 }
