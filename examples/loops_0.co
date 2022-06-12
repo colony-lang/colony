@@ -1,0 +1,56 @@
+//
+// functional loop funcs
+//
+a := range(0, 1_000_000, 3)
+    .map((n) -> { n + 1 })
+    .filter((n) -> { n % 2 })
+    .take_while((n) -> { n % 3 })
+    .drop_while((n) -> { n % 3 })
+    .reduce((acc, n) -> { acc + n }, 0)
+
+b := range(0, 1_000_000, 3)
+    .each((n) -> f64 -> { n / 2 })
+
+//
+// loop func / break / continue ???
+//
+loop(0, (i) -> {
+    i >= 10 ? { break() } :
+    i % 2 ? { continue() } : {}
+    
+    print(i)
+    i + 1
+})
+
+//
+// while func ???
+//
+while(0, (i) -> { i < 10 }, (i) -> {
+    print(i)
+    i + 1
+})
+
+//
+// for func ???
+//
+for(0, (i) -> { i < 10 }, (i) -> { i + 1 }, (i) -> {
+    print(i)
+})
+
+//
+// generator ???
+//
+f0 := (b: int, e: int, s: int) -> generator<int> -> {
+    g := loop(b, (i) -> {
+        i < e ? {
+            v := yield<Option<int>>(i)
+        } : {
+            break()
+        }
+    })
+
+    g
+}
+
+g0: generator<int> = f0(0, 10, 2)
+g0, v := g0.next(None)
