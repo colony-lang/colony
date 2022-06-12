@@ -25,6 +25,26 @@ a: str = "abc"          // str
 a := "abc"              // str
 
 //
+// list
+//
+p: list = [1.0, 2.0, 3.0, 4.0]              // list
+p: list<f64> = [1.0, 2.0, 3.0, 4.0]         // list<f64>
+p: list<object> = [1.0, 2.0, 3.0, 4.0]      // list<f64>
+p: object = [1.0, 2.0, 3.0, 4.0]            // list is subtupe of object
+x := p[0]
+y := p[1]
+
+//
+// dict
+//
+p: dict = {1: 2.0, 3: 4.0}                  // dict
+p: dict<i64, f64> = {1: 2.0, 3: 4.0}        // dict<i64, f64>
+p: dict<object, object> = {1: 2.0, 3: 4.0}  // dict<i64, f64>
+p: object = {1: 2.0, 3: 4.0}                // dict is subtupe of object
+x := p[1]
+y := p[3]
+
+//
 // type alias
 //
 I64: type = i64
@@ -45,28 +65,11 @@ U: type = i64 | f64
 P: struct = (x: f64=0.0, y: f64=0.0)        // struct
 P: type = (x: f64=0.0, y: f64=0.0)          // struct is subtype of type
 P: object = (x: f64=0.0, y: f64=0.0)        // struct is subtype of type
+
 p: P = P(1.0, 2.0)                          // P
 p: P = P(x=1.0, y=2.0)                      // P
 x := p.x
 y := p.y
-
-//
-// list
-//
-p: list = [1.0, 2.0, 3.0, 4.0]              // list
-p: list<f64> = [1.0, 2.0, 3.0, 4.0]         // list<f64>
-p: object = [1.0, 2.0, 3.0, 4.0]            // list is subtupe of object
-x := p[0]
-y := p[1]
-
-//
-// dict
-//
-p: dict = {1: 2.0, 3: 4.0}                  // dict
-p: dict<i64, f64> = {1: 2.0, 3: 4.0}        // dict<i64, f64>
-p: object = {1: 2.0, 3: 4.0}                // dict is subtupe of object
-x := p[1]
-y := p[3]
 
 //
 // generic struct
@@ -74,6 +77,7 @@ y := p[3]
 G: generic_struct = <X:=type, Y:=type, R:=type>     // generic_struct
 G: type = <X:=type, Y:=type, R:=type>               // generic_struct is subtype of type
 G: object = <X:=type, Y:=type, R:=type>             // generic_struct is subtype of type
+
 g: G = G<i64, i64, f64>                             // G
 g: G = G<X=i64, Y=i64, R=f64>                       // G
 X := G.X
@@ -85,6 +89,7 @@ Y := G.Y
 P: param_struct = <T:=i64 | f64> -> (x: T=T.default, y: T=T.default)
 P: type = <T:=i64 | f64> -> (x: T=T.default, y: T=T.default)
 P: object = <T:=i64 | f64> -> (x: T=T.default, y: T=T.default)
+
 p0: P = P<i64>(1, 2)
 p1: P = P<i64>(2, 3)
 
@@ -191,8 +196,8 @@ P: struct = (
         // __type__ := struct,
         // __bases__ := [object],
         // __name__ := 'P',
-        __add__ := (self, other: P) -> P -> {
-            P(self.x + other.x, self.y + other.y)
+        __add__ := (self, other: Self) -> Self -> {
+            Self(self.x + other.x, self.y + other.y)
         },
         sum := (self) -> f64 -> {
             r := self.x + self.y
@@ -216,30 +221,34 @@ s1 := p1::__type__::sum(p1)
 // Option
 //
 NoneType: type = (
-    __type__ := (
-        __type__ := type,
-        __bases__ := [struct],
-        __name__ := "None",
-    )
+    __type__ := type,
+    __bases__ := [struct],
+    __name__ := "None",
 )
 
 None: NoneType = (
     __type__ := NoneType
 )
 
-Some := <V:=type> -> (
+Some: param_struct = <V:=type> -> (
     v: V,
 )
 
 Option: type = <V:=type> -> (NoneType | Some<V>)
 
+// NOTE:
+//  typeof(None) == NoneType
+//  typeof(None) == Option
 o0: Option<i64> = None
-o1: Option<i64> = Some<i64>(1)
-
 o0: Option = None
-o1: Option = Some<i64>(1)
-
 o0 := None
+
+// NOTE:
+//  typeof(Some<i64>(1)) == Some<i64>
+//  typeof(Some<i64>(1)) == Option<i64>
+//  typeof(Some<i64>(1)) == Option
+o1: Option<i64> = Some<i64>(1)
+o1: Option = Some<i64>(1)
 o1 := Some<i64>(1)
 
 //
@@ -257,12 +266,11 @@ Result: union = <V:=type, E:=type> -> (Ok<V> | Err<E>);
 Result: type = <V:=type, E:=type> -> (Ok<V> | Err<E>)
 
 r0: Result<i64, str> = Ok<i64>(1)
-r1: Result<i64, str> = Err<str>("Some error")
-
-r0: Result<i64, str> = Ok<i64>(1)
-r1: Result<i64, str> = Err<str>("Some error")
-
+r0: Result = Ok<i64>(1)
 r0 := Ok<i64>(1)
+
+r1: Result<i64, str> = Err<str>("Some error")
+r1: Result = Err<str>("Some error")
 r1 := Err<str>("Some error")
 
 //
@@ -271,8 +279,13 @@ r1 := Err<str>("Some error")
 r: object = 10 % 2 ? { true } : { false }
 r := 10 % 2 ? { true } : { false }
 
+r := 10 % 2 ? { -2 } :
+     10 % 3 ? { -1 } :
+     10 & 4 ? { -0 } :
+     { 1 }
+
 //
-// match / numbers / union
+// match_type / numbers / union
 //
 A: type = int
 B: type = float
@@ -283,19 +296,19 @@ C: type = A | B
 c: C = 1
 c: C = 1.1
 
-r := match(c, {
+r := match_type(c, {
     A: (y) -> { y },
     B: (z) -> { z },
     _: () -> { 0 },
 })
 
-r := match(c)
+r := match_type(c)
     .case(A, (y) -> { y })
     .case(B, (z) -> { z })
     .default(() -> { 0 })
 
 //
-// match / struct / union
+// match_type / struct / union
 //
 A: struct = (
     x: f64 = 0.0,
@@ -310,19 +323,49 @@ B: struct = (
 C: union = A | B;
 C: type = A | B
 
-r := match(c, {
+r := match_type(c, {
     A: (x, y) -> { x + y },
     B: (z, w) -> { z + w },
     _: () -> { 0 },
 })
 
-r := match(c)
+r := match_type(c)
     .case(A, (x, y) -> { y })
     .case(B, (z, w) -> { z })
     .default(() -> { 0 })
 
 //
-// loop
+// match_value
+//
+a := 10
+
+r := match_value(a, {
+    0: (v) -> { true },
+    _: (v) -> { false },
+})
+
+r := match_value(a)
+    .case(0, (v) -> { true })
+    .default((v) -> { false })
+
+//
+// match_expr
+//
+a := 10
+
+r := match_expr(a, [
+    [(v) -> { v % 2 }, (v) -> { -2 }],
+    [(v) -> { v % 3 }, (v) -> { -1 }],
+    [_, (v) -> { 0 }],
+])
+
+r := match_expr(a)
+    .case((v) -> { v % 2 }, (v) -> { -2 })
+    .case((v) -> { v % 3 }, (v) -> { -1 })
+    .default((v) -> { 0 })
+
+//
+// functional loop funcs
 //
 a := range(0, 1_000_000, 3)
     .map((n) -> { n + 1 })
@@ -333,6 +376,30 @@ a := range(0, 1_000_000, 3)
 
 b := range(0, 1_000_000, 3)
     .each((n) -> f64 -> { n / 2 })
+
+//
+// loop func
+//
+loop(0, (i) -> {
+    i >= 10 ? { break() } : {}
+    print(i)
+    i + 1
+})
+
+//
+// while func
+//
+while(0, (i) -> { i < 10 }, {
+    print(i)
+    i + 1
+})
+
+//
+// for func
+//
+for(0, (i) -> { i < 10 }, (i) -> { i + 1 }, (i) -> {
+    print(i)
+})
 
 //
 // Option / match
