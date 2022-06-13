@@ -1,6 +1,6 @@
 
 //
-// generator 1
+// generator / iterator
 //
 g: generator<int> = generator<int>((i: int) -> int -> {
     r := i < 10 ? {
@@ -42,7 +42,7 @@ r: int = g(0).map((i) -> { i })
 r == 10
 
 //
-// range generator ???
+// range generator ??? !!!
 //
 range: generator<int> = generator<int>(b: int, e: int, s: int=1) -> int -> {
     i := b
