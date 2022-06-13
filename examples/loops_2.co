@@ -15,7 +15,7 @@ g: generator<int> = generator<int>((i: int) -> int -> {
 
 it: iterator<int> = g(0)
 
-f := loop<int>((i: int) -> int -> {
+f: loop<int> = loop<int>((i: int) -> int -> {
     it: iterator<int>, v: int = it.next(1)
     match(it).case(None, () -> { return() })
     print(v)
