@@ -1,13 +1,26 @@
 
-// ???
-last_i: int = loop(0, (i: int) -> int -> {
+// loop
+last_i: int = loop<int>(0, (i: int) -> int -> {
     i < 10 ? {
         // pass
     } : {
-        break()
+        break()     // breaks last loop function
     }
 
     i += 1
 })
 
 last_i == 10
+
+// generator
+g: generator<int> = generator<int>(0, (i: int) -> int -> {
+    r := i < 10 ? {
+        v := yield(i)
+        i += 1
+    } : {
+        break()     // breaks last loop function
+    }
+
+    r
+})
+
