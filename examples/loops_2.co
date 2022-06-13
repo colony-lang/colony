@@ -1,0 +1,57 @@
+
+//
+// generator 1
+//
+g: generator<int> = generator<int>((i: int) -> int -> {
+    r := i < 10 ? {
+        v := yield(i)
+        i += v
+    } : {
+        return()     // breaks last loop function
+    }
+
+    r
+})
+
+it: iterator<int> = g(0)
+
+f := loop<int>((i: int) -> int -> {
+    it: iterator<int>, v: int = it.next(1)
+    match(it).case(None, () -> { return() })
+    print(v)
+    v
+})
+
+f(10) == 10
+
+//
+// generator 2 ???
+//
+g: generator<int> = generator<int>((i: int) -> int -> {
+    r := i < 10 ? {
+        v := yield(i)
+        i += v
+    } : {
+        return()     // breaks last loop function
+    }
+
+    r
+})
+
+r: int = g(0).map((i) -> { i })
+r == 10
+
+//
+// range generator ???
+//
+range: generator<int> = generator<int>(b: int, e: int, s: int=1) -> int -> {
+    i := b
+
+    i < e ? {
+        yield(i)
+        i += s
+        continue(i)
+    } : {
+        return()     // breaks last loop function
+    }
+})
