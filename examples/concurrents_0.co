@@ -1,4 +1,8 @@
 //
+// IDEAS ONLY, NOT OFFICIAL EXAMPLE
+//
+
+//
 // event loop / yield / async / await_all ???
 //
 { sum } := import("fp")
