@@ -24,31 +24,3 @@ A := struct(
         },
     )
 )
-
-A := struct(
-    x: f64 = 0.0,
-    y: f64 = 0.0,
-    
-    __funcs__ := (
-        __add__ := (self, other: Self) -> Self -> {
-            Self(self.x + other.x, self.y + other.y)
-        },
-        
-        sum := (self) -> f64 -> {
-            r := self.x + self.y
-        },
-    )
-)
-
-A := struct(
-    x: f64 = 0.0,
-    y: f64 = 0.0,
-    
-    __add__ := (self, other: Self) -> Self -> {
-        Self(self.x + other.x, self.y + other.y)
-    },
-    
-    sum := (self) -> f64 -> {
-        r := self.x + self.y
-    },
-)
