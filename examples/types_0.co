@@ -60,6 +60,14 @@ U: union = i64 | f64;
 U: type = i64 | f64
 
 //
+// param_union
+//
+U: type = <V: type=type, W: type=type> -> (V | W)
+
+u0: U = U<i64, f64>(1)
+u1: U = U<i64, f64>(1.0)
+
+//
 // struct type
 //
 P: struct = (x: f64=0.0, y: f64=0.0)        // struct
