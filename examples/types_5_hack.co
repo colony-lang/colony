@@ -115,26 +115,6 @@ Point: type = (
     )
 )
 
-Point: type = (
-    ...X,
-    ...Y,
-    ...Z,
-    __type__ := (
-        __add__ := (self, other: Self) -> Self {
-            Self(self.x + other.x, self.y + other.y, self.z + other.z)
-        },
-        get_x := (self) -> i64 {
-            self.x
-        },
-        get_y := (self) -> i64 {
-            self.y
-        },
-        get_z := (self) -> i64 {
-            self.z
-        },
-    )
-)
-
 p0 := Point(1, 2, 3)
 p1 := Point(2, 3, 4)
 p2 := p0 + p1
@@ -156,26 +136,6 @@ Point: type = <XX:=i64 | f64, YY:=i64 | f64, ZZ:=i64 | f64> -> (
         __type__: type = type,
         __name__: str = "Point",
         __bases__: list<type> = [X<XX>, Y<YY>, Z<ZZ>],
-        __add__ := (self, other: Self) -> Self {
-            Self(self.x + other.x, self.y + other.y, self.z + other.z)
-        },
-        get_x := (self) -> XX {
-            self.x
-        },
-        get_y := (self) -> YY {
-            self.y
-        },
-        get_z := (self) -> ZZ {
-            self.z
-        },
-    )
-);
-
-Point: type = <XX:=i64 | f64, YY:=i64 | f64, ZZ:=i64 | f64> -> (
-    ...X<XX>,
-    ...Y<YY>,
-    ...Z<ZZ>,
-    __type__ := (
         __add__ := (self, other: Self) -> Self {
             Self(self.x + other.x, self.y + other.y, self.z + other.z)
         },
