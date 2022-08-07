@@ -1,0 +1,120 @@
+//
+// list
+//
+p: list = [1.0, 2.0, 3.0, 4.0]              // list
+p: list(f64) = [1.0, 2.0, 3.0, 4.0]         // list(f64)
+p: list(object) = [1.0, 2.0, 3.0, 4.0]      // list(object)
+p: object = [1.0, 2.0, 3.0, 4.0]            // list is subtupe of object
+
+//
+// dict
+//
+p: dict = {1: 2.0, 3: 4.0}                  // dict
+p: dict(i64, f64) = {1: 2.0, 3: 4.0}        // dict(i64, f64)
+p: dict(object, object) = {1: 2.0, 3: 4.0}  // dict(object, object)
+p: object = {1: 2.0, 3: 4.0}                // dict is subtupe of object
+
+//
+// struct
+//
+P: struct = (x: f64=0.0, y: f64=0.0)        // struct
+P: type = (x: f64=0.0, y: f64=0.0)          // struct is subtype of type
+P: object = (x: f64=0.0, y: f64=0.0)        // type is subtype of object
+
+p: P = P(1.0, 2.0)                          // P
+p: P = P(x=1.0, y=2.0)                      // P
+
+//
+// "generic" struct
+//
+G: struct = (X: type=type, Y: type=type, R: type=type)      // struct
+G: struct = (X:=type, Y:=type, R:=type)     // struct
+G: type = (X:=type, Y:=type, R:=type)       // struct is subtype of type
+G: object = (X:=type, Y:=type, R:=type)     // type is subtype of object
+
+g: G = G(i64, i64, f64)                     // G
+g: G = G(X=i64, Y=i64, R=f64)               // G
+
+//
+// "parameterized" struct
+//
+P: decl = (T:=i64 | f64) => (x: T=T.default, y: T=T.default)
+P: type = (T:=i64 | f64) => (x: T=T.default, y: T=T.default)
+P: object = (T:=i64 | f64) => (x: T=T.default, y: T=T.default)
+
+PType: struct = P(i64)
+PType: type = P(i64)
+PType: object = P(i64)
+PType := P(i64)
+
+p0: PType = PType(1, 2)
+p0: PType = PType(1, 2)
+
+p0: P(i64) = P(i64)(1, 2)
+p1: P(i64) = P(i64)(2, 3)
+
+p0: P(object) = P(i64)(1, 2)
+p1: P(object) = P(i64)(2, 3)
+
+//
+// function
+//
+f: fn = (x: f64, y: f64) => f64 { r: f64 = x + y }
+
+F: decl = (x: f64, y: f64) => f64
+F: type = (x: f64, y: f64) => f64
+f := F -> { r: f64 = x + y }
+
+a := f(1.0, 2.0)
+
+//
+// "parameterized" function
+//
+F: decl = (T:=i64 | f64) -> (x: T=T.default, y: T=T.default) => T
+F: type = (T:=i64 | f64) -> (x: T=T.default, y: T=T.default) => T
+F: object = (T:=i64 | f64) -> (x: T=T.default, y: T=T.default) => T
+
+f: F = (T:=i64 | f64) -> (x: T=T.default, y: T=T.default) => T { x + y }
+f: F = F -> { x + y }
+f: fn = F -> { x + y }
+f: object = F -> { x + y }
+
+r0: i64 = f(i64)(1, 2)
+
+//
+// struct composition
+//
+X: type = (x: i64=0)
+Y: type = (y: i64=0)
+Z: type = (z: i64=0)
+
+Point: type = X & Y & Z
+
+Point: type = (
+    ...X,
+    ...Y,
+    ...Z,
+    __type__: type = (
+        __type__: type = type,
+        __name__: str = "Point",
+        __bases__: list(type) = [X, Y, Z],
+        __add__ := (self, other: Self) => Self {
+            Self(self.x + other.x, self.y + other.y, self.z + other.z)
+        },
+        get_x := (self) => i64 {
+            self.x
+        },
+        get_y := (self) => i64 {
+            self.y
+        },
+        get_z := (self) => i64 {
+            self.z
+        },
+    )
+)
+
+p0 := Point(1, 2, 3)
+p1 := Point(2, 3, 4)
+p2 := p0 + p1
+p2 := p0.__add__(p1)
+p2 := p0::__type__::__add__(p0, p1)
