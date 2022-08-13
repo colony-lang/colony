@@ -1,74 +1,21 @@
 //
-// primitive
-//
-a: i64 = 1              // i64
-a: i64 = 1_i64          // i64
-a := 1                  // i64
-a := 1_i64              // i64
-
-a: f64 = 1.0            // f64
-a: f64 = 1.0_f64        // f64
-a := 1.0                // f64
-a := 1.0_f64            // f64
-
-a: u8 = 255_u8          // u8
-a := 255_u8             // u8
-
-a: bytes = b'abc'       // bytes
-a := b'abc'             // bytes
-a: bytes = b"abc"       // bytes
-a := b"abc"             // bytes
-
-a: str = 'abc'          // str
-a := 'abc'              // str
-a: str = "abc"          // str
-a := "abc"              // str
-
-//
 // list
 //
 p: list = [1.0, 2.0, 3.0, 4.0]              // list
-p: list<f64> = [1.0, 2.0, 3.0, 4.0]         // list<f64>
-p: list<object> = [1.0, 2.0, 3.0, 4.0]      // list<object>
+p: list(f64) = [1.0, 2.0, 3.0, 4.0]         // list(f64)
+p: list(object) = [1.0, 2.0, 3.0, 4.0]      // list(object)
 p: object = [1.0, 2.0, 3.0, 4.0]            // list is subtupe of object
-x := p[0]
-y := p[1]
 
 //
 // dict
 //
 p: dict = {1: 2.0, 3: 4.0}                  // dict
-p: dict<i64, f64> = {1: 2.0, 3: 4.0}        // dict<i64, f64>
-p: dict<object, object> = {1: 2.0, 3: 4.0}  // dict<object, object>
+p: dict(i64, f64) = {1: 2.0, 3: 4.0}        // dict(i64, f64)
+p: dict(object, object) = {1: 2.0, 3: 4.0}  // dict(object, object)
 p: object = {1: 2.0, 3: 4.0}                // dict is subtupe of object
-x := p[1]
-y := p[3]
 
 //
-// type alias
-//
-I64: type = i64
-F64: type = f64
-
-x: I64 = 1
-r: F64 = 2.0
-
-//
-// union type
-//
-U: union = i64 | f64;
-U: type = i64 | f64
-
-//
-// param_union
-//
-U: type = <V: type=type, W: type=type> -> (V | W)
-
-u0: U = U<i64, f64>(1)
-u1: U = U<i64, f64>(1.0)
-
-//
-// struct type
+// struct
 //
 P: struct = (x: f64=0.0, y: f64=0.0)        // struct
 P: type = (x: f64=0.0, y: f64=0.0)          // struct is subtype of type
@@ -76,395 +23,176 @@ P: object = (x: f64=0.0, y: f64=0.0)        // type is subtype of object
 
 p: P = P(1.0, 2.0)                          // P
 p: P = P(x=1.0, y=2.0)                      // P
-x := p.x
-y := p.y
 
 //
-// generic struct
+// "generic" struct
 //
-G: generic_struct = <X:=type, Y:=type, R:=type>     // generic_struct
-G: type = <X:=type, Y:=type, R:=type>               // generic_struct is subtype of type
-G: object = <X:=type, Y:=type, R:=type>             // type is subtype of object
+G: generic_struct = <X: type=type, Y: type=type, Z: type=type>      // generic_struct
+G: generic_struct = <X:=type, Y:=type, Z:=type>                     // generic_struct
+G: type = <X:=type, Y:=type, Z:=type>                               // generic_struct is subtype of type
+G: object = <X:=type, Y:=type, Z:=type>                             // type is subtype of object
 
-g: G = G<i64, i64, f64>                             // G
-g: G = G<X=i64, Y=i64, R=f64>                       // G
-X := G.X
-Y := G.Y
+g: G = G<i64, i64, f64>                     // G
+g: G = G<X=i64, Y=i64, Z=f64>               // G
 
 //
-// parameterized struct type
+// "parameterized" struct
 //
 P: param_struct = <T:=i64 | f64> -> (x: T=T.default, y: T=T.default)
 P: type = <T:=i64 | f64> -> (x: T=T.default, y: T=T.default)
 P: object = <T:=i64 | f64> -> (x: T=T.default, y: T=T.default)
 
-p0: P = P<i64>(1, 2)
-p1: P = P<i64>(2, 3)
+PType: struct = P<i64>
+PType: type = P<i64>
+PType: object = P<i64>
+PType := P<i64>
+
+p0: PType = PType(1, 2)
+p0: PType = PType(1, 2)
+
+p0: P<i64> = P<i64>(1, 2)
+p1: P<i64> = P<i64>(2, 3)
+
+p0: P<object> = P<i64>(1, 2)
+p1: P<object> = P<i64>(2, 3)
 
 //
-// parameterized function type
+// function
 //
-F: param_fn = <T:=i64 | f64> -> (x: T=T.default, y: T=T.default) -> T
+f: fn = (x: f64, y: f64) -> f64 { r: f64 = x + y }
+
+F: fn_decl = (x: f64, y: f64) -> f64
+F: type = (x: f64, y: f64) -> f64
+f := F -> { r: f64 = x + y }
+
+a := f(1.0, 2.0)
+
+//
+// "parameterized" function
+//
+f: param_fn = <T:=i64 | f64> -> (x: T=T.default, y: T=T.default) -> T { x + y }
+
+F: param_fn_decl = <T:=i64 | f64> -> (x: T=T.default, y: T=T.default) -> T
 F: type = <T:=i64 | f64> -> (x: T=T.default, y: T=T.default) -> T
 F: object = <T:=i64 | f64> -> (x: T=T.default, y: T=T.default) -> T
 
-f: F = <T:=i64 | f64> -> (x: T=T.default, y: T=T.default) -> T -> { x + y }
-
+f: F = <T:=i64 | f64> -> (x: T=T.default, y: T=T.default) -> T { x + y }
 f: F = F -> { x + y }
 f: fn = F -> { x + y }
 f: object = F -> { x + y }
 
 r0: i64 = f<i64>(1, 2)
-r1: i64 = f<i64>(2, 3)
 
 //
-// function
+// struct composition
 //
-f := (x: f64, y: f64) -> f64 -> {
-    r: f64 = x + y
-}
+X: type = (x: i64=0)
+Y: type = (y: i64=0)
+Z: type = (z: i64=0)
 
-a := f(1.0, 2.0)
+Point: type = X & Y & Z
 
-//
-// parameterized function 1
-//
-f := <T:=i64 | f64> -> (x: T, y: T) -> T -> {
-    r: T = x + y
-}
-
-a := f<f64>(1.0, 2.0)
-
-//
-// parameterized function 2
-//
-G := <T:=i64 | f64>
-
-f := G -> (x: T, y: T) -> T -> {
-    r: T = x + y
-}
-
-a := f<f64>(1.0, 2.0)
-
-//
-// parameterized function 3
-//
-G0 := <T:=i64 | f64>
-G1 := <R:=i64 | f64>
-
-f := G0 -> G1 -> (x: T, y: T) -> R -> {
-    r: R = x + y
-}
-
-a := f<f64><f64>(1.0, 2.0)
-
-//
-// parameterized function 4
-//
-G0 := <T:=i64 | f64>
-G1 := <R:=i64 | f64>
-
-f := <...G0, ...G1> -> (x: T, y: T) -> R -> {
-    r: R = x + y
-}
-
-a := f<f64, f64>(1.0, 2.0)
-
-//
-// parameterized function 5
-//
-G0 := <T:=i64 | f64>
-G1 := <R:=i64 | f64>
-
-f := (G0 & G1) -> (x: T, y: T) -> R -> {
-    r: R = x + y
-}
-
-a := f<f64, f64>(1.0, 2.0)
-
-//
-// parameterized function 6
-//
-G0 := <T:=i64 | f64>
-G1 := <R:=i64 | f64>
-G := G0 & G1
-
-f := G -> (x: T, y: T) -> R -> {
-    r: R = x + y
-}
-
-a := f<f64, f64>(1.0, 2.0)
-
-//
-// user-defined struct
-//
-P: struct = (
-    x: f64 = 0.0,
-    y: f64 = 0.0,
-    __type__ := (
-        // __type__ := struct,
-        // __bases__ := [object],
-        // __name__ := 'P',
-        __add__ := (self, other: Self) -> Self -> {
-            Self(self.x + other.x, self.y + other.y)
+Point: type = (
+    ...X,
+    ...Y,
+    ...Z,
+    __type__: type = (
+        __type__: type = type,
+        __name__: str = "Point",
+        __bases__: list<type> = [X, Y, Z],
+        __add__ := (self, other: Self) -> Self {
+            Self(self.x + other.x, self.y + other.y, self.z + other.z)
         },
-        sum := (self) -> f64 -> {
-            r := self.x + self.y
+        get_x := (self) -> i64 {
+            self.x
         },
-    ),
+        get_y := (self) -> i64 {
+            self.y
+        },
+        get_z := (self) -> i64 {
+            self.z
+        },
+    )
 )
 
-p0 := P(1.0, 2.0, 3.0)
-p1 := P(1.0, 2.0, 3.0)
+p0 := Point(1, 2, 3)
+p1 := Point(2, 3, 4)
 p2 := p0 + p1
-s0 := p0.sum()
-s1 := p1.sum()
-
-p0 := P::__type__::__call__(P, 1.0, 2.0, 3.0)
-p1 := P::__type__::__call__(P, 1.0, 2.0, 3.0)
+p2 := p0.__add__(p1)
 p2 := p0::__type__::__add__(p0, p1)
-s0 := p0::__type__::sum(p0)
-s1 := p1::__type__::sum(p1)
 
 //
-// Option
+// "parameterized" struct composition
 //
-NoneType: type = (
-    __type__ := type,
-    __bases__ := [struct],
-    __name__ := "None",
-)
+X: type = <X:=i64 | f64> -> (x: X)
+Y: type = <Y:=i64 | f64> -> (y: Y)
+Z: type = <Z:=i64 | f64> -> (z: Z)
 
-None: NoneType = (
-    __type__ := NoneType
-)
+Point: type = <XX:=i64 | f64, YY:=i64 | f64, ZZ:=i64 | f64> -> (
+    ...X<XX>,
+    ...Y<YY>,
+    ...Z<ZZ>,
+    __type__: type = (
+        __type__: type = type,
+        __name__: str = "Point",
+        __bases__: list<type> = [X<XX>, Y<YY>, Z<ZZ>],
+        __add__ := (self, other: Self) -> Self {
+            Self(self.x + other.x, self.y + other.y, self.z + other.z)
+        },
+        get_x := (self) -> XX {
+            self.x
+        },
+        get_y := (self) -> YY {
+            self.y
+        },
+        get_z := (self) -> ZZ {
+            self.z
+        },
+    )
+);
 
-Some: param_struct = <V: type=type> -> (
-    v: V,
-)
+p0 := Point<i64>(1, 2, 3)
+p1 := Point<i64>(2, 3, 4)
 
-Option: type = <V: type=type> -> (NoneType | Some<V>)
+p0: Point<i64> = Point<i64>(1, 2, 3)
+p1: Point<i64> = Point<i64>(2, 3, 4)
 
-// NOTE:
-//  typeof(None) == NoneType
-//  typeof(None) == Option
-o0: Option<i64> = None
-o0: Option = None
-o0 := None
+p0: Point = Point<i64>(1, 2, 3)
+p1: Point = Point<i64>(2, 3, 4)
 
-// NOTE:
-//  typeof(Some<i64>(1)) == Some<i64>
-//  typeof(Some<i64>(1)) == Option<i64>
-//  typeof(Some<i64>(1)) == Option
-o1: Option<i64> = Some<i64>(1)
-o1: Option = Some<i64>(1)
-o1 := Some<i64>(1)
-
-//
-// Result
-//
-Ok: param_struct = <V: type=type> -> (v: V)
-Ok: type = <V: type=type> -> (v: V)
-Ok := <V: type=type> -> (v: V)
-
-Err: param_struct = <E: type=str> -> (e: E)
-Err: type = <E: type=str> -> (e: E)
-Err := <E: type=str> -> (e: E)
-
-Result: union = <V: type=type, E: type=str> -> (Ok<V> | Err<E>);
-Result: type = <V: type=type, E: type=str> -> (Ok<V> | Err<E>)
-
-r0: Result<i64, str> = Ok<i64>(1)
-r0: Result = Ok<i64>(1)
-r0 := Ok<i64>(1)
-
-r1: Result<i64, str> = Err<str>("Some error")
-r1: Result = Err<str>("Some error")
-r1 := Err<str>("Some error")
+p2 := p0 + p1
+p2 := p0.__add__(p1)
+p2 := p0::__type__::__add__(p0, p1)
 
 //
-// if-else
+// union
 //
-r: object = 10 % 2 ? { true } : { false }
-r := 10 % 2 ? { true } : { false }
+X: type = (x: i64=0)
+Y: type = (y: i64=0)
+Z: type = (z: i64=0)
 
-r := 10 % 2 ? { -2 } :
-     10 % 3 ? { -1 } :
-     10 & 4 ? { -0 } :
-     { 1 }
+P: union = X | Y | Z;
 
-//
-// match_type / numbers / union
-//
-A: type = int
-B: type = float
+P: union = (
+    __type__: type = union,
+    __items__: list<type> = [X, Y, Z],
+);
 
-C: union = A | B;
-C: type = A | B
-
-c: C = 1
-c: C = 1.1
-
-r := match_type(c, {
-    A: (y) -> { y },
-    B: (z) -> { z },
-    _: () -> { 0 },
-})
-
-r := match_type(c)
-    .case(A, (y) -> { y })
-    .case(B, (z) -> { z })
-    .default(() -> { 0 })
+p0: P = 1
 
 //
-// match_type / struct / union
+// "parameterized" union
 //
-A: struct = (
-    x: f64 = 0.0,
-    y: f64 = 0.0,
-)
+X: type = <T:=i64 | f64> -> (x: T)
+Y: type = <T:=i64 | f64> -> (y: T)
+Z: type = <T:=i64 | f64> -> (z: T)
 
-B: struct = (
-    z: f64 = 0.0,
-    w: f64 = 0.0,
-)
+P: param_union = <T:=i64|f64> -> (X<T> | Y<T> | Z<T>);
 
-C: union = A | B;
-C: type = A | B
+P: param_union = <T:=i64|f64> -> (
+    __type__: type = union,
+    __items__: list<type> = [X<T>, Y<T>, Z<T>],
+);
 
-r := match_type(c, {
-    A: (x, y) -> { x + y },
-    B: (z, w) -> { z + w },
-    _: () -> { 0 },
-})
-
-r := match_type(c)
-    .case(A, (x, y) -> { y })
-    .case(B, (z, w) -> { z })
-    .default(() -> { 0 })
-
-//
-// match_value
-//
-a := 10
-
-r := match_value(a, {
-    0: (v) -> { true },
-    _: (v) -> { false },
-})
-
-r := match_value(a)
-    .case(0, (v) -> { true })
-    .default((v) -> { false })
-
-//
-// match_expr
-//
-a := 10
-
-r := match_expr(a, [
-    [(v) -> { v % 2 }, (v) -> { -2 }],
-    [(v) -> { v % 3 }, (v) -> { -1 }],
-    [_, (v) -> { 0 }],
-])
-
-r := match_expr(a)
-    .case((v) -> { v % 2 }, (v) -> { -2 })
-    .case((v) -> { v % 3 }, (v) -> { -1 })
-    .default((v) -> { 0 })
-
-//
-// Option / match
-//
-a: Option<int> = None
-a: Option<int> = Some<int>(1)
-
-r := match(a)
-    .case(Some, (v) -> { v })
-    .case(None, () -> { 0 })
-    .default(() -> { -1 })
-
-//
-// Result / match
-//
-a: Result<V=int, E=str> = Ok<V>(1)
-a: Result<V=int, E=str> = Err<E>("Some error")
-
-r := match(a)
-    .case(Ok, (v) -> { v })
-    .case(Err, (e) -> { 0 })
-    .default(() -> { -1 })
-
-//
-// recursion
-//
-fib := (n: int) -> int -> {
-    n <= 1 ? n : fib(n - 1) + fib(n - 2)
-}
-
-r := fib(10)
-
-//
-// Result / Ok / Err / unwrap
-//
-div: Result = (x: f64, y: f64) -> Result<f64, str> -> {
-    r := y == 0 ? {
-        Err<str>("ZeroDivisionError")
-    } : {
-        z := x / y
-        Ok<f64>(z)
-    }
-}
-
-r := div(1.0, 2.0).unwrap()             // can panic
-r := div(1.0, 2.0).unwrap_or(inf)       // cannot panic
-
-//
-// try func
-//
-div: f64 = (x: f64, y: f64) -> f64 -> {
-    r := x / y
-}
-
-Error := Err<str>("Error")
-ZeroDivisionError := Err<str>("ZeroDivisionError")
-
-r: Result<f64, str> = try(div(1.0, 2.0))
-r: Result<f64, str> = try(div(1.0, 2.0), Error)
-r: Result<f64, str> = try(div(1.0, 2.0), ZeroDivisionError)
-
-r: Result = try(div(1.0, 2.0))
-r: Result = try(div(1.0, 2.0), Error)
-r: Result = try(div(1.0, 2.0), ZeroDivisionError)
-
-r := try(div(1.0, 2.0))
-r := try(div(1.0, 2.0), Error)
-r := try(div(1.0, 2.0), ZeroDivisionError)
-
-//
-// try block func
-//
-f1 := () -> { 0 }
-f2 := () -> { 1 }
-f3 := () -> { 2 }
-
-r := try(() -> {
-    f1()
-    f2()
-    f3()
-})
-
-//
-// import / destruction
-//
-io := import("io")
-print := io.print
-
-io := import("io")
-{ print } := io
-
-{ print } := import("io")
-
-print(1)
-print({'a': 1.0})
-print(['a', 1.0])
+p0: P<i64> = 1
+p1: P<f64> = 1.0

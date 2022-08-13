@@ -44,6 +44,9 @@ struct co_object_t;
 #include "../core/ctx.h"
 
 typedef enum co_type_t {
+    // special cases, implementation dependent
+    CO_TYPE_UNDEFINED = 0,
+
     // primitive types
     CO_TYPE_BOOL = 1,
     CO_TYPE_U8 = 2,
@@ -64,23 +67,26 @@ typedef enum co_type_t {
     CO_TYPE_PARAM_STRUCT = 22,
     CO_TYPE_UNION = 23,
     CO_TYPE_PARAM_UNION = 24,
-    CO_TYPE_CODE = 25,
-    CO_TYPE_FN = 26,
-    CO_TYPE_PARAM_FN = 27,
-
-    CO_TYPE_BYTES = 30,
-    CO_TYPE_STR = 31,
-    CO_TYPE_LIST = 32,
-    CO_TYPE_DICT = 33,
     
-    CO_TYPE_RESULT = 40,
-    CO_TYPE_OK = 41,
-    CO_TYPE_ERR = 42,
-    CO_TYPE_OPTION = 43,
-    CO_TYPE_SOME = 44,
-    CO_TYPE_NONE = 45,
+    CO_TYPE_CODE = 30,
+    CO_TYPE_FN = 31,
+    CO_TYPE_FN_DECL = 32,
+    CO_TYPE_PARAM_FN = 33,
+    CO_TYPE_PARAM_FN_DECL = 34,
 
-    CO_TYPE_GC_PTR = 50,
+    CO_TYPE_BYTES = 40,
+    CO_TYPE_STR = 41,
+    CO_TYPE_LIST = 42,
+    CO_TYPE_DICT = 43,
+    
+    CO_TYPE_RESULT = 50,
+    CO_TYPE_OK = 51,
+    CO_TYPE_ERR = 52,
+    CO_TYPE_OPTION = 53,
+    CO_TYPE_SOME = 54,
+    CO_TYPE_NONE = 55,
+
+    CO_TYPE_GC_PTR = 60,
 } co_type_t;
 
 typedef struct co_gc_t {
@@ -122,8 +128,7 @@ typedef struct co_union_t {
 
 typedef struct co_param_union_t {
     CO_GC_HEAD;
-    struct co_object_t *generic_struct_types;  // generic_struct
-    struct co_object_t *types;  // list
+    struct co_object_t *items;  // list<type>
 } co_param_union_t;
 
 typedef struct co_code_t {
@@ -134,9 +139,17 @@ typedef struct co_fn_t {
     CO_GC_HEAD;
 } co_fn_t;
 
+typedef struct co_fn_decl_t {
+    CO_GC_HEAD;
+} co_fn_decl_t;
+
 typedef struct co_param_fn_t {
     CO_GC_HEAD;
 } co_param_fn_t;
+
+typedef struct co_param_fn_decl_t {
+    CO_GC_HEAD;
+} co_param_fn_decl_t;
 
 typedef struct co_bytes_t {
     CO_GC_HEAD;
@@ -223,7 +236,9 @@ typedef union co_value_t {
     struct co_param_union_t *param_union;
     struct co_code_t *code;
     struct co_fn_t *fn;
+    struct co_fn_decl_t *fn_decl;
     struct co_param_fn_t *param_fn;
+    struct co_param_fn_decl_t *param_fn_decl;
 
     struct co_bytes_t *bytes;
     struct co_str_t *str;
