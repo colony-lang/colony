@@ -12,6 +12,8 @@ enum co_type_t;
 
 struct co_gc_t;
 
+struct co_gc_ptr_t;
+
 struct co_struct_field_t;
 struct co_struct_t;
 struct co_generic_struct_field_t;
@@ -35,8 +37,6 @@ struct co_err_t;
 struct co_option_t;
 struct co_some_t;
 struct co_none_t;
-
-struct co_gc_ptr_t;
 
 union co_value_t;
 struct co_object_t;
@@ -62,36 +62,40 @@ typedef enum co_type_t {
     CO_TYPE_PTR = 12,
 
     // GC'ed types
-    CO_TYPE_STRUCT = 20,
-    CO_TYPE_GENERIC_STRUCT = 21,
-    CO_TYPE_PARAM_STRUCT = 22,
-    CO_TYPE_UNION = 23,
-    CO_TYPE_PARAM_UNION = 24,
-    
-    CO_TYPE_CODE = 30,
-    CO_TYPE_FN = 31,
-    CO_TYPE_FN_DECL = 32,
-    CO_TYPE_PARAM_FN = 33,
-    CO_TYPE_PARAM_FN_DECL = 34,
+    CO_TYPE_GC_PTR = 20,
 
-    CO_TYPE_BYTES = 40,
-    CO_TYPE_STR = 41,
-    CO_TYPE_LIST = 42,
-    CO_TYPE_DICT = 43,
+    CO_TYPE_STRUCT = 30,
+    CO_TYPE_GENERIC_STRUCT = 31,
+    CO_TYPE_PARAM_STRUCT = 32,
+    CO_TYPE_UNION = 33,
+    CO_TYPE_PARAM_UNION = 34,
     
-    CO_TYPE_RESULT = 50,
-    CO_TYPE_OK = 51,
-    CO_TYPE_ERR = 52,
-    CO_TYPE_OPTION = 53,
-    CO_TYPE_SOME = 54,
-    CO_TYPE_NONE = 55,
+    CO_TYPE_CODE = 40,
+    CO_TYPE_FN = 41,
+    CO_TYPE_FN_DECL = 42,
+    CO_TYPE_PARAM_FN = 43,
+    CO_TYPE_PARAM_FN_DECL = 44,
 
-    CO_TYPE_GC_PTR = 60,
+    CO_TYPE_BYTES = 50,
+    CO_TYPE_STR = 51,
+    CO_TYPE_LIST = 52,
+    CO_TYPE_DICT = 53,
+    
+    CO_TYPE_RESULT = 60,
+    CO_TYPE_OK = 61,
+    CO_TYPE_ERR = 62,
+    CO_TYPE_OPTION = 63,
+    CO_TYPE_SOME = 64,
+    CO_TYPE_NONE = 65
 } co_type_t;
 
 typedef struct co_gc_t {
     CO_GC_HEAD;
 } co_gc_t;
+
+typedef struct co_gc_ptr_t {
+    CO_GC_HEAD;
+} co_gc_ptr_t;
 
 typedef struct co_struct_field_t {
     struct co_object_t *name;               // str
@@ -208,10 +212,6 @@ typedef struct co_some_t {
 typedef struct co_none_t {
     CO_GC_HEAD;
 } co_none_t;
-
-typedef struct co_gc_ptr_t {
-    CO_GC_HEAD;
-} co_gc_ptr_t;
 
 typedef union co_value_t {
     // primitive types
