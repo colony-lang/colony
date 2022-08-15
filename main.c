@@ -10,7 +10,7 @@ int main(int argc, char **argv) {
     builtins = co_builtins_c_populate_ctx(root_ctx);
     
     // context with root contect as parent
-    // co_ctx_t *ctx = co_ctx_new(root_ctx);
+    // co_ctx_t *ctx = co_ctx_spawn(root_ctx);
 
     // cleanup
     // co_ctx_free(ctx);

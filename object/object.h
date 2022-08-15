@@ -251,8 +251,11 @@ typedef union co_value_t {
 
     // GC'ed types
     struct co_struct_t *struct_;
+    // struct co_struct_instance_t *struct_instance;
     struct co_generic_struct_t *generic_struct;
+    // struct co_generic_struct_instance_t *generic_struct_instance;
     struct co_param_struct_t *param_struct;
+    // struct co_param_struct_instance_t *param_struct_instance;
     struct co_union_t *union_;
     struct co_param_union_t *param_union;
     
