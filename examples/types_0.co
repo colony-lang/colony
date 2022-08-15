@@ -2,16 +2,16 @@
 // list
 //
 p: list = [1.0, 2.0, 3.0, 4.0]              // list
-p: list(f64) = [1.0, 2.0, 3.0, 4.0]         // list(f64)
-p: list(object) = [1.0, 2.0, 3.0, 4.0]      // list(object)
+p: list<f64> = [1.0, 2.0, 3.0, 4.0]         // list<f64>
+p: list<object> = [1.0, 2.0, 3.0, 4.0]      // list<object>
 p: object = [1.0, 2.0, 3.0, 4.0]            // list is subtupe of object
 
 //
 // dict
 //
 p: dict = {1: 2.0, 3: 4.0}                  // dict
-p: dict(i64, f64) = {1: 2.0, 3: 4.0}        // dict(i64, f64)
-p: dict(object, object) = {1: 2.0, 3: 4.0}  // dict(object, object)
+p: dict<i64, f64> = {1: 2.0, 3: 4.0}        // dict<i64, f64>
+p: dict<object, object> = {1: 2.0, 3: 4.0}  // dict<object, object>
 p: object = {1: 2.0, 3: 4.0}                // dict is subtupe of object
 
 //

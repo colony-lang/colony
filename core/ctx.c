@@ -1,6 +1,7 @@
 #include "ctx.h"
 
-struct co_ctx_t *co_ctx_new(struct co_ctx_t *parent) {
+struct co_ctx_t *co_ctx_new(void) {
+    /*
     struct co_ctx_t *ctx = malloc(sizeof(struct co_ctx_t));
 
     if (parent == NULL) {
@@ -17,11 +18,26 @@ struct co_ctx_t *co_ctx_new(struct co_ctx_t *parent) {
     }
 
     return ctx;
+    */
+    struct co_ctx_t *ctx = malloc(sizeof(co_ctx_t));
+    ctx->parent = NULL;
+    ctx->ctxs_cap = 8;
+    ctx->ctxs_len = 0;
+    ctx->ctxs = malloc(sizeof(co_ctx_t*));
+    ctx->regs_cap = 8;
+    ctx->regs_len = 0;
+    ctx->regs = malloc(sizeof(co_object_t));
+    return ctx;
+}
+
+struct co_ctx_t *co_ctx_spawn(struct co_ctx_t *ctx) {
+
 }
 
 int co_ctx_free(struct co_ctx_t *ctx) {
-    ctx->root = NULL;
     ctx->parent = NULL;
+    free(ctx->ctxs);
+    free(ctx->regs);
     free(ctx);
     return 0;
 }

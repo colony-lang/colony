@@ -70,11 +70,12 @@ typedef enum co_type_t {
     CO_TYPE_UNION = 33,
     CO_TYPE_PARAM_UNION = 34,
     
-    CO_TYPE_CODE = 40,
-    CO_TYPE_FN = 41,
-    CO_TYPE_FN_DECL = 42,
-    CO_TYPE_PARAM_FN = 43,
-    CO_TYPE_PARAM_FN_DECL = 44,
+    CO_TYPE_MODULE = 40,
+    CO_TYPE_CODE = 41,
+    CO_TYPE_FN = 42,
+    CO_TYPE_FN_DECL = 43,
+    CO_TYPE_PARAM_FN = 44,
+    CO_TYPE_PARAM_FN_DECL = 45,
 
     CO_TYPE_BYTES = 50,
     CO_TYPE_STR = 51,
@@ -95,6 +96,7 @@ typedef struct co_gc_t {
 
 typedef struct co_gc_ptr_t {
     CO_GC_HEAD;
+    // TODO:
 } co_gc_ptr_t;
 
 typedef struct co_struct_field_t {
@@ -123,6 +125,7 @@ typedef struct co_generic_struct_t {
 
 typedef struct co_param_struct_t {
     CO_GC_HEAD;
+    // TODO:
 } co_param_struct_t;
 
 typedef struct co_union_t {
@@ -135,24 +138,36 @@ typedef struct co_param_union_t {
     struct co_object_t *items;  // list<type>
 } co_param_union_t;
 
+typedef struct co_module_t {
+    CO_GC_HEAD;
+    struct co_object_t *path;   // str
+    struct co_object_t *name;   // str
+    struct co_object_t *vars;   // list<struct(a: str, t: type, v: object)>
+} co_module_t;
+
 typedef struct co_code_t {
     CO_GC_HEAD;
+    // TODO:
 } co_code_t;
 
 typedef struct co_fn_t {
     CO_GC_HEAD;
+    // TODO:
 } co_fn_t;
 
 typedef struct co_fn_decl_t {
     CO_GC_HEAD;
+    // TODO:
 } co_fn_decl_t;
 
 typedef struct co_param_fn_t {
     CO_GC_HEAD;
+    // TODO:
 } co_param_fn_t;
 
 typedef struct co_param_fn_decl_t {
     CO_GC_HEAD;
+    // TODO:
 } co_param_fn_decl_t;
 
 typedef struct co_bytes_t {
@@ -191,26 +206,32 @@ typedef struct co_dict_t {
 
 typedef struct co_result_t {
     CO_GC_HEAD;
+    // TODO:
 } co_result_t;
 
 typedef struct co_ok_t {
     CO_GC_HEAD;
+    // TODO:
 } co_ok_t;
 
 typedef struct co_err_t {
     CO_GC_HEAD;
+    // TODO:
 } co_err_t;
 
 typedef struct co_option_t {
     CO_GC_HEAD;
+    // TODO:
 } co_option_t;
 
 typedef struct co_some_t {
     CO_GC_HEAD;
+    // TODO:
 } co_some_t;
 
 typedef struct co_none_t {
     CO_GC_HEAD;
+    // TODO:
 } co_none_t;
 
 typedef union co_value_t {
@@ -234,6 +255,8 @@ typedef union co_value_t {
     struct co_param_struct_t *param_struct;
     struct co_union_t *union_;
     struct co_param_union_t *param_union;
+    
+    struct co_module_t *module;
     struct co_code_t *code;
     struct co_fn_t *fn;
     struct co_fn_decl_t *fn_decl;
