@@ -1,10 +1,11 @@
 #ifndef CO_CTX_H
 #define CO_CTX_H
 
+struct co_ctx_t;
+
 #include <stdlib.h>
 #include "../object/object.h"
 
-struct co_ctx_t;
 
 typedef struct co_ctx_t {
     struct co_ctx_t *parent;

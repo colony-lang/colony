@@ -23,15 +23,16 @@ struct co_ctx_t *co_ctx_new(void) {
     ctx->parent = NULL;
     ctx->ctxs_cap = 8;
     ctx->ctxs_len = 0;
-    ctx->ctxs = malloc(sizeof(co_ctx_t*));
+    ctx->ctxs = calloc(ctx->ctxs_cap, sizeof(co_ctx_t*));
     ctx->regs_cap = 8;
     ctx->regs_len = 0;
-    ctx->regs = malloc(sizeof(co_object_t));
+    ctx->regs = calloc(ctx->regs_cap, sizeof(co_object_t));
     return ctx;
 }
 
 struct co_ctx_t *co_ctx_spawn(struct co_ctx_t *ctx) {
-
+    // TODO:
+    return NULL;
 }
 
 int co_ctx_free(struct co_ctx_t *ctx) {
