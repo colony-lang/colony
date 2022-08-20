@@ -152,7 +152,8 @@ struct co_none_t;
 
 typedef struct co_gc_ptr_t {
     CO_GC_HEAD;
-    // TODO:
+    void *ptr;
+    int(*free_cb)(struct co_ctx_t *ctx, struct co_object_t self);
 } co_gc_ptr_t;
 
 typedef struct co_struct_field_t {

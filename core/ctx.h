@@ -1,11 +1,13 @@
 #ifndef CO_CTX_H
 #define CO_CTX_H
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 struct co_ctx_t;
 
-#include <stdlib.h>
 #include "../object/object.h"
-
 
 typedef struct co_ctx_t {
     struct co_ctx_t *parent;
@@ -24,5 +26,6 @@ typedef struct co_ctx_t {
 struct co_ctx_t *co_ctx_new(void);
 struct co_ctx_t *co_ctx_spawn(struct co_ctx_t *ctx);
 int co_ctx_free(struct co_ctx_t *ctx);
+void co_ctx_panic(struct co_ctx_t *ctx, char *msg);
 
 #endif
