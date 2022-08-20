@@ -1,4 +1,5 @@
 #include "struct.h"
+#include "str.h"
 
 /* (cls: type, other: struct) -> struct */
 co_object_t co_struct_new(co_ctx_t *ctx, co_object_t obj) {
@@ -58,10 +59,10 @@ co_object_t co_struct_new_c_fields(co_ctx_t *ctx, co_struct_field_t *fields_arra
 
 /* (self: struct) -> Undefined */
 co_object_t co_struct_free(co_ctx_t *ctx, co_object_t obj) {
-    
+
 }
 
 /* (ctx, self: co_object_t) -> Undefined */
 co_object_t co_struct_free_c(co_ctx_t *ctx, co_object_t self) {
-    
+
 }
