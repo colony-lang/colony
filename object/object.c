@@ -1,13 +1,20 @@
 #include "object.h"
 
-inline struct co_object_t co_object_new_c(struct co_ctx_t *ctx, enum co_type_t t, union co_value_t v) {
-    co_object_t self = {.v = v, .t = t};
+inline co_object_t co_object_new_c(co_ctx_t *ctx, co_type_t t, co_value_t v) {
+    co_object_t self = {.t = t, .v = v};
     return self;
 }
 
-inline int co_object_free_c(struct co_ctx_t *ctx, struct co_object_t self) {
+inline struct co_object_t co_object_new_c_ptr(struct co_ctx_t *ctx, enum co_type_t t, void *ptr) {
+    co_value_t v = {.ptr = ptr};
+    co_object_t self = {.t = t, .v = v};
+    return self;
+}
+
+inline int co_object_free_c(co_ctx_t *ctx, co_object_t self) {
     int rc = 0;
-    struct co_gc_ptr_t *gc_ptr = NULL;
+    co_object_t ret;
+    co_gc_ptr_t *gc_ptr = NULL;
 
     switch (self.t) {
         case CO_TYPE_UNDEFINED:
@@ -74,6 +81,7 @@ inline int co_object_free_c(struct co_ctx_t *ctx, struct co_object_t self) {
         case CO_TYPE_PARAM_FN_DECL:
             break;
         case CO_TYPE_BYTES:
+            // ret = co_bytes_free(ctx, )
             break;
         case CO_TYPE_STR:
             break;

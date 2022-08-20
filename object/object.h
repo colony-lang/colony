@@ -164,6 +164,7 @@ typedef struct co_struct_field_t {
 
 typedef struct co_struct_t {
     CO_GC_HEAD;
+    size_t cap;
     size_t len;
     struct co_struct_field_t *fields;
 } co_struct_t;
@@ -181,6 +182,7 @@ typedef struct co_generic_struct_field_t {
 
 typedef struct co_generic_struct_t {
     CO_GC_HEAD;
+    size_t cap;
     size_t len;
     struct co_generic_struct_field_t *fields;
 } co_generic_struct_t;
@@ -307,7 +309,8 @@ typedef struct co_none_t {
     // TODO:
 } co_none_t;
 
-inline struct co_object_t co_object_new_c(struct co_ctx_t *ctx, enum co_type_t t, union co_value_t v);
-inline int co_object_free_c(struct co_ctx_t *ctx, struct co_object_t self);
+struct co_object_t co_object_new_c(struct co_ctx_t *ctx, enum co_type_t t, union co_value_t v);
+struct co_object_t co_object_new_c_ptr(struct co_ctx_t *ctx, enum co_type_t t, void *ptr);
+int co_object_free_c(struct co_ctx_t *ctx, struct co_object_t self);
 
 #endif
