@@ -8,7 +8,8 @@
 
 /* (cls: type, other: bytes) -> bytes */
 co_object_t co_bytes_new(co_ctx_t *ctx, co_object_t obj) {
-    co_struct_new_c_fields fields_array[] = {
+    co_struct_field_t fields_array[] = {
+        // {{.t = CO_TYPE_STR, .v = {.str = }}},
         CO_STRUCT_FIELDS_END
     };
 

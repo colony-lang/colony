@@ -3,6 +3,7 @@
 
 #include "../core/ctx.h"
 #include "object.h"
+#include "struct.h"
 
 /* (cls: type, other: bytes) -> bytes */
 co_object_t co_bytes_new(co_ctx_t *ctx, co_object_t obj);
