@@ -7,6 +7,7 @@
 #include "object/struct.h"
 #include "object/module.h"
 #include "object/bytes.h"
+#include "object/str.h"
 
 #include "libs/builtins.h"
 

@@ -1,4 +1,7 @@
 #include "object.h"
+#include "struct.h"
+#include "bytes.h"
+#include "str.h"
 
 inline co_object_t co_object_new_c(co_ctx_t *ctx, co_type_t t, co_value_t v) {
     co_object_t self = {.t = t, .v = v};
@@ -53,6 +56,7 @@ inline int co_object_free_c(co_ctx_t *ctx, co_object_t self) {
 
             break;
         case CO_TYPE_STRUCT:
+            ret = co_struct_free_c(ctx, self);
             break;
         case CO_TYPE_STRUCT_INSTANCE:
             break;
@@ -81,9 +85,10 @@ inline int co_object_free_c(co_ctx_t *ctx, co_object_t self) {
         case CO_TYPE_PARAM_FN_DECL:
             break;
         case CO_TYPE_BYTES:
-            // ret = co_bytes_free(ctx, )
+            ret = co_bytes_free_c(ctx, self);
             break;
         case CO_TYPE_STR:
+            ret = co_str_free_c(ctx, self);
             break;
         case CO_TYPE_LIST:
             break;
@@ -105,6 +110,6 @@ inline int co_object_free_c(co_ctx_t *ctx, co_object_t self) {
             break;
     }
 
-    self.t = CO_TYPE_UNDEFINED;
+    assert(self.t == CO_TYPE_UNDEFINED);
     return 0;
 }

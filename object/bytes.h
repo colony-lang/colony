@@ -14,6 +14,9 @@ co_object_t co_bytes_new_c(co_ctx_t *ctx, size_t len, char *items);
 /* (self: bytes) -> Undefined */
 co_object_t co_bytes_free(co_ctx_t *ctx, co_object_t obj);
 
+/* (ctx, self: co_object_t) -> Undefined */
+co_object_t co_bytes_free_c(co_ctx_t *ctx, co_object_t self);
+
 /* (self: bytes, other: bytes) -> bool */
 co_object_t co_bytes_lt(co_ctx_t *ctx, co_object_t obj);
 
@@ -43,5 +46,8 @@ co_object_t co_bytes_get_item(co_ctx_t *ctx, co_object_t obj);
 
 /* (self: bytes, index: u64, value: bytes) -> bytes */
 co_object_t co_bytes_set_item(co_ctx_t *ctx, co_object_t obj);
+
+/* (self: bytes) -> str */
+co_object_t co_bytes_decode(co_ctx_t *ctx, co_object_t obj);
 
 #endif

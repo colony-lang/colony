@@ -10,6 +10,7 @@ SOURCES=main.c \
 	object/struct.c \
 	object/module.c \
 	object/bytes.c \
+	object/str.c \
 	libs/builtins.c
 OBJECTS=$(SOURCES:.c=.o)
 EXECUTABLE=colony
