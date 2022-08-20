@@ -1,4 +1,5 @@
 #include "str.h"
+#include "struct.h"
 
 /* (cls: type, other: str) -> str */
 co_object_t co_str_new(co_ctx_t *ctx, co_object_t obj) {

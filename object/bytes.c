@@ -1,4 +1,5 @@
 #include "bytes.h"
+#include "struct.h"
 
 #define CO_STRUCT_FIELDS_END (co_struct_field_t){ \
     .name = {.t = CO_TYPE_UNDEFINED, .v = (co_value_t){.ptr = NULL}}, \
