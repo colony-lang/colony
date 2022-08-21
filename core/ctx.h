@@ -34,20 +34,16 @@ struct co_ctx_t *co_ctx_spawn(struct co_ctx_t *ctx);
 int co_ctx_free(struct co_ctx_t *ctx);
 void co_ctx_panic(struct co_ctx_t *ctx, char *msg);
 
-// { ???
-
 /* (self: ctx, attr: str) -> object */
-struct co_object_t co_ctx_getattr(struct co_ctx_t *ctx, struct co_object_t obj);
+struct co_object_t co_ctx_getvar(struct co_ctx_t *ctx, struct co_object_t obj);
 
 /* (ctx, attr: char*) -> object */
-struct co_object_t co_ctx_getattr_c(struct co_ctx_t *ctx, char *attr);
+struct co_object_t co_ctx_getvar_c(struct co_ctx_t *ctx, char *attr);
 
-/* (self: ctx, attr: str, value: object) -> object */
-struct co_object_t co_ctx_setattr(struct co_ctx_t *ctx, struct co_object_t obj);
+/* (self: ctx, attr: str, cls: type, value: object) -> object */
+struct co_object_t co_ctx_setvar(struct co_ctx_t *ctx, struct co_object_t obj);
 
-/* (ctx, attr: char*, value: char*) -> object */
-struct co_object_t co_ctx_setattr_c(struct co_ctx_t *ctx, char *attr, struct co_object_t value);
-
-// } ???
+/* (ctx, attr: char*, cls: co_object_t, value: co_object_t) -> object */
+struct co_object_t co_ctx_setvar_c(struct co_ctx_t *ctx, char *attr, struct co_object_t cls, struct co_object_t value);
 
 #endif

@@ -9,6 +9,6 @@ struct co_frame_t *co_frame_new(struct co_ctx_t *ctx, struct co_frame_t *parent)
 }
 
 int co_frame_free(struct co_ctx_t *ctx, struct co_frame_t *frame) {
-    co_object_decref_c(ctx, frame->regs);
+    CO_DECREF(ctx, frame->regs);
     free(frame);
 }

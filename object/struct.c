@@ -31,8 +31,8 @@ co_object_t co_struct_new_c_fields_array(co_ctx_t *ctx, co_struct_field_t *field
         field = fields_array[i];
 
         if (field.name.k == CO_KIND_UNDEFINED &&
-            field.type.k == CO_KIND_UNDEFINED &&
-            field.default_value.k == CO_KIND_UNDEFINED
+            field.cls.k == CO_KIND_UNDEFINED &&
+            field.value.k == CO_KIND_UNDEFINED
         ) {
             break;
         }

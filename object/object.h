@@ -10,8 +10,8 @@
 
 #define CO_STRUCT_FIELDS_END (co_struct_field_t){ \
     .name = {.k = CO_KIND_UNDEFINED, .v = (co_value_t){.ptr = NULL}}, \
-    .type = {.k = CO_KIND_UNDEFINED, .v = (co_value_t){.ptr = NULL}}, \
-    .default_value = {.k = CO_KIND_UNDEFINED, .v = (co_value_t){.ptr = NULL}} \
+    .cls = {.k = CO_KIND_UNDEFINED, .v = (co_value_t){.ptr = NULL}}, \
+    .value = {.k = CO_KIND_UNDEFINED, .v = (co_value_t){.ptr = NULL}} \
 }
 
 // #define CO_STRUCT_FIELDS_DEF(name, kind, default_value) (co_struct_field_t){
@@ -24,10 +24,8 @@
 #define CO_CLRREF(ctx, obj) co_object_clrref_c(ctx, obj)
 
 typedef enum co_kind_t {
-    // special cases, implementation dependent
-    CO_KIND_UNDEFINED = 0,
-
     // primitive types
+    CO_KIND_UNDEFINED = 0, // special cases, uninitialized object, implementation dependent
     CO_KIND_BOOL = 1,
     CO_KIND_U8 = 2,
     CO_KIND_I8 = 3,
@@ -39,10 +37,10 @@ typedef enum co_kind_t {
     CO_KIND_I64 = 9,
     CO_KIND_F32 = 10,
     CO_KIND_F64 = 11,
-    CO_KIND_PTR = 12,
 
     // GC'ed types
-    CO_KIND_GC_PTR = 20,
+    CO_KIND_PTR = 20,
+    CO_KIND_GC_PTR = 21,
 
     CO_KIND_TYPE = 30,
     CO_KIND_STRUCT = 31,
@@ -180,9 +178,9 @@ typedef struct co_type_t {
 } co_type_t;
 
 typedef struct co_struct_field_t {
-    struct co_object_t name;               // str
-    struct co_object_t type;               // type
-    struct co_object_t default_value;      // object
+    struct co_object_t name;                // str
+    struct co_object_t cls;                 // type
+    struct co_object_t value;               // object
 } co_struct_field_t;
 
 typedef struct co_struct_t {
