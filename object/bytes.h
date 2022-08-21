@@ -22,6 +22,9 @@ co_object_t co_bytes_lt(co_ctx_t *ctx, co_object_t obj);
 /* (self: bytes, other: bytes) -> bool */
 co_object_t co_bytes_eq(co_ctx_t *ctx, co_object_t obj);
 
+/* (ctx, self: bytes, len: size_t, items: char*) -> bool */
+co_object_t co_bytes_eq_c(co_ctx_t *ctx, co_object_t self, size_t len, char *items);
+
 /* (self: bytes) -> u64 */
 co_object_t co_bytes_hash(co_ctx_t *ctx, co_object_t obj);
 

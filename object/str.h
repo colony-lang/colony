@@ -1,6 +1,9 @@
 #ifndef CO_STR_H
 #define CO_STR_H
 
+#include <string.h>
+#include <stdbool.h>
+
 #include "../core/ctx.h"
 #include "object.h"
 
@@ -21,6 +24,9 @@ co_object_t co_str_lt(co_ctx_t *ctx, co_object_t obj);
 
 /* (self: str, other: str) -> bool */
 co_object_t co_str_eq(co_ctx_t *ctx, co_object_t obj);
+
+/* (ctx, self: str, len: size_t, items: char*) -> bool */
+co_object_t co_str_eq_c(co_ctx_t *ctx, co_object_t self, size_t len, char *items);
 
 /* (self: str) -> u64 */
 co_object_t co_str_hash(co_ctx_t *ctx, co_object_t obj);
