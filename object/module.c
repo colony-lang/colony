@@ -20,5 +20,5 @@ struct co_object_t co_module_new(struct co_ctx_t *ctx, struct co_object_t obj) {
 
 struct co_object_t co_module_free(struct co_ctx_t *ctx, struct co_object_t obj) {
     // TODO:
-    return obj;
+    return ctx->undefined;
 }

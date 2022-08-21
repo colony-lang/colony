@@ -11,4 +11,5 @@ struct co_frame_t *co_frame_new(struct co_ctx_t *ctx, struct co_frame_t *parent)
 int co_frame_free(struct co_ctx_t *ctx, struct co_frame_t *frame) {
     CO_DECREF(ctx, frame->regs);
     free(frame);
+    return 0;
 }

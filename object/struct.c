@@ -3,7 +3,8 @@
 
 /* (cls: type, other: struct) -> struct */
 co_object_t co_struct_new(co_ctx_t *ctx, co_object_t obj) {
-
+    // TODO:
+    return ctx->undefined;
 }
 
 /* (ctx, cap: size_t, len: size_t, fields: co_struct_field_t*) -> struct */
@@ -64,7 +65,8 @@ co_object_t co_struct_new_c_fields_array(co_ctx_t *ctx, co_struct_field_t *field
 
 /* (self: struct) -> Undefined */
 co_object_t co_struct_free(co_ctx_t *ctx, co_object_t obj) {
-
+    // TODO:
+    return ctx->undefined;
 }
 
 /* (ctx, self: co_object_t) -> Undefined */
