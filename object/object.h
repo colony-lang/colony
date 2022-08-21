@@ -8,55 +8,62 @@
 
 #define CO_GC_HEAD size_t rc
 
-typedef enum co_type_t {
+#define CO_STRUCT_FIELDS_END (co_struct_field_t){ \
+    .name = {.k = CO_KIND_UNDEFINED, .v = (co_value_t){.ptr = NULL}}, \
+    .type = {.k = CO_KIND_UNDEFINED, .v = (co_value_t){.ptr = NULL}}, \
+    .default_value = {.k = CO_KIND_UNDEFINED, .v = (co_value_t){.ptr = NULL}} \
+}
+
+typedef enum co_kind_t {
     // special cases, implementation dependent
-    CO_TYPE_UNDEFINED = 0,
+    CO_KIND_UNDEFINED = 0,
 
     // primitive types
-    CO_TYPE_BOOL = 1,
-    CO_TYPE_U8 = 2,
-    CO_TYPE_I8 = 3,
-    CO_TYPE_U16 = 4,
-    CO_TYPE_I16 = 5,
-    CO_TYPE_U32 = 6,
-    CO_TYPE_I32 = 7,
-    CO_TYPE_U64 = 8,
-    CO_TYPE_I64 = 9,
-    CO_TYPE_F32 = 10,
-    CO_TYPE_F64 = 11,
-    CO_TYPE_PTR = 12,
+    CO_KIND_BOOL = 1,
+    CO_KIND_U8 = 2,
+    CO_KIND_I8 = 3,
+    CO_KIND_U16 = 4,
+    CO_KIND_I16 = 5,
+    CO_KIND_U32 = 6,
+    CO_KIND_I32 = 7,
+    CO_KIND_U64 = 8,
+    CO_KIND_I64 = 9,
+    CO_KIND_F32 = 10,
+    CO_KIND_F64 = 11,
+    CO_KIND_PTR = 12,
 
     // GC'ed types
-    CO_TYPE_GC_PTR = 20,
+    CO_KIND_GC_PTR = 20,
 
-    CO_TYPE_STRUCT = 30,
-    CO_TYPE_STRUCT_INSTANCE = 31,
-    CO_TYPE_GENERIC_STRUCT = 32,
-    CO_TYPE_GENERIC_STRUCT_INSTANCE = 33,
-    CO_TYPE_PARAM_STRUCT = 34,
-    CO_TYPE_PARAM_STRUCT_INSTANCE = 35,
-    CO_TYPE_UNION = 36,
-    CO_TYPE_PARAM_UNION = 37,
+    CO_KIND_TYPE = 30,
+    CO_KIND_STRUCT = 31,
+    CO_KIND_STRUCT_INSTANCE = 32,
+    CO_KIND_GENERIC_STRUCT = 33,
+    CO_KIND_GENERIC_STRUCT_INSTANCE = 34,
+    CO_KIND_PARAM_STRUCT = 35,
+    CO_KIND_PARAM_STRUCT_INSTANCE = 36,
+    CO_KIND_UNION = 37,
+    CO_KIND_PARAM_UNION = 38,
     
-    CO_TYPE_MODULE = 40,
-    CO_TYPE_CODE = 41,
-    CO_TYPE_FN = 42,
-    CO_TYPE_FN_DECL = 43,
-    CO_TYPE_PARAM_FN = 44,
-    CO_TYPE_PARAM_FN_DECL = 45,
+    CO_KIND_MODULE = 40,
+    CO_KIND_CODE = 41,
+    CO_KIND_FN = 42,
+    CO_KIND_FN_DECL = 43,
+    CO_KIND_PARAM_FN = 44,
+    CO_KIND_PARAM_FN_DECL = 45,
 
-    CO_TYPE_BYTES = 50,
-    CO_TYPE_STR = 51,
-    CO_TYPE_LIST = 52,
-    CO_TYPE_DICT = 53,
+    CO_KIND_BYTES = 50,
+    CO_KIND_STR = 51,
+    CO_KIND_LIST = 52,
+    CO_KIND_DICT = 53,
     
-    CO_TYPE_RESULT = 60,
-    CO_TYPE_OK = 61,
-    CO_TYPE_ERR = 62,
-    CO_TYPE_OPTION = 63,
-    CO_TYPE_SOME = 64,
-    CO_TYPE_NONE = 65
-} co_type_t;
+    CO_KIND_RESULT = 60,
+    CO_KIND_OK = 61,
+    CO_KIND_ERR = 62,
+    CO_KIND_OPTION = 63,
+    CO_KIND_SOME = 64,
+    CO_KIND_NONE = 65
+} co_kind_t;
 
 typedef union co_value_t {
     // primitive types
@@ -75,6 +82,7 @@ typedef union co_value_t {
     /*
     gc_ptr
 
+    type
     struct_
     struct_instance
     generic_struct
@@ -108,7 +116,7 @@ typedef union co_value_t {
 } co_value_t;
 
 typedef struct co_object_t {
-    enum co_type_t t;
+    enum co_kind_t k;
     union co_value_t v;
 } co_object_t;
 
@@ -118,6 +126,7 @@ typedef struct co_gc_t {
 
 struct co_gc_ptr_t;
 
+struct co_type_t;
 struct co_struct_field_t;
 struct co_struct_t;
 struct co_struct_instance_t;
@@ -155,6 +164,11 @@ typedef struct co_gc_ptr_t {
     void *ptr;
     int(*free_cb)(struct co_ctx_t *ctx, struct co_object_t self);
 } co_gc_ptr_t;
+
+typedef struct co_type_t {
+    CO_GC_HEAD;
+    struct co_object_t type;                // type
+} co_type_t;
 
 typedef struct co_struct_field_t {
     struct co_object_t name;               // str
@@ -309,8 +323,8 @@ typedef struct co_none_t {
     // TODO:
 } co_none_t;
 
-struct co_object_t co_object_new_c(struct co_ctx_t *ctx, enum co_type_t t, union co_value_t v);
-struct co_object_t co_object_new_c_ptr(struct co_ctx_t *ctx, enum co_type_t t, void *ptr);
+struct co_object_t co_object_new_c(struct co_ctx_t *ctx, enum co_kind_t k, union co_value_t v);
+struct co_object_t co_object_new_c_ptr(struct co_ctx_t *ctx, enum co_kind_t k, void *ptr);
 int co_object_free_c(struct co_ctx_t *ctx, struct co_object_t self);
 
 #endif

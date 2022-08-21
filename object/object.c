@@ -3,14 +3,14 @@
 #include "bytes.h"
 #include "str.h"
 
-inline co_object_t co_object_new_c(co_ctx_t *ctx, co_type_t t, co_value_t v) {
-    co_object_t self = {.t = t, .v = v};
+inline co_object_t co_object_new_c(co_ctx_t *ctx, co_kind_t k, co_value_t v) {
+    co_object_t self = {.k = k, .v = v};
     return self;
 }
 
-inline struct co_object_t co_object_new_c_ptr(struct co_ctx_t *ctx, enum co_type_t t, void *ptr) {
+inline struct co_object_t co_object_new_c_ptr(struct co_ctx_t *ctx, enum co_kind_t k, void *ptr) {
     co_value_t v = {.ptr = ptr};
-    co_object_t self = {.t = t, .v = v};
+    co_object_t self = {.k = k, .v = v};
     return self;
 }
 
@@ -19,34 +19,34 @@ inline int co_object_free_c(co_ctx_t *ctx, co_object_t self) {
     co_object_t ret;
     co_gc_ptr_t *gc_ptr = NULL;
 
-    switch (self.t) {
-        case CO_TYPE_UNDEFINED:
+    switch (self.k) {
+        case CO_KIND_UNDEFINED:
             break;
-        case CO_TYPE_BOOL:
+        case CO_KIND_BOOL:
             break;
-        case CO_TYPE_U8:
+        case CO_KIND_U8:
             break;
-        case CO_TYPE_I8:
+        case CO_KIND_I8:
             break;
-        case CO_TYPE_U16:
+        case CO_KIND_U16:
             break;
-        case CO_TYPE_I16:
+        case CO_KIND_I16:
             break;
-        case CO_TYPE_U32:
+        case CO_KIND_U32:
             break;
-        case CO_TYPE_I32:
+        case CO_KIND_I32:
             break;
-        case CO_TYPE_U64:
+        case CO_KIND_U64:
             break;
-        case CO_TYPE_I64:
+        case CO_KIND_I64:
             break;
-        case CO_TYPE_F32:
+        case CO_KIND_F32:
             break;
-        case CO_TYPE_F64:
+        case CO_KIND_F64:
             break;
-        case CO_TYPE_PTR:
+        case CO_KIND_PTR:
             break;
-        case CO_TYPE_GC_PTR:
+        case CO_KIND_GC_PTR:
             gc_ptr = self.v.ptr;
             rc = gc_ptr->free_cb(ctx, self);
 
@@ -55,61 +55,61 @@ inline int co_object_free_c(co_ctx_t *ctx, co_object_t self) {
             }
 
             break;
-        case CO_TYPE_STRUCT:
+        case CO_KIND_STRUCT:
             ret = co_struct_free_c(ctx, self);
             break;
-        case CO_TYPE_STRUCT_INSTANCE:
+        case CO_KIND_STRUCT_INSTANCE:
             break;
-        case CO_TYPE_GENERIC_STRUCT:
+        case CO_KIND_GENERIC_STRUCT:
             break;
-        case CO_TYPE_GENERIC_STRUCT_INSTANCE:
+        case CO_KIND_GENERIC_STRUCT_INSTANCE:
             break;
-        case CO_TYPE_PARAM_STRUCT:
+        case CO_KIND_PARAM_STRUCT:
             break;
-        case CO_TYPE_PARAM_STRUCT_INSTANCE:
+        case CO_KIND_PARAM_STRUCT_INSTANCE:
             break;
-        case CO_TYPE_UNION:
+        case CO_KIND_UNION:
             break;
-        case CO_TYPE_PARAM_UNION:
+        case CO_KIND_PARAM_UNION:
             break;
-        case CO_TYPE_MODULE:
+        case CO_KIND_MODULE:
             break;
-        case CO_TYPE_CODE:
+        case CO_KIND_CODE:
             break;
-        case CO_TYPE_FN:
+        case CO_KIND_FN:
             break;
-        case CO_TYPE_FN_DECL:
+        case CO_KIND_FN_DECL:
             break;
-        case CO_TYPE_PARAM_FN:
+        case CO_KIND_PARAM_FN:
             break;
-        case CO_TYPE_PARAM_FN_DECL:
+        case CO_KIND_PARAM_FN_DECL:
             break;
-        case CO_TYPE_BYTES:
+        case CO_KIND_BYTES:
             ret = co_bytes_free_c(ctx, self);
             break;
-        case CO_TYPE_STR:
+        case CO_KIND_STR:
             ret = co_str_free_c(ctx, self);
             break;
-        case CO_TYPE_LIST:
+        case CO_KIND_LIST:
             break;
-        case CO_TYPE_DICT:
+        case CO_KIND_DICT:
             break;
-        case CO_TYPE_RESULT:
+        case CO_KIND_RESULT:
             break;
-        case CO_TYPE_OK:
+        case CO_KIND_OK:
             break;
-        case CO_TYPE_ERR:
+        case CO_KIND_ERR:
             break;
-        case CO_TYPE_OPTION:
+        case CO_KIND_OPTION:
             break;
-        case CO_TYPE_SOME:
+        case CO_KIND_SOME:
             break;
-        case CO_TYPE_NONE:
+        case CO_KIND_NONE:
             break;
         default:
             break;
     }
 
-    assert(self.t == CO_TYPE_UNDEFINED);
+    assert(self.k == CO_KIND_UNDEFINED);
     return 0;
 }

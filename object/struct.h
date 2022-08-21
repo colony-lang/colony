@@ -11,7 +11,7 @@ co_object_t co_struct_new(co_ctx_t *ctx, co_object_t obj);
 co_object_t co_struct_new_c(co_ctx_t *ctx, size_t cap, size_t len, co_struct_field_t *fields);
 
 /* (ctx, fields_array: co_struct_field_t*) -> struct */
-co_object_t co_struct_new_c_fields(co_ctx_t *ctx, co_struct_field_t *fields_array);
+co_object_t co_struct_new_c_fields_array(co_ctx_t *ctx, co_struct_field_t *fields_array);
 
 /* (self: struct) -> Undefined */
 co_object_t co_struct_free(co_ctx_t *ctx, co_object_t obj);

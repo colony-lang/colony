@@ -23,7 +23,6 @@ struct co_ctx_t *co_ctx_spawn(struct co_ctx_t *ctx) {
 }
 
 int co_ctx_free(struct co_ctx_t *ctx) {
-    ctx->parent = NULL;
     free(ctx->ctxs);
     free(ctx->regs);
     free(ctx);
@@ -33,6 +32,7 @@ int co_ctx_free(struct co_ctx_t *ctx) {
 void co_ctx_panic(struct co_ctx_t *ctx, char *msg) {
     // FIXME: print trackback
     printf("panic: %s\n", msg);
+
     // FIXME: panic only current context
     exit(1);
 }

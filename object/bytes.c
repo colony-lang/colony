@@ -1,32 +1,28 @@
 #include "bytes.h"
 #include "struct.h"
 
-#define CO_STRUCT_FIELDS_END (co_struct_field_t){ \
-    .name = {.t = CO_TYPE_UNDEFINED, .v = (co_value_t){.ptr = NULL}}, \
-    .type = {.t = CO_TYPE_UNDEFINED, .v = (co_value_t){.ptr = NULL}}, \
-    .default_value = {.t = CO_TYPE_UNDEFINED, .v = (co_value_t){.ptr = NULL}} \
-}
-
 /* (cls: type, other: bytes) -> bytes */
 co_object_t co_bytes_new(co_ctx_t *ctx, co_object_t obj) {
+    // TODO:
     co_struct_field_t fields_array[] = {
-        // {{.t = CO_TYPE_STR, .v = {.str = }}},
+        // {{.t = CO_KIND_STR, .v = {.str = }}},
+        // CO_STRUCT_FIELDS_DEF("cls", CO_KIND_TYPE),
         CO_STRUCT_FIELDS_END
     };
 
-    co_object_t struct_type_bytes = co_struct_new_c_fields(ctx, fields_array);
+    co_object_t struct_type_bytes = co_struct_new_c_fields_array(ctx, fields_array);
 }
 
 /* (ctx, len: size_t, items: char*) -> bytes */
 co_object_t co_bytes_new_c(co_ctx_t *ctx, size_t len, char *items) {
-    // bytes value
+    // create bytes value
     co_bytes_t *v = malloc(sizeof(co_bytes_t));
     v->rc = 1;
     v->len = len;
     v->items = items;
 
-    // self object
-    co_object_t self = co_object_new_c_ptr(ctx, CO_TYPE_BYTES, v);
+    // create self object
+    co_object_t self = co_object_new_c_ptr(ctx, CO_KIND_BYTES, v);
     return self;
 }
 
@@ -43,7 +39,7 @@ co_object_t co_bytes_free_c(co_ctx_t *ctx, co_object_t self) {
     free(v);
 
     // clear object type
-    self.t = CO_TYPE_UNDEFINED;
+    self.k = CO_KIND_UNDEFINED;
     return self;
 }
 

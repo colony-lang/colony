@@ -8,7 +8,15 @@ co_object_t co_str_new(co_ctx_t *ctx, co_object_t obj) {
 
 /* (ctx, len: size_t, items: char*) -> str */
 co_object_t co_str_new_c(co_ctx_t *ctx, size_t len, char *items) {
-    
+    // create str value
+    co_str_t *v = malloc(sizeof(co_str_t));
+    v->rc = 1;
+    v->len = len;
+    v->items = items;
+
+    // create self object
+    co_object_t self = co_object_new_c_ptr(ctx, CO_KIND_STR, v);
+    return self;
 }
 
 /* (self: str) -> Undefined */
@@ -24,7 +32,7 @@ co_object_t co_str_free_c(co_ctx_t *ctx, co_object_t self) {
     free(v);
 
     // clear object type
-    self.t = CO_TYPE_UNDEFINED;
+    self.k = CO_KIND_UNDEFINED;
     return self;
 }
 
