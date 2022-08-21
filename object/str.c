@@ -53,38 +53,41 @@ co_object_t co_str_eq(co_ctx_t *ctx, co_object_t obj) {
 /* (ctx, self: str, len: size_t, items: char*) -> bool */
 co_object_t co_str_eq_c(co_ctx_t *ctx, co_object_t self, size_t len, char *items) {
     co_str_t *v = (co_str_t*)self.v.ptr;
-    co_object_t res;
+    co_object_t ret;
 
     if (v->len != len) {
-        res = (co_object_t){
+        // TODO: move def to `bool.h/c` file
+        ret = (co_object_t){
             .k = CO_KIND_BOOL,
             .v = {
                 .b = false
             }
         };
 
-        return res;
+        return ret;
     }
 
     if (strncmp(v->items, items, len) != 0) {
-        res = (co_object_t){
+        // TODO: move def to `bool.h/c` file
+        ret = (co_object_t){
             .k = CO_KIND_BOOL,
             .v = {
                 .b = false
             }
         };
 
-        return res;
+        return ret;
     }
 
-    res = (co_object_t){
+    // TODO: move def to `bool.h/c` file
+    ret = (co_object_t){
         .k = CO_KIND_BOOL,
         .v = {
             .b = true
         }
     };
 
-    return res;
+    return ret;
 }
 
 /* (self: str) -> u64 */

@@ -330,12 +330,27 @@ typedef struct co_none_t {
     // TODO:
 } co_none_t;
 
+/* (cls: type) -> cls */
+struct co_object_t co_object_new(struct co_ctx_t *ctx, struct co_object_t obj);
+
+/* (ctx, k: co_kind_t, v: co_value_t) -> co_object_t */
 struct co_object_t co_object_new_c(struct co_ctx_t *ctx, enum co_kind_t k, union co_value_t v);
+
+/* (ctx, k: co_kind_t, ptr: void*) -> co_object_t */
 struct co_object_t co_object_new_c_ptr(struct co_ctx_t *ctx, enum co_kind_t k, void *ptr);
+
+/* (self) -> undefined */
+struct co_object_t co_object_free(struct co_ctx_t *ctx, struct co_object_t obj);
+
+/* (ctx, self: co_object_t) -> int */
 int co_object_free_c(struct co_ctx_t *ctx, struct co_object_t self);
+
 void co_object_incref_c(struct co_ctx_t *ctx, struct co_object_t self);
+
 void co_object_decref_c(struct co_ctx_t *ctx, struct co_object_t self);
+
 void co_object_rstref_c(struct co_ctx_t *ctx, struct co_object_t self);
+
 void co_object_clrref_c(struct co_ctx_t *ctx, struct co_object_t self);
 
 #endif

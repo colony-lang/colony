@@ -3,21 +3,36 @@
 #include "bytes.h"
 #include "str.h"
 
+/* (cls: type) -> cls */
+struct co_object_t co_object_new(struct co_ctx_t *ctx, struct co_object_t obj) {
+    // TODO:
+    return ctx->undefined;
+}
+
+/* (ctx, k: co_kind_t, v: co_value_t) -> co_object_t */
 inline co_object_t co_object_new_c(co_ctx_t *ctx, co_kind_t k, co_value_t v) {
     co_object_t self = {.k = k, .v = v};
     return self;
 }
 
+/* (ctx, k: co_kind_t, ptr: void*) -> co_object_t */
 inline struct co_object_t co_object_new_c_ptr(struct co_ctx_t *ctx, enum co_kind_t k, void *ptr) {
     co_value_t v = {.ptr = ptr};
     co_object_t self = {.k = k, .v = v};
     return self;
 }
 
+/* (self) -> undefined */
+struct co_object_t co_object_free(struct co_ctx_t *ctx, struct co_object_t obj) {
+    // TODO:
+    return ctx->undefined;
+}
+
+/* (ctx, self: co_object_t) -> int */
 inline int co_object_free_c(co_ctx_t *ctx, co_object_t self) {
     int rc = 0;
-    co_object_t ret;
     co_gc_ptr_t *gc_ptr = NULL;
+    co_object_t ret = {.k = CO_KIND_UNDEFINED};
 
     switch (self.k) {
         case CO_KIND_UNDEFINED:
@@ -111,6 +126,7 @@ inline int co_object_free_c(co_ctx_t *ctx, co_object_t self) {
     }
 
     assert(self.k == CO_KIND_UNDEFINED);
+    assert(ret.k == CO_KIND_UNDEFINED);
     return 0;
 }
 

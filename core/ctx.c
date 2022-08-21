@@ -5,19 +5,8 @@ struct co_ctx_t *co_ctx_new(void) {
     ctx->parent = NULL;
     
     // predefined values
-    ctx->undefined = (co_object_t){
-        .k = CO_KIND_UNDEFINED,
-        .v = {
-            .ptr = NULL
-        }
-    };
-
-    ctx->builtins = (co_object_t){
-        .k = CO_KIND_UNDEFINED,
-        .v = {
-            .ptr = NULL
-        }
-    };
+    ctx->undefined = co_object_new_c_ptr(ctx, CO_KIND_UNDEFINED, NULL);
+    ctx->builtins = co_object_new_c_ptr(ctx, CO_KIND_UNDEFINED, NULL);
 
     // ctxs
     ctx->ctxs_cap = 8;
@@ -38,6 +27,8 @@ struct co_ctx_t *co_ctx_spawn(struct co_ctx_t *ctx) {
 }
 
 int co_ctx_free(struct co_ctx_t *ctx) {
+    CO_DECREF(ctx, ctx->undefined);
+    CO_DECREF(ctx, ctx->builtins);
     free(ctx->ctxs);
     free(ctx->frames);
     free(ctx);
@@ -50,4 +41,28 @@ void co_ctx_panic(struct co_ctx_t *ctx, char *msg) {
 
     // FIXME: panic only current context
     exit(1);
+}
+
+/* (self: ctx, attr: str) -> object */
+struct co_object_t co_ctx_getvar(struct co_ctx_t *ctx, struct co_object_t obj) {
+    // TODO:
+    return ctx->undefined;
+}
+
+/* (ctx, attr: char*) -> object */
+struct co_object_t co_ctx_getvar_c(struct co_ctx_t *ctx, char *attr) {
+    // TODO:
+    return ctx->undefined;
+}
+
+/* (self: ctx, attr: str, cls: type, value: object) -> object */
+struct co_object_t co_ctx_setvar(struct co_ctx_t *ctx, struct co_object_t obj) {
+    // TODO:
+    return ctx->undefined;
+}
+
+/* (ctx, attr: char*, cls: co_object_t, value: co_object_t) -> object */
+struct co_object_t co_ctx_setvar_c(struct co_ctx_t *ctx, char *attr, struct co_object_t cls, struct co_object_t value) {
+    // TODO:
+    return ctx->undefined;
 }

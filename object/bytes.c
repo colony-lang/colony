@@ -1,17 +1,30 @@
 #include "bytes.h"
 #include "struct.h"
 
-/* (cls: type, other: bytes) -> bytes */
+/* (cls: type) -> bytes */
 co_object_t co_bytes_new(co_ctx_t *ctx, co_object_t obj) {
-    // TODO:
-    co_struct_field_t fields_array[] = {
-        // {{.t = CO_KIND_STR, .v = {.str = }}},
-        // CO_STRUCT_FIELDS_DEF("cls", "type", ctx->undefined),
-        // CO_STRUCT_FIELDS_DEF("other", "struct", ctx->undefined),
-        CO_STRUCT_FIELDS_END
-    };
+    // create struct value
+    co_struct_t *v = malloc(sizeof(co_struct_t));
+    v->rc = 1;
+    v->cap = 0;
+    v->len = 0;
+    v->fields = calloc(v->cap, sizeof(co_struct_field_t));
 
-    co_object_t struct_type_bytes = co_struct_new_c_fields_array(ctx, fields_array);
+    // create struct object
+    co_object_t self = co_object_new_c_ptr(ctx, CO_KIND_BYTES, v);
+    return self;
+}
+
+/* (cls: type, other: bytes) -> bytes */
+co_object_t co_bytes_new_from(co_ctx_t *ctx, co_object_t obj) {
+    // // TODO:
+    // co_struct_field_t fields_array[] = {
+    //     // CO_STRUCT_FIELDS_DEF("cls", "type", ctx->undefined),
+    //     // CO_STRUCT_FIELDS_DEF("other", "struct", ctx->undefined),
+    //     CO_STRUCT_FIELDS_END
+    // };
+
+    // co_object_t struct_type_bytes = co_struct_new_c_fields_array(ctx, fields_array);
 
     // TODO:
     return ctx->undefined;
@@ -63,38 +76,41 @@ co_object_t co_bytes_eq(co_ctx_t *ctx, co_object_t obj) {
 /* (ctx, self: bytes, len: size_t, items: char*) -> bool */
 co_object_t co_bytes_eq_c(co_ctx_t *ctx, co_object_t self, size_t len, char *items) {
     co_bytes_t *v = (co_bytes_t*)self.v.ptr;
-    co_object_t res;
+    co_object_t ret;
 
     if (v->len != len) {
-        res = (co_object_t){
+        // TODO: move def to `bool.h/c` file
+        ret = (co_object_t){
             .k = CO_KIND_BOOL,
             .v = {
                 .b = false
             }
         };
 
-        return res;
+        return ret;
     }
 
     if (strncmp(v->items, items, len) != 0) {
-        res = (co_object_t){
+        // TODO: move def to `bool.h/c` file
+        ret = (co_object_t){
             .k = CO_KIND_BOOL,
             .v = {
                 .b = false
             }
         };
 
-        return res;
+        return ret;
     }
 
-    res = (co_object_t){
+    // TODO: move def to `bool.h/c` file
+    ret = (co_object_t){
         .k = CO_KIND_BOOL,
         .v = {
             .b = true
         }
     };
 
-    return res;
+    return ret;
 }
 
 /* (self: bytes) -> u64 */
