@@ -24,10 +24,10 @@ struct co_ctx_t *co_ctx_new(void) {
     ctx->ctxs_len = 0;
     ctx->ctxs = calloc(ctx->ctxs_cap, sizeof(co_ctx_t*));
     
-    // regs
-    ctx->regs_cap = 8;
-    ctx->regs_len = 0;
-    ctx->regs = calloc(ctx->regs_cap, sizeof(co_object_t));
+    // frames
+    ctx->frames_cap = 8;
+    ctx->frames_len = 0;
+    ctx->frames = calloc(ctx->frames_cap, sizeof(co_frame_t*));
     
     return ctx;
 }
@@ -39,7 +39,7 @@ struct co_ctx_t *co_ctx_spawn(struct co_ctx_t *ctx) {
 
 int co_ctx_free(struct co_ctx_t *ctx) {
     free(ctx->ctxs);
-    free(ctx->regs);
+    free(ctx->frames);
     free(ctx);
     return 0;
 }

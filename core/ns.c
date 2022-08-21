@@ -5,9 +5,9 @@ struct co_ns_t *co_ns_new(struct co_ctx_t *ctx, struct co_frame_t *frame) {
     co_ns_t *ns = malloc(sizeof(co_ns_t));
     ns->ctx = ctx;
     ns->frame = frame;
-    ns->attrs_cap = 8;
-    ns->attrs_len = 0;
-    ns->attrs = calloc(ns->attrs_cap, sizeof(co_object_t));
+    ns->regs_cap = 8;
+    ns->regs_len = 0;
+    ns->regs = calloc(ns->attrs_cap, sizeof(co_object_t));
     return ns;
 }
 

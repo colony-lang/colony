@@ -8,7 +8,6 @@ SOURCES=\
 	main.c \
 	core/ctx.c \
 	core/frame.c \
-	core/ns.c \
 	object/object.c \
 	object/struct.c \
 	object/module.c \

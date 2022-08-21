@@ -8,7 +8,7 @@
 
 struct co_ctx_t;
 
-#include "ns.h"
+#include "frame.h"
 #include "../object/object.h"
 
 typedef struct co_ctx_t {
@@ -18,15 +18,15 @@ typedef struct co_ctx_t {
     struct co_object_t undefined;   // special value of undefined
     struct co_object_t builtins;    // builtins module
 
-    // C array of ctx's
+    // array of ctx's
     size_t ctxs_cap;
     size_t ctxs_len;
     struct co_ctx_t **ctxs;
 
-    // C array of objects
-    size_t regs_cap;
-    size_t regs_len;
-    struct co_object_t *regs;
+    // array of frames
+    size_t frames_cap;
+    size_t frames_len;
+    struct co_frame_t **frames;
 } co_ctx_t;
 
 struct co_ctx_t *co_ctx_new(void);

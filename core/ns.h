@@ -11,10 +11,13 @@ typedef struct co_ns_t {
     struct co_ctx_t *ctx;
     struct co_frame_t *frame;
 
-    // attrs
-    size_t attrs_cap;
-    size_t attrs_len;
-    struct co_object_t *attrs;
+    // regs
+    size_t regs_cap;
+    size_t regs_len;
+    struct co_object_t *regs;   // list<object>
+                                //  +0: arrt: str
+                                //  +1: type: type
+                                //  +2: default_value: object
 } co_ns_t;
 
 struct co_ns_t *co_ns_new(struct co_ctx_t *ctx, struct co_frame_t *frame);

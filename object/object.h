@@ -18,6 +18,11 @@
 //     .name = {.k = CO_KIND_UNDEFINED, .v = (co_value_t){.ptr = NULL}},
 // }
 
+#define CO_INCREF(ctx, obj) co_object_incref_c(ctx, obj)
+#define CO_DECREF(ctx, obj) co_object_decref_c(ctx, obj)
+#define CO_RSTREF(ctx, obj) co_object_rstref_c(ctx, obj)
+#define CO_CLRREF(ctx, obj) co_object_clrref_c(ctx, obj)
+
 typedef enum co_kind_t {
     // special cases, implementation dependent
     CO_KIND_UNDEFINED = 0,
@@ -330,5 +335,9 @@ typedef struct co_none_t {
 struct co_object_t co_object_new_c(struct co_ctx_t *ctx, enum co_kind_t k, union co_value_t v);
 struct co_object_t co_object_new_c_ptr(struct co_ctx_t *ctx, enum co_kind_t k, void *ptr);
 int co_object_free_c(struct co_ctx_t *ctx, struct co_object_t self);
+void co_object_incref_c(struct co_ctx_t *ctx, struct co_object_t self);
+void co_object_decref_c(struct co_ctx_t *ctx, struct co_object_t self);
+void co_object_rstref_c(struct co_ctx_t *ctx, struct co_object_t self);
+void co_object_clrref_c(struct co_ctx_t *ctx, struct co_object_t self);
 
 #endif
