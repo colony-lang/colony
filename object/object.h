@@ -14,6 +14,10 @@
     .default_value = {.k = CO_KIND_UNDEFINED, .v = (co_value_t){.ptr = NULL}} \
 }
 
+// #define CO_STRUCT_FIELDS_DEF(name, kind, default_value) (co_struct_field_t){
+//     .name = {.k = CO_KIND_UNDEFINED, .v = (co_value_t){.ptr = NULL}},
+// }
+
 typedef enum co_kind_t {
     // special cases, implementation dependent
     CO_KIND_UNDEFINED = 0,

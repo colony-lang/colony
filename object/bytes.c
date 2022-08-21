@@ -6,7 +6,8 @@ co_object_t co_bytes_new(co_ctx_t *ctx, co_object_t obj) {
     // TODO:
     co_struct_field_t fields_array[] = {
         // {{.t = CO_KIND_STR, .v = {.str = }}},
-        // CO_STRUCT_FIELDS_DEF("cls", CO_KIND_TYPE),
+        // CO_STRUCT_FIELDS_DEF("cls", "type", ctx->undefined),
+        // CO_STRUCT_FIELDS_DEF("other", "struct", ctx->undefined),
         CO_STRUCT_FIELDS_END
     };
 

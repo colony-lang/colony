@@ -2,6 +2,8 @@
 #define CO_COLONY_H
 
 #include "core/ctx.h"
+#include "core/frame.h"
+#include "core/ns.h"
 
 #include "object/object.h"
 #include "object/struct.h"

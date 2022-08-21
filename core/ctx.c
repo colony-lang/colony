@@ -4,6 +4,21 @@ struct co_ctx_t *co_ctx_new(void) {
     struct co_ctx_t *ctx = malloc(sizeof(co_ctx_t));
     ctx->parent = NULL;
     
+    // predefined values
+    ctx->undefined = (co_object_t){
+        .k = CO_KIND_UNDEFINED,
+        .v = {
+            .ptr = NULL
+        }
+    };
+
+    ctx->builtins = (co_object_t){
+        .k = CO_KIND_UNDEFINED,
+        .v = {
+            .ptr = NULL
+        }
+    };
+
     // ctxs
     ctx->ctxs_cap = 8;
     ctx->ctxs_len = 0;

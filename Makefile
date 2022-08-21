@@ -4,8 +4,11 @@ CC=clang
 CFLAGS=-c -Wall -O0 -g
 # CFLAGS=-c -Wall -O3
 LDFLAGS=-lm -lpthread
-SOURCES=main.c \
+SOURCES=\
+	main.c \
 	core/ctx.c \
+	core/frame.c \
+	core/ns.c \
 	object/object.c \
 	object/struct.c \
 	object/module.c \
