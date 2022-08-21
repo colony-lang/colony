@@ -50,7 +50,7 @@ struct co_object_t co_ctx_getvar(struct co_ctx_t *ctx, struct co_object_t obj) {
 }
 
 /* (ctx, attr: char*) -> object */
-struct co_object_t co_ctx_getvar_c(struct co_ctx_t *ctx, char *attr) {
+struct co_object_t co_ctx_getvar_c(struct co_ctx_t *ctx, size_t attr_len, char *attr) {
     // TODO:
     return ctx->undefined;
 }
@@ -62,7 +62,7 @@ struct co_object_t co_ctx_setvar(struct co_ctx_t *ctx, struct co_object_t obj) {
 }
 
 /* (ctx, attr: char*, cls: co_object_t, value: co_object_t) -> object */
-struct co_object_t co_ctx_setvar_c(struct co_ctx_t *ctx, char *attr, struct co_object_t cls, struct co_object_t value) {
+struct co_object_t co_ctx_setvar_c(struct co_ctx_t *ctx, size_t attr_len, char *attr, struct co_object_t cls, struct co_object_t value) {
     // TODO:
     return ctx->undefined;
 }
