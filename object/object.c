@@ -73,16 +73,16 @@ inline int co_object_free_c(co_ctx_t *ctx, co_object_t self) {
         case CO_KIND_STRUCT:
             ret = co_struct_free_c(ctx, self);
             break;
-        case CO_KIND_STRUCT_INSTANCE:
-            break;
+        // case CO_KIND_STRUCT_INSTANCE:
+        //     break;
         case CO_KIND_GENERIC_STRUCT:
             break;
-        case CO_KIND_GENERIC_STRUCT_INSTANCE:
-            break;
+        // case CO_KIND_GENERIC_STRUCT_INSTANCE:
+        //     break;
         case CO_KIND_PARAM_STRUCT:
             break;
-        case CO_KIND_PARAM_STRUCT_INSTANCE:
-            break;
+        // case CO_KIND_PARAM_STRUCT_INSTANCE:
+        //     break;
         case CO_KIND_UNION:
             break;
         case CO_KIND_PARAM_UNION:

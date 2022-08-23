@@ -42,13 +42,13 @@ typedef enum co_kind_t {
     CO_KIND_PTR = 20,
     CO_KIND_GC_PTR = 21,
 
-    CO_KIND_TYPE = 30,
+    // CO_KIND_TYPE = 30,
     CO_KIND_STRUCT = 31,
-    CO_KIND_STRUCT_INSTANCE = 32,
+    // CO_KIND_STRUCT_INSTANCE = 32,
     CO_KIND_GENERIC_STRUCT = 33,
-    CO_KIND_GENERIC_STRUCT_INSTANCE = 34,
+    // CO_KIND_GENERIC_STRUCT_INSTANCE = 34,
     CO_KIND_PARAM_STRUCT = 35,
-    CO_KIND_PARAM_STRUCT_INSTANCE = 36,
+    // CO_KIND_PARAM_STRUCT_INSTANCE = 36,
     CO_KIND_UNION = 37,
     CO_KIND_PARAM_UNION = 38,
     
@@ -89,13 +89,13 @@ typedef union co_value_t {
     /*
     gc_ptr
 
-    type
+    // type
     struct_
-    struct_instance
+    // struct_instance
     generic_struct
-    generic_struct_instance
+    // generic_struct_instance
     param_struct
-    param_struct_instance
+    // param_struct_instance
     union_
     param_union
     
@@ -133,15 +133,15 @@ typedef struct co_gc_t {
 
 struct co_gc_ptr_t;
 
-struct co_type_t;
+// struct co_type_t;
 struct co_struct_field_t;
 struct co_struct_t;
-struct co_struct_instance_t;
+// struct co_struct_instance_t;
 struct co_generic_struct_field_t;
 struct co_generic_struct_t;
-struct co_generic_struct_instance_t;
+// struct co_generic_struct_instance_t;
 struct co_param_struct_t;
-struct co_param_struct_instance_t;
+// struct co_param_struct_instance_t;
 struct co_union_t;
 struct co_param_union_t;
 
@@ -172,10 +172,10 @@ typedef struct co_gc_ptr_t {
     int(*free_cb)(struct co_ctx_t *ctx, struct co_object_t self);
 } co_gc_ptr_t;
 
-typedef struct co_type_t {
-    CO_GC_HEAD;
-    struct co_object_t type;                // type
-} co_type_t;
+// typedef struct co_type_t {
+//     CO_GC_HEAD;
+//     struct co_object_t type;                // type
+// } co_type_t;
 
 typedef struct co_struct_field_t {
     struct co_object_t name;                // str
@@ -190,10 +190,10 @@ typedef struct co_struct_t {
     struct co_struct_field_t *fields;
 } co_struct_t;
 
-typedef struct co_struct_instance_t {
-    CO_GC_HEAD;
-    // TODO:
-} co_struct_instance_t;
+// typedef struct co_struct_instance_t {
+//     CO_GC_HEAD;
+//     // TODO:
+// } co_struct_instance_t;
 
 typedef struct co_generic_struct_field_t {
     struct co_object_t name;               // str
@@ -208,20 +208,20 @@ typedef struct co_generic_struct_t {
     struct co_generic_struct_field_t *fields;
 } co_generic_struct_t;
 
-typedef struct co_generic_struct_instance_t {
-    CO_GC_HEAD;
-    // TODO:
-} co_generic_struct_instance_t;
+// typedef struct co_generic_struct_instance_t {
+//     CO_GC_HEAD;
+//     // TODO:
+// } co_generic_struct_instance_t;
 
 typedef struct co_param_struct_t {
     CO_GC_HEAD;
     // TODO:
 } co_param_struct_t;
 
-typedef struct co_param_struct_instance_t {
-    CO_GC_HEAD;
-    // TODO:
-} co_param_struct_instance_t;
+// typedef struct co_param_struct_instance_t {
+//     CO_GC_HEAD;
+//     // TODO:
+// } co_param_struct_instance_t;
 
 typedef struct co_union_t {
     CO_GC_HEAD;
