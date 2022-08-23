@@ -10,7 +10,6 @@ SOURCES=\
 	core/frame.c \
 	object/object.c \
 	object/struct.c \
-	object/module.c \
 	object/bytes.c \
 	object/str.c \
 	libs/builtins.c

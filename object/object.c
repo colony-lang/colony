@@ -81,8 +81,6 @@ struct co_object_t co_object_free_c(co_ctx_t *ctx, co_object_t self) {
             break;
         case CO_KIND_PARAM_UNION:
             break;
-        case CO_KIND_MODULE:
-            break;
         case CO_KIND_CODE:
             break;
         case CO_KIND_FN:

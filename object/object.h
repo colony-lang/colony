@@ -48,12 +48,11 @@ typedef enum co_kind_t {
     CO_KIND_UNION = 33,
     CO_KIND_PARAM_UNION = 34,
     
-    CO_KIND_MODULE = 40,
-    CO_KIND_CODE = 41,
-    CO_KIND_FN = 42,
-    CO_KIND_FN_DECL = 43,
-    CO_KIND_PARAM_FN = 44,
-    CO_KIND_PARAM_FN_DECL = 45,
+    CO_KIND_CODE = 40,
+    CO_KIND_FN = 41,
+    CO_KIND_FN_DECL = 42,
+    CO_KIND_PARAM_FN = 43,
+    CO_KIND_PARAM_FN_DECL = 44,
 
     CO_KIND_BYTES = 50,
     CO_KIND_STR = 51,
@@ -91,7 +90,6 @@ typedef union co_value_t {
     union_
     param_union
     
-    module
     code
     fn
     fn_decl
@@ -133,7 +131,6 @@ struct co_param_struct_t;
 struct co_union_t;
 struct co_param_union_t;
 
-struct co_module_t;
 struct co_code_t;
 struct co_fn_t;
 struct co_param_fn_t;
@@ -200,13 +197,6 @@ typedef struct co_param_union_t {
     CO_GC_HEAD;
     struct co_object_t items;  // list<type>
 } co_param_union_t;
-
-typedef struct co_module_t {
-    CO_GC_HEAD;
-    struct co_object_t path;   // str
-    struct co_object_t name;   // str
-    struct co_object_t vars;   // list<struct(a: str, t: type, v: object)>
-} co_module_t;
 
 typedef struct co_code_t {
     CO_GC_HEAD;

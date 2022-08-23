@@ -19,8 +19,21 @@ co_object_t co_struct_new_c_fields_array(co_ctx_t *ctx, co_struct_field_t *field
 /* (self: struct) -> Undefined */
 co_object_t co_struct_free(co_ctx_t *ctx, co_object_t obj);
 
-/* (ctx, self: co_object_t) -> Undefined */
+/* (ctx, self: struct) -> Undefined */
 co_object_t co_struct_free_c(co_ctx_t *ctx, co_object_t self);
+
+
+
+/* (self, self: struct, item: (attr: str, cls: type, value: object)) -> struct */
+co_object_t co_struct_append(co_ctx_t *ctx, co_object_t obj);
+
+/* (ctx, self: struct, attr: str, cls: type, value: object) -> struct */
+co_object_t co_struct_append_c(co_ctx_t *ctx, co_object_t self, co_object_t attr, co_object_t cls, co_object_t value);
+
+/* (ctx, self: struct, attr: str, cls: type, value: object) -> struct */
+co_object_t co_struct_mut_append_c(co_ctx_t *ctx, co_object_t self, co_object_t attr, co_object_t cls, co_object_t value);
+
+/// { ???
 
 /* (self, item: int | str) -> object */
 co_object_t co_struct_getitem(co_ctx_t *ctx, co_object_t obj);
@@ -51,5 +64,7 @@ co_object_t co_struct_setattr_c(co_ctx_t *ctx, size_t attr_len, char *attr, co_o
 
 /* (self, ...args) -> cls */
 co_object_t co_struct_call(co_ctx_t *ctx, co_object_t obj);
+
+/// } ???
 
 #endif
