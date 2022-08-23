@@ -310,8 +310,8 @@ struct co_object_t co_object_new_c_ptr(struct co_ctx_t *ctx, enum co_kind_t k, v
 /* (self) -> undefined */
 struct co_object_t co_object_free(struct co_ctx_t *ctx, struct co_object_t obj);
 
-/* (ctx, self: co_object_t) -> int */
-int co_object_free_c(struct co_ctx_t *ctx, struct co_object_t self);
+/* (ctx, self: co_object_t) -> co_object_t */
+struct co_object_t co_object_free_c(struct co_ctx_t *ctx, struct co_object_t self);
 
 /* (ctx, self: co_object_t) -> void */
 void co_object_incref_c(struct co_ctx_t *ctx, struct co_object_t self);
