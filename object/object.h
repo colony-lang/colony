@@ -313,12 +313,16 @@ struct co_object_t co_object_free(struct co_ctx_t *ctx, struct co_object_t obj);
 /* (ctx, self: co_object_t) -> int */
 int co_object_free_c(struct co_ctx_t *ctx, struct co_object_t self);
 
+/* (ctx, self: co_object_t) -> void */
 void co_object_incref_c(struct co_ctx_t *ctx, struct co_object_t self);
 
+/* (ctx, self: co_object_t) -> void */
 void co_object_decref_c(struct co_ctx_t *ctx, struct co_object_t self);
 
+/* (ctx, self: co_object_t) -> void */
 void co_object_rstref_c(struct co_ctx_t *ctx, struct co_object_t self);
 
+/* (ctx, self: co_object_t) -> void */
 void co_object_clrref_c(struct co_ctx_t *ctx, struct co_object_t self);
 
 #endif

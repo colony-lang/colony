@@ -124,12 +124,14 @@ inline int co_object_free_c(co_ctx_t *ctx, co_object_t self) {
     return 0;
 }
 
+/* (ctx, self: co_object_t) -> void */
 inline void co_object_incref_c(struct co_ctx_t *ctx, struct co_object_t self) {
     if (self.k < CO_KIND_PTR) return;
     co_gc_t *gc = (co_gc_t*)self.v.ptr;
     gc->rc++;
 }
 
+/* (ctx, self: co_object_t) -> void */
 inline void co_object_decref_c(struct co_ctx_t *ctx, struct co_object_t self) {
     if (self.k < CO_KIND_PTR) return;
     co_gc_t *gc = (co_gc_t*)self.v.ptr;
@@ -140,12 +142,14 @@ inline void co_object_decref_c(struct co_ctx_t *ctx, struct co_object_t self) {
     }
 }
 
+/* (ctx, self: co_object_t) -> void */
 inline void co_object_rstref_c(struct co_ctx_t *ctx, struct co_object_t self) {
     if (self.k < CO_KIND_PTR) return;
     co_gc_t *gc = (co_gc_t*)self.v.ptr;
     gc->rc = 1;
 }
 
+/* (ctx, self: co_object_t) -> void */
 inline void co_object_clrref_c(struct co_ctx_t *ctx, struct co_object_t self) {
     if (self.k < CO_KIND_PTR) return;
     co_gc_t *gc = (co_gc_t*)self.v.ptr;
