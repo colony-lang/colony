@@ -22,8 +22,6 @@ co_object_t co_struct_free(co_ctx_t *ctx, co_object_t obj);
 /* (ctx, self: struct) -> Undefined */
 co_object_t co_struct_free_c(co_ctx_t *ctx, co_object_t self);
 
-
-
 /* (self, self: struct, item: (attr: str, cls: type, value: object)) -> struct */
 co_object_t co_struct_append(co_ctx_t *ctx, co_object_t obj);
 
@@ -32,6 +30,9 @@ co_object_t co_struct_append_c(co_ctx_t *ctx, co_object_t self, co_object_t attr
 
 /* (ctx, self: struct, attr: str, cls: type, value: object) -> struct */
 co_object_t co_struct_mut_append_c(co_ctx_t *ctx, co_object_t self, co_object_t attr, co_object_t cls, co_object_t value);
+
+
+
 
 /// { ???
 
