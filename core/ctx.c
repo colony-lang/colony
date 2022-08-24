@@ -6,6 +6,7 @@ struct co_ctx_t *co_ctx_new(void) {
     
     // predefined values
     ctx->undefined = co_object_new_c_ptr(ctx, CO_KIND_UNDEFINED, NULL);
+    ctx->panic = co_object_new_c_ptr(ctx, CO_KIND_PANIC, NULL);
     ctx->builtins = co_object_new_c_ptr(ctx, CO_KIND_UNDEFINED, NULL);
 
     // ctxs
@@ -28,6 +29,7 @@ struct co_ctx_t *co_ctx_spawn(struct co_ctx_t *ctx) {
 
 int co_ctx_free(struct co_ctx_t *ctx) {
     CO_DECREF(ctx, ctx->undefined);
+    CO_DECREF(ctx, ctx->panic);
     CO_DECREF(ctx, ctx->builtins);
     free(ctx->ctxs);
     free(ctx->frames);
@@ -35,12 +37,12 @@ int co_ctx_free(struct co_ctx_t *ctx) {
     return 0;
 }
 
-void co_ctx_panic(struct co_ctx_t *ctx, char *msg) {
+struct co_object_t co_ctx_panic(struct co_ctx_t *ctx, char *msg) {
     // FIXME: print trackback
     printf("panic: %s\n", msg);
 
-    // FIXME: panic only current context
-    exit(1);
+    // "general" panic
+    return ctx->panic;
 }
 
 /* (self: ctx, attr: str) -> object */

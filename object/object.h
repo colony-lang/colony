@@ -25,18 +25,19 @@
 
 typedef enum co_kind_t {
     // primitive types
-    CO_KIND_UNDEFINED = 0, // special cases, uninitialized object, implementation dependent
-    CO_KIND_BOOL = 1,
-    CO_KIND_U8 = 2,
-    CO_KIND_I8 = 3,
-    CO_KIND_U16 = 4,
-    CO_KIND_I16 = 5,
-    CO_KIND_U32 = 6,
-    CO_KIND_I32 = 7,
-    CO_KIND_U64 = 8,
-    CO_KIND_I64 = 9,
-    CO_KIND_F32 = 10,
-    CO_KIND_F64 = 11,
+    CO_KIND_UNDEFINED = 0,  // special cases, uninitialized object, implementation dependent
+    CO_KIND_PANIC = 1,      // special cases, panic object, implementation dependent
+    CO_KIND_BOOL = 2,
+    CO_KIND_U8 = 3,
+    CO_KIND_I8 = 4,
+    CO_KIND_U16 = 5,
+    CO_KIND_I16 = 6,
+    CO_KIND_U32 = 7,
+    CO_KIND_I32 = 8,
+    CO_KIND_U64 = 9,
+    CO_KIND_I64 = 10,
+    CO_KIND_F32 = 11,
+    CO_KIND_F64 = 12,
 
     // GC'ed types
     CO_KIND_PTR = 20,

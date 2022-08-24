@@ -65,7 +65,7 @@ struct co_object_t co_object_free_c(co_ctx_t *ctx, co_object_t self) {
             ret = gc_ptr->free_cb(ctx, self);
             
             if (ret.k != CO_KIND_UNDEFINED) {
-                co_ctx_panic(ctx, "Object of type 'gc_ptr' failed to free resources");
+                return co_ctx_panic(ctx, "Object of type 'gc_ptr' failed to free resources");
             }
 
             break;
