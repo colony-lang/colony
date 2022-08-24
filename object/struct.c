@@ -149,11 +149,12 @@ co_object_t co_struct_getitem(co_ctx_t *ctx, co_object_t obj) {
 /* (ctx, cls, index: ssize_t) -> object */
 /* (ctx, self, index: ssize_t) -> object */
 co_object_t co_struct_getitem_c_index(co_ctx_t *ctx, co_object_t self, ssize_t index) {
+    // FIXME:
     co_object_t value;
     co_struct_t *v = (co_struct_t*)self.v.ptr;
     co_struct_field_t *fields = v->fields;
-    size_t u_index = index % v->len;
-    
+    size_t u_index = (size_t)index % v->len;
+
     co_struct_field_t field = fields[u_index];
     value = field.value;
     return value;
