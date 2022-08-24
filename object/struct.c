@@ -138,3 +138,78 @@ co_object_t co_struct_mut_append_c(co_ctx_t *ctx, co_object_t self, co_object_t 
     // TODO:
     return ctx->undefined;
 }
+
+/* (cls, item: int | str) -> object */
+/* (self, item: int | str) -> object */
+co_object_t co_struct_getitem(co_ctx_t *ctx, co_object_t obj) {
+    // TODO:
+    return ctx->undefined;
+}
+
+/* (ctx, cls, index: ssize_t) -> object */
+/* (ctx, self, index: ssize_t) -> object */
+co_object_t co_struct_getitem_c_index(co_ctx_t *ctx, co_object_t self, ssize_t index) {
+    co_object_t value;
+    co_struct_t *v = (co_struct_t*)self.v.ptr;
+    co_struct_field_t *fields = v->fields;
+    size_t u_index = index % v->len;
+
+    co_struct_field_t field = fields[u_index];
+    value = field.value;
+    return value;
+}
+
+/* (ctx, cls, attr_len: size_t, attr: char*) -> object */
+/* (ctx, self, attr_len: size_t, attr: char*) -> object */
+co_object_t co_struct_getitem_c_attr(co_ctx_t *ctx, co_object_t self, size_t attr_len, char *attr) {
+    // TODO:
+    return ctx->undefined;
+}
+
+/* (cls, item: int | str, value: object) -> struct */
+/* (self, item: int | str, value: object) -> object */
+co_object_t co_struct_setitem(co_ctx_t *ctx, co_object_t obj) {
+    // TODO:
+    return ctx->undefined;
+}
+
+/* (ctx, cls, attr_len: size_t, attr: char*, value: co_object_t) -> struct */
+/* (ctx, self, attr_len: size_t, attr: char*, value: co_object_t) -> object */
+co_object_t co_struct_setitem_c_attr(co_ctx_t *ctx, co_object_t self, size_t attr_len, char *attr, co_object_t value) {
+    // TODO:
+    return ctx->undefined;
+}
+
+/* (cls, attr: str) -> object */
+/* (self, attr: str) -> object */
+co_object_t co_struct_getattr(co_ctx_t *ctx, co_object_t obj) {
+    // TODO:
+    return ctx->undefined;
+}
+
+/* (ctx, cls, attr_len: size_t, attr: char*) -> object */
+/* (ctx, self, attr_len: size_t, attr: char*) -> object */
+co_object_t co_struct_getattr_c(co_ctx_t *ctx, co_object_t self, size_t attr_len, char *attr) {
+    // TODO:
+    return ctx->undefined;
+}
+
+/* (self, cls, attr: str, struct(cls: type, value: object)) -> struct */
+/* (self, self, attr: str, struct(cls: type, value: object)) -> object */
+co_object_t co_struct_setattr(co_ctx_t *ctx, co_object_t obj) {
+    // TODO:
+    return ctx->undefined;
+}
+
+/* (ctx, cls, attr_len: size_t, attr: char*, value: co_object_t) -> struct */
+/* (ctx, self, attr_len: size_t, attr: char*, value: co_object_t) -> object */
+co_object_t co_struct_setattr_c(co_ctx_t *ctx, co_object_t self, size_t attr_len, char *attr, co_object_t value) {
+    // TODO:
+    return ctx->undefined;
+}
+
+/* (cls, args, kwargs) -> object */
+co_object_t co_struct_call(co_ctx_t *ctx, co_object_t obj) {
+    // TODO:
+    return ctx->undefined;
+}
