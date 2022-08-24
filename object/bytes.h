@@ -7,9 +7,6 @@
 /* (cls: type) -> bytes */
 co_object_t co_bytes_new(co_ctx_t *ctx, co_object_t obj);
 
-/* (cls: type, other: bytes) -> bytes */
-co_object_t co_bytes_new_from(co_ctx_t *ctx, co_object_t obj);
-
 /* (ctx, len: size_t, items: char*) -> bytes */
 co_object_t co_bytes_new_c(co_ctx_t *ctx, size_t len, char *items);
 
