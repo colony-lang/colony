@@ -15,21 +15,6 @@ co_object_t co_bytes_new(co_ctx_t *ctx, co_object_t obj) {
     return self;
 }
 
-/* (cls: type, other: bytes) -> bytes */
-co_object_t co_bytes_new_from(co_ctx_t *ctx, co_object_t obj) {
-    // // TODO:
-    // co_struct_field_t fields_array[] = {
-    //     // CO_STRUCT_FIELDS_DEF("cls", "type", ctx->undefined),
-    //     // CO_STRUCT_FIELDS_DEF("other", "struct", ctx->undefined),
-    //     CO_STRUCT_FIELDS_END
-    // };
-
-    // co_object_t struct_type_bytes = co_struct_new_c_fields_array(ctx, fields_array);
-
-    // TODO:
-    return ctx->undefined;
-}
-
 /* (ctx, len: size_t, items: char*) -> bytes */
 co_object_t co_bytes_new_c(co_ctx_t *ctx, size_t len, char *items) {
     // create bytes value
