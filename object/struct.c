@@ -153,7 +153,7 @@ co_object_t co_struct_getitem_c_index(co_ctx_t *ctx, co_object_t self, ssize_t i
     co_struct_t *v = (co_struct_t*)self.v.ptr;
     co_struct_field_t *fields = v->fields;
     size_t u_index = index % v->len;
-
+    
     co_struct_field_t field = fields[u_index];
     value = field.value;
     return value;
