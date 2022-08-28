@@ -4,7 +4,7 @@
 #include "../core/ctx.h"
 #include "object.h"
 
-/* (cls: type) -> struct */
+/* (cls: type, attrs: list<struct(attr: str, cls: type, value: object)>) -> struct */
 co_object_t co_struct_new(co_ctx_t *ctx, co_object_t obj);
 
 /* (ctx, cap: size_t, len: size_t, fields: co_struct_field_t*) -> struct */

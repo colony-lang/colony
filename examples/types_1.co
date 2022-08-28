@@ -1,0 +1,41 @@
+//
+// struct
+//
+P: struct = (x: f64=0.0, y: f64=0.0)        // struct
+P: type = (x: f64=0.0, y: f64=0.0)          // struct is subtype of type
+P: object = (x: f64=0.0, y: f64=0.0)        // type is subtype of object
+
+p: P = P(1.0, 2.0)                          // P
+p: P = P(x=1.0, y=2.0)                      // P
+
+//
+// "generic" struct
+//
+G: generic_struct = <X: type=type, Y: type=type, Z: type=type>      // generic_struct
+G: generic_struct = <X:=type, Y:=type, Z:=type>                     // generic_struct
+G: type = <X:=type, Y:=type, Z:=type>                               // generic_struct is subtype of type
+G: object = <X:=type, Y:=type, Z:=type>                             // type is subtype of object
+
+g: G = G<i64, i64, f64>                     // G
+g: G = G<X=i64, Y=i64, Z=f64>               // G
+
+//
+// "parameterized" struct
+//
+P: param_struct = <T:=i64 | f64> -> (x: T=T.default, y: T=T.default)
+P: type = <T:=i64 | f64> -> (x: T=T.default, y: T=T.default)
+P: object = <T:=i64 | f64> -> (x: T=T.default, y: T=T.default)
+
+PType: struct = P<i64>
+PType: type = P<i64>
+PType: object = P<i64>
+PType := P<i64>
+
+p0: PType = PType(1, 2)
+p0: PType = PType(1, 2)
+
+p0: P<i64> = P<i64>(1, 2)
+p1: P<i64> = P<i64>(2, 3)
+
+p0: P<object> = P<i64>(1, 2)
+p1: P<object> = P<i64>(2, 3)

@@ -1,8 +1,12 @@
 #include "struct.h"
 #include "str.h"
 
-/* (cls: type) -> struct */
+/* (cls: type, attrs: list<struct(attr: str, cls: type, value: object)>) -> struct */
 co_object_t co_struct_new(co_ctx_t *ctx, co_object_t obj) {
+    /*
+     * create struct from attributes
+     */
+    
     // TODO:
     return ctx->undefined;
 }
