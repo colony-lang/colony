@@ -1,0 +1,83 @@
+// primitives
+a: bool = true
+a: bool = false
+
+a: i8 = -1_i8
+a: u64 = 1_u64
+a: i64 = -1
+a: i64 = -1_i64
+
+a: f32 = -1.1_f32
+a: f64 = -1.1_f64
+a: f64 = -1.1
+
+a: bytes = b'1234'
+a: str = '1234'
+
+// struct
+A: t_struct = (x: i64, y: i64=0)
+A: l_struct = [x: i64, y: i64=0]
+A: g_struct = <x: i64, y: i64=0>
+A: d_struct = {x: i64, y: i64=0}
+
+// union
+n64: union = i64 | f64
+struct: union = t_struct | l_struct | g_struct | d_struct
+
+// function
+f := (x: i64, y: i64) -> i64 => {
+    x + y
+}
+
+// struct composition
+A := <T: type> -> (x: T, y: T)
+
+o0: A = <i64>(1, 2)
+o1: A = <i64>(2, 3)
+o2: A = o0 + o1
+
+// struct composition => function 1
+f := <T: type> -> (x: T, y: T) => T {
+    x + y
+}
+
+r := f<i64>(1, 2)
+r == 3
+
+// struct composition => function 2
+Args := <T: type> -> (x: i64, y: i64)
+
+f := Args<i64> => i64 {
+    x + y
+}
+
+r := f(1, 2)
+r == 3
+
+//
+//
+//
+A_Sum: struct = (
+    __add__ := (self, other: Self) => Self {
+        Self(self.x + other.x, self.y + other.y)
+    }
+)
+
+A_Sub: struct = (
+    __sub__ := (self, other: Self) => Self {
+        Self(self.x - other.x, self.y - other.y)
+    }
+)
+
+A: struct = (
+    // implicit by default, __type__ is always 0th elemenet of a structure
+    __type__: type = (
+        // in case of t_struct, __type__ is always struct (t_struct)
+        // __type__: type = t_struct,
+        __interface__: list<type> = [A_Sum, A_Sub],
+        __name__: str = 'A',
+    ),
+    // implicit by default, __closure__ is always 1st element of a structure (and a function)
+    x: i64,
+    y: i64=0,
+)
