@@ -1,6 +1,0 @@
-// import whole module into namespace
-os := import('os')
-
-// import by "destructing" from module
-{ fopen, fread, fwrite, fseek, ftell, fclose } := import('os')
-{ File, Path } := import('fs')
