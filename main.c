@@ -3,7 +3,7 @@
 
 int main(int argc, char **argv) {
     // root context
-    co_ctx_t *root_ctx = co_ctx_new();
+    // co_ctx_t *root_ctx = co_ctx_new();
     // co_object_t builtins;
     
     // root context - builtins
@@ -14,6 +14,6 @@ int main(int argc, char **argv) {
 
     // cleanup
     // co_ctx_free(ctx);
-    co_ctx_free(root_ctx);
+    // co_ctx_free(root_ctx);
     return 0;
 }

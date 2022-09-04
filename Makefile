@@ -2,17 +2,8 @@
 CC=clang
 # CC=musl-clang
 CFLAGS=-c -Wall -O0 -g
-# CFLAGS=-c -Wall -O3
 LDFLAGS=-lm -lpthread
-SOURCES=\
-	main.c \
-	core/ctx.c \
-	core/frame.c \
-	object/object.c \
-	object/struct.c \
-	object/bytes.c \
-	object/str.c \
-	libs/builtins.c
+SOURCES= colony.c main.c
 OBJECTS=$(SOURCES:.c=.o)
 EXECUTABLE=colony
 
