@@ -27,7 +27,7 @@ n64: union = i64 | f64;
 // struct: union = t_struct | l_struct | g_struct | d_struct
 
 // function
-f := (x: i64, y: i64) -> i64 => {
+f := (x: i64, y: i64) => i64 {
     x + y
 }
 
