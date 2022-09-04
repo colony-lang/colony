@@ -15,14 +15,16 @@ a: bytes = b'1234'
 a: str = '1234'
 
 // struct
-A: t_struct = (x: i64, y: i64=0)
-A: l_struct = [x: i64, y: i64=0]
-A: g_struct = <x: i64, y: i64=0>
-A: d_struct = {x: i64, y: i64=0}
+A: t_struct = (x: i64, y: i64=0)    // tuple struct
+A: l_struct = [x: i64, y: i64=0]    // list struct
+A: g_struct = <x: i64, y: i64=0>    // generic struct
+A: d_struct = {x: i64, y: i64=0}    // dict struct
 
 // union
-n64: union = i64 | f64
-struct: union = t_struct | l_struct | g_struct | d_struct
+n64: union = i64 | f64;
+
+// NOTE: conceptually
+// struct: union = t_struct | l_struct | g_struct | d_struct
 
 // function
 f := (x: i64, y: i64) -> i64 => {
@@ -32,8 +34,8 @@ f := (x: i64, y: i64) -> i64 => {
 // struct composition
 A := <T: type> -> (x: T, y: T)
 
-o0: A = <i64>(1, 2)
-o1: A = <i64>(2, 3)
+o0: A = A<i64>(1, 2)
+o1: A = A<i64>(2, 3)
 o2: A = o0 + o1
 
 // struct composition => function 1
@@ -57,27 +59,70 @@ r == 3
 //
 //
 //
-A_Sum: struct = (
+p_struct: type = (
+    __new__ := (cls: type, ...args) => Self {
+        self: Self = (
+            __type__: type = cls,
+            ...args
+        )
+
+        self
+    }
+)
+
+A_Sum: type = (
     __add__ := (self, other: Self) => Self {
         Self(self.x + other.x, self.y + other.y)
-    }
+    },
 )
 
-A_Sub: struct = (
+A_Sub: type = (
     __sub__ := (self, other: Self) => Self {
         Self(self.x - other.x, self.y - other.y)
-    }
+    },
 )
 
-A: struct = (
+A: type = <T: type> -> (
     // implicit by default, __type__ is always 0th elemenet of a structure
     __type__: type = (
         // in case of t_struct, __type__ is always struct (t_struct)
         // __type__: type = t_struct,
-        __interface__: list<type> = [A_Sum, A_Sub],
+        // implicit by default, __closure__ is always 1st element of a structure (and a function)
         __name__: str = 'A',
+        // implicit spread for __type__, in this case t_struct
+        ...p_struct,
+        ...A_Sum,
+        ...A_Sub,
+        __mul__ := (self, other: Self) => Self {
+            Self(self.x * other.x, self.y * other.y)
+        },
+        __div__ := (self, other: Self) => Self {
+            Self(self.x / other.x, self.y / other.y)
+        },
     ),
     // implicit by default, __closure__ is always 1st element of a structure (and a function)
-    x: i64,
-    y: i64=0,
+    x: T=T.default,
+    y: T=T.default,
 )
+
+// T := A<i64>
+// T.__type__.__new__(T, ...(1, 2))
+a0: A = A<i64>(1, 2)
+// T := A<i64>
+// T.__type__.__new__(T, ...(2, 3))
+a1: A = A<i64>(2, 3)
+
+// f := getattr(a0, '__add__')
+a2: A = a0 + a1
+a2: A = a0.__type__.__add__(a0, a1)
+
+// f := getattr(a0, '__sub__')
+a3: A = a0 - a1
+a3: A = a0.__type__.__sub__(a0, a1)
+
+// f := getattr(a0, '__mul__')
+a4: A = a0.__type__.__mul__(a0, a1)
+
+// f := getattr(a0, '__div__')
+a5: A = a0 / a1
+a5: A = a0.__type__.__div__(a0, a1)
