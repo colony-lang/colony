@@ -88,6 +88,7 @@ A: type = <T: type> -> (
         // in case of t_struct, __type__ is always struct (t_struct)
         // __type__: type = t_struct,
         // implicit by default, __closure__ is always 1st element of a structure (and a function)
+        // __closure__ := ... ,
         __name__: str = 'A',
         // implicit spread for __type__, in this case t_struct
         ...p_struct,
@@ -101,6 +102,7 @@ A: type = <T: type> -> (
         },
     ),
     // implicit by default, __closure__ is always 1st element of a structure (and a function)
+    // __closure__ := ... ,
     x: T=T.default,
     y: T=T.default,
 )
