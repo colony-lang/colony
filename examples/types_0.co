@@ -57,7 +57,7 @@ r := f(1, 2)
 r == 3
 
 //
-//
+// structs
 //
 p_struct: type = (
     __new__ := (cls: type, ...args) => Self {
@@ -67,7 +67,10 @@ p_struct: type = (
         )
 
         self
-    }
+    },
+    __repr__ := (self) => str {
+        '({} at {})'.format(self.__type__.__name__, addressof(self))
+    },
 )
 
 A_Sum: type = (
