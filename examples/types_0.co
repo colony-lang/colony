@@ -4,41 +4,44 @@ a: bool = false
 
 a: i8 = -1_i8
 a: u64 = 1_u64
-a: i64 = -1
 a: i64 = -1_i64
+a: i64 = -1
 
 a: f32 = -1.1_f32
 a: f64 = -1.1_f64
 a: f64 = -1.1
 
-a: bytes = b'1234'
-a: str = '1234'
+a: bytes = b"1234"
+a: str = "1234"
+
+// list
+l: list<i64> = [0, 1, 2, 3]
+
+// dict
+d: dict<str, i64> = {'x': 1, 'y': 2}
+
+// generic
+G: generic = <x: i64, y: i64=0>
 
 // struct
-A: t_struct = (x: i64, y: i64=0)    // tuple struct
-A: l_struct = [x: i64, y: i64=0]    // list struct
-A: g_struct = <x: i64, y: i64=0>    // generic struct
-A: d_struct = {x: i64, y: i64=0}    // dict struct
+A: struct = (x: i64, y: i64=0)
 
 // union
 n64: union = i64 | f64;
-
-// NOTE: conceptually
-// struct: union = t_struct | l_struct | g_struct | d_struct
 
 // function
 f := (x: i64, y: i64) => i64 {
     x + y
 }
 
-// struct composition
+// generic and struct composition
 A := <T: type> -> (x: T, y: T)
 
 o0: A = A<i64>(1, 2)
 o1: A = A<i64>(2, 3)
 o2: A = o0 + o1
 
-// struct composition => function 1
+// generic, struct and function block composition
 f := <T: type> -> (x: T, y: T) => T {
     x + y
 }
@@ -46,10 +49,15 @@ f := <T: type> -> (x: T, y: T) => T {
 r := f<i64>(1, 2)
 r == 3
 
-// struct composition => function 2
-Args := <T: type> -> (x: i64, y: i64)
+// generic and struct composition == generic struct
+// generic struct and function block composition
+Args := <T: type> -> (x: T, y: T)
 
 f := Args<i64> => i64 {
+    x + y
+}
+
+f := Args<i64> => T {
     x + y
 }
 
@@ -69,7 +77,10 @@ p_struct: type = (
         self
     },
     __repr__ := (self) => str {
-        '({} at {})'.format(self.__type__.__name__, addressof(self))
+        "({} at {})".format(
+            self.__type__.__name__,
+            addressof(self),
+        )
     },
 )
 
@@ -111,10 +122,10 @@ A: type = <T: type> -> (
 )
 
 // T := A<i64>
-// T.__type__.__new__(T, ...(1, 2))
+// T.__type__.__new__(T, ...(1, 2)) # ???
 a0: A = A<i64>(1, 2)
 // T := A<i64>
-// T.__type__.__new__(T, ...(2, 3))
+// T.__type__.__new__(T, ...(2, 3)) # ???
 a1: A = A<i64>(2, 3)
 
 // f := getattr(a0, '__add__')
