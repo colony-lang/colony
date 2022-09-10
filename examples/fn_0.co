@@ -1,7 +1,7 @@
 // function
 f := (x: i64, y: i64) -> i64 {
     //                   ^
-    //                   |- block starts here
+    //                   |- block starts here; `i64` is type of return object
     x + y
 }
 
@@ -12,7 +12,6 @@ A := <T: type> -> (x: T, y: T)
 o0: A = A<i64>(1, 2)
 o1: A = A<i64>(2, 3)
 o2: A = o0 + o1
-
 
 // generic function
 // composition of generic, struct and function block

@@ -35,12 +35,16 @@ A: type = <T: type> -> (
     ),
     // implicit by default, __closure__ is always 1st element of a structure (and a function)
     // __closure__ := ... ,
-    x: T=T.default,
-    y: T=T.default,
+    __fields__ := (
+        x: T=T.default,
+        y: T=T.default,
+    ),
 );
 
-A: type = <T: type, bases:=[A_Add, A_Sub], name:='A'> -> (
+A: type = <T: type> -> (
     __type__ := (
+        __bases__ := [A_Add, A_Sub],
+        __name__ := 'A',
         __mul__ := (self, other: Self) -> Self {
             Self(self.x * other.x, self.y * other.y)
         },
@@ -48,8 +52,11 @@ A: type = <T: type, bases:=[A_Add, A_Sub], name:='A'> -> (
             Self(self.x / other.x, self.y / other.y)
         },
     ),
-    x: T=T.default,
-    y: T=T.default,
+    // NOTE: new untested feature for fields without initialization to default value
+    __fields__ := (
+        x: T=T.default,
+        y: T=T.default,
+    ),
 );
 
 // R := A<i64>
