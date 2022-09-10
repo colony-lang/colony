@@ -1,0 +1,12 @@
+// primitives
+a: bool = true
+a: bool = false
+
+a: i8 = -1_i8
+a: u64 = 1_u64
+a: i64 = -1_i64
+a: i64 = -1
+
+a: f32 = -1.1_f32
+a: f64 = -1.1_f64
+a: f64 = -1.1

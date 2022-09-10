@@ -1,0 +1,41 @@
+// function
+f := (x: i64, y: i64) -> i64 {
+    //                   ^
+    //                   |- block starts here
+    x + y
+}
+
+// function declaration
+// composition of generic and struct
+A := <T: type> -> (x: T, y: T)
+
+o0: A = A<i64>(1, 2)
+o1: A = A<i64>(2, 3)
+o2: A = o0 + o1
+
+
+// generic function
+// composition of generic, struct and function block
+f := <T: type> -> (x: T, y: T) -> T {
+    x + y
+}
+
+r := f<i64>(1, 2)
+r == 3
+
+// generic struct
+// composition of combine generic and struct
+Args := <T: type> -> (x: T, y: T)
+
+// generic function
+// composition of combine generic struct and function block
+f := Args<i64> -> i64 {
+    x + y
+}
+
+f := Args<i64> -> T {
+    x + y
+}
+
+r := f(1, 2)
+r == 3

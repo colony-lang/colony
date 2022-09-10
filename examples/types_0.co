@@ -1,144 +1,34 @@
-// primitives
-a: bool = true
-a: bool = false
-
-a: i8 = -1_i8
-a: u64 = 1_u64
-a: i64 = -1_i64
-a: i64 = -1
-
-a: f32 = -1.1_f32
-a: f64 = -1.1_f64
-a: f64 = -1.1
-
-a: bytes = b"1234"
-a: str = "1234"
-
-// list
-l: list<i64> = [0, 1, 2, 3]
-
-// dict
-d: dict<str, i64> = {'x': 1, 'y': 2}
+// struct
+A: struct = (x: i64, y: i64=0)
 
 // generic
 G: generic = <x: i64, y: i64=0>
 
-// struct
-A: struct = (x: i64, y: i64=0)
-
 // union
-n64: union = i64 | f64;
+Num64: union = i64 | f64;
+Num64Container_0: union = list<i64> | list<f64>;
+Num64Container_1: type = list<i64 | f64>;
 
-// function
-f := (x: i64, y: i64) => i64 {
-    x + y
-}
-
-// generic and struct composition
-A := <T: type> -> (x: T, y: T)
-
-o0: A = A<i64>(1, 2)
-o1: A = A<i64>(2, 3)
-o2: A = o0 + o1
-
-// generic, struct and function block composition
-f := <T: type> -> (x: T, y: T) => T {
-    x + y
-}
-
-r := f<i64>(1, 2)
-r == 3
-
-// generic and struct composition == generic struct
-// generic struct and function block composition
-Args := <T: type> -> (x: T, y: T)
-
-f := Args<i64> => i64 {
-    x + y
-}
-
-f := Args<i64> => T {
-    x + y
-}
-
-r := f(1, 2)
-r == 3
-
-//
-// structs
-//
-p_struct: type = (
-    __new__ := (cls: type, ...args) => Self {
+// struct pseudo implementation
+struct: type = (
+    __new__ := (cls: type, [args]: list, {kwargs}: dict) -> cls {
         self: Self = (
             __type__: type = cls,
-            ...args
+            __closure__ := cls,
         )
 
+        self := self.extend(args)
+        self := self.extend(kwargs)
         self
     },
-    __repr__ := (self) => str {
+    __call__ := (cls: type, [args]: list, {kwargs}: dict) -> cls {
+        self: cls = cls.__new__(cls, args, kwargs)
+        self
+    },
+    __repr__ := (obj) -> str {
         "({} at {})".format(
-            self.__type__.__name__,
-            addressof(self),
+            obj.__type__.__name__,
+            addressof(obj),
         )
     },
-)
-
-A_Sum: type = (
-    __add__ := (self, other: Self) => Self {
-        Self(self.x + other.x, self.y + other.y)
-    },
-)
-
-A_Sub: type = (
-    __sub__ := (self, other: Self) => Self {
-        Self(self.x - other.x, self.y - other.y)
-    },
-)
-
-A: type = <T: type> -> (
-    // implicit by default, __type__ is always 0th elemenet of a structure
-    __type__: type = (
-        // in case of t_struct, __type__ is always struct (t_struct)
-        // __type__: type = t_struct,
-        // implicit by default, __closure__ is always 1st element of a structure (and a function)
-        // __closure__ := ... ,
-        __name__: str = 'A',
-        // implicit spread for __type__, in this case t_struct
-        ...p_struct,
-        ...A_Sum,
-        ...A_Sub,
-        __mul__ := (self, other: Self) => Self {
-            Self(self.x * other.x, self.y * other.y)
-        },
-        __div__ := (self, other: Self) => Self {
-            Self(self.x / other.x, self.y / other.y)
-        },
-    ),
-    // implicit by default, __closure__ is always 1st element of a structure (and a function)
-    // __closure__ := ... ,
-    x: T=T.default,
-    y: T=T.default,
-)
-
-// T := A<i64>
-// T.__type__.__new__(T, ...(1, 2)) # ???
-a0: A = A<i64>(1, 2)
-// T := A<i64>
-// T.__type__.__new__(T, ...(2, 3)) # ???
-a1: A = A<i64>(2, 3)
-
-// f := getattr(a0, '__add__')
-a2: A = a0 + a1
-a2: A = a0.__type__.__add__(a0, a1)
-
-// f := getattr(a0, '__sub__')
-a3: A = a0 - a1
-a3: A = a0.__type__.__sub__(a0, a1)
-
-// f := getattr(a0, '__mul__')
-a4: A = a0.__type__.__mul__(a0, a1)
-
-// f := getattr(a0, '__div__')
-a5: A = a0 / a1
-a5: A = a0.__type__.__div__(a0, a1)
+);

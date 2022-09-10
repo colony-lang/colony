@@ -1,0 +1,13 @@
+// bytes strings
+a: bytes = b"1234"
+
+// utf8 strings
+a: str = "1234"
+
+// list
+l: list = [0, 1, 2, 3, true, false]
+l: list<i64> = [0, 1, 2, 3]
+
+// dict
+d: dict = {'x': 1, 'y': 2, 't': true, 'f': false}
+d: dict<str, i64> = {'x': 1, 'y': 2}
