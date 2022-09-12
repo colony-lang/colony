@@ -17,12 +17,13 @@ struct: type = (
             __closure__ := cls,
         )
 
-        self := self.extend(args)
-        self := self.extend(kwargs)
+        // NOTE: work out creation of struct; what is meaning of args and kwargs?
+        // self := self.extend(args)
+        // self := self.extend(kwargs)
         self
     },
     __call__ := (cls: type, [args]: list, {kwargs}: dict) -> cls {
-        self: cls = cls.__new__(cls, args, kwargs)
+        self: cls = cls.__new__(cls, [args]=args, {kwargs}=kwargs)
         self
     },
     __repr__ := (obj) -> str {
