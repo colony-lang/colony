@@ -1,0 +1,16 @@
+
+A := <T: type> -> (
+    __add__ := (self, other: Self) -> Self {
+        Self(
+            self.x + other.x,
+            self.y + other.y,
+        )
+    },
+) -> (
+    x: T,
+    y: T,
+)
+
+a0: A<i64> = A<i64>(1, 2)
+a1: A<i64> = A<i64>(2, 3)
+a2 := a0 + a1
