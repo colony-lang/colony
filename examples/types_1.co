@@ -13,51 +13,25 @@ A_Sub: type = (
     },
 );
 
-// A: type = <T: type, bases:=[A_Add, A_Sub], name:='A'> -> (
 A: type = <T: type> -> (
     // implicit by default, __type__ is always 0th elemenet of a structure
-    __type__: type = (
-        // implicit by default, __type__ is always 0th elemenet of a structure
-        // __type__: type = struct,
-        
-        // implicit by default, __closure__ is always 1st element of a structure (and a function)
-        // __closure__ := ... ,
-        
-        __bases__: list<type> = [A_Add, A_Sub],
-        __name__: str = 'A',
-        
-        __mul__ := (self, other: Self) -> Self {
-            Self(self.x * other.x, self.y * other.y)
-        },
-        __div__ := (self, other: Self) -> Self {
-            Self(self.x / other.x, self.y / other.y)
-        },
-    ),
+    // __type__: type = struct,
+    
     // implicit by default, __closure__ is always 1st element of a structure (and a function)
     // __closure__ := ... ,
-    __fields__ := (
-        x: T=T.default,
-        y: T=T.default,
-    ),
-);
 
-A: type = <T: type> -> (
-    __type__ := (
-        __bases__ := [A_Add, A_Sub],
-        __name__ := 'A',
-        __mul__ := (self, other: Self) -> Self {
-            Self(self.x * other.x, self.y * other.y)
-        },
-        __div__ := (self, other: Self) -> Self {
-            Self(self.x / other.x, self.y / other.y)
-        },
-    ),
-    // NOTE: new untested feature for fields without initialization to default value
-    __fields__ := (
-        x: T=T.default,
-        y: T=T.default,
-    ),
-);
+    __bases__ := [A_Add, A_Sub],
+    __name__ := 'A',
+    __mul__ := (self, other: Self) -> Self {
+        Self(self.x * other.x, self.y * other.y)
+    },
+    __div__ := (self, other: Self) -> Self {
+        Self(self.x / other.x, self.y / other.y)
+    },
+) -> (
+    x: T,
+    y: T,
+)
 
 // R := A<i64>
 // R.__type__.__call__(R, [1, 2], {})
@@ -76,6 +50,7 @@ a3: A = a0 - a1
 a3: A = a0.__type__.__sub__(a0, a1)
 
 // f := getattr(a0, '__mul__')
+a4: A = a0 * a1
 a4: A = a0.__type__.__mul__(a0, a1)
 
 // f := getattr(a0, '__div__')

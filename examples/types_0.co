@@ -11,8 +11,12 @@ Num64Container_1: type = list<i64 | f64>;
 
 // struct pseudo implementation
 struct: type = (
-    __new__ := (cls: type, [args]: list, {kwargs}: dict) -> cls {
-        self: Self = (
+    __call__ := (cls: type, args: list, kwargs: dict) -> Self {
+        self: cls = cls.__new__(cls, args=args, kwargs=kwargs)
+        self
+    },
+    __new__ := (cls: type, args: list, kwargs: dict) -> Self {
+        self: cls = (
             __type__: type = cls,
             __closure__ := cls,
         )
@@ -20,10 +24,6 @@ struct: type = (
         // NOTE: work out creation of struct; what is meaning of args and kwargs?
         // self := self.extend(args)
         // self := self.extend(kwargs)
-        self
-    },
-    __call__ := (cls: type, [args]: list, {kwargs}: dict) -> cls {
-        self: cls = cls.__new__(cls, [args]=args, {kwargs}=kwargs)
         self
     },
     __repr__ := (obj) -> str {
