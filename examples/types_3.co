@@ -61,12 +61,3 @@ a2 := A<i64>.new_with_rs(a2_r0, a2_r1)
 
 // panics, not handled
 a3 := a0.div(0)
-
-// try
-a3: Result<A<i64>, Error> = try(() -> a0.div(0))
-
-// match
-r := match(a3)
-    .case(A<i64>, (v) -> { 1 })
-    .case(ZeroDivisionError, (e) -> { 0 })
-    .default(() -> { -1 })

@@ -1,0 +1,5 @@
+// import
+io := import("io")
+print := io.print
+
+print(1)

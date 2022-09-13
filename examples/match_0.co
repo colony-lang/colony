@@ -1,0 +1,34 @@
+
+A := <T: type> -> (
+    __name__ := 'R',
+    mul := (self, v: T) -> Self {
+        Self(
+            self.x * v,
+            self.y * v,
+        )
+    },
+    div := (self, v: T) -> Self {
+        Self(
+            self.x / v,
+            self.y / v,
+        )
+    },
+) -> (
+    x: T,
+    y: T,
+);
+
+a0 := A<i64>(1, 2)
+a1 := a0.mul(2)
+
+// panics, not handled
+a2 := a0.div(0)
+
+// try
+a3: Result<A<i64>, Error> = try(() -> a0.div(0))
+
+// match
+r := match(a3)
+    .case(A<i64>, (v) -> { 1 })
+    .case(ZeroDivisionError, (e) -> { 0 })
+    .default(() -> { -1 })
