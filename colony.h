@@ -39,18 +39,6 @@ struct co_result_t;
 #define CO_GC_T \
     size_t rc;
 
-typedef struct co_ctx_t {
-
-    struct co_ctx_t *parent_ctx;
-    struct co_frame_t *root_frame;
-    struct co_frame_t *current_frame;
-} co_ctx_t;
-
-typedef struct co_frame_t {
-    struct co_frame_t *parent;
-    void *closure; // struct co_object_t * / unsafe mutable struct
-} co_frame_t;
-
 typedef enum co_kind_t {
     // special kinds
     CO_KIND_UNDEFINED,
@@ -105,8 +93,173 @@ typedef struct co_object_t {
     union co_value_t v;
 } co_object_t;
 
+typedef struct co_ctx_t {
+    CO_GC_T
+    struct co_object_t parent_ctx;
+    struct co_object_t current_frame;
+} co_ctx_t;
+
+typedef struct co_frame_t {
+    CO_GC_T
+    struct co_object_t parent_frame;
+    struct co_object_t closure; // unsafe mutable struct
+} co_frame_t;
+
+/*
+ * bool
+ */
+co_object_t co_bool_new(co_object_t obj, co_object_t args, co_object_t kwargs);
+co_object_t co_bool_free(co_object_t obj, co_object_t args, co_object_t kwargs);
+
+/*
+ * int
+ */
+co_object_t co_int_new(co_object_t obj, co_object_t args, co_object_t kwargs);
+co_object_t co_int_free(co_object_t obj, co_object_t args, co_object_t kwargs);
+
+/*
+ * float
+ */
+co_object_t co_float_new(co_object_t obj, co_object_t args, co_object_t kwargs);
+co_object_t co_float_free(co_object_t obj, co_object_t args, co_object_t kwargs);
+
+/*
+ * ctx
+ */
 co_object_t co_ctx_new(co_object_t obj, co_object_t args, co_object_t kwargs);
 co_object_t co_ctx_free(co_object_t obj, co_object_t args, co_object_t kwargs);
 co_object_t co_ctx_spawn(co_object_t ctx, co_object_t args, co_object_t kwargs);
+
+/*
+ * frame
+ */
+co_object_t co_frame_new(co_object_t obj, co_object_t args, co_object_t kwargs);
+co_object_t co_frame_free(co_object_t obj, co_object_t args, co_object_t kwargs);
+
+/*
+ * module
+ */
+co_object_t co_module_new(co_object_t obj, co_object_t args, co_object_t kwargs);
+co_object_t co_module_free(co_object_t obj, co_object_t args, co_object_t kwargs);
+
+/*
+ * bytes
+ */
+co_object_t co_bytes_new(co_object_t obj, co_object_t args, co_object_t kwargs);
+co_object_t co_bytes_free(co_object_t obj, co_object_t args, co_object_t kwargs);
+
+/*
+ * str
+ */
+co_object_t co_str_new(co_object_t obj, co_object_t args, co_object_t kwargs);
+co_object_t co_str_free(co_object_t obj, co_object_t args, co_object_t kwargs);
+
+/*
+ * list
+ */
+co_object_t co_list_new(co_object_t obj, co_object_t args, co_object_t kwargs);
+co_object_t co_list_free(co_object_t obj, co_object_t args, co_object_t kwargs);
+
+/*
+ * dict
+ */
+co_object_t co_dict_new(co_object_t obj, co_object_t args, co_object_t kwargs);
+co_object_t co_dict_free(co_object_t obj, co_object_t args, co_object_t kwargs);
+
+/*
+ * block
+ */
+co_object_t co_block_new(co_object_t obj, co_object_t args, co_object_t kwargs);
+co_object_t co_block_free(co_object_t obj, co_object_t args, co_object_t kwargs);
+
+/*
+ * code
+ */
+co_object_t co_code_new(co_object_t obj, co_object_t args, co_object_t kwargs);
+co_object_t co_code_free(co_object_t obj, co_object_t args, co_object_t kwargs);
+
+/*
+ * fn
+ */
+co_object_t co_fn_new(co_object_t obj, co_object_t args, co_object_t kwargs);
+co_object_t co_fn_free(co_object_t obj, co_object_t args, co_object_t kwargs);
+
+/*
+ * struct
+ */
+co_object_t co_struct_new(co_object_t obj, co_object_t args, co_object_t kwargs);
+co_object_t co_struct_free(co_object_t obj, co_object_t args, co_object_t kwargs);
+
+/*
+ * union
+ */
+co_object_t co_union_new(co_object_t obj, co_object_t args, co_object_t kwargs);
+co_object_t co_union_free(co_object_t obj, co_object_t args, co_object_t kwargs);
+
+/*
+ * generic
+ */
+co_object_t co_generic_new(co_object_t obj, co_object_t args, co_object_t kwargs);
+co_object_t co_generic_free(co_object_t obj, co_object_t args, co_object_t kwargs);
+
+/*
+ * generic struct
+ */
+co_object_t co_generic_struct_new(co_object_t obj, co_object_t args, co_object_t kwargs);
+co_object_t co_generic_struct_free(co_object_t obj, co_object_t args, co_object_t kwargs);
+
+/*
+ * generic union
+ */
+co_object_t co_generic_union_new(co_object_t obj, co_object_t args, co_object_t kwargs);
+co_object_t co_generic_union_free(co_object_t obj, co_object_t args, co_object_t kwargs);
+
+/*
+ * generic type
+ */
+co_object_t co_generic_type_new(co_object_t obj, co_object_t args, co_object_t kwargs);
+co_object_t co_generic_type_free(co_object_t obj, co_object_t args, co_object_t kwargs);
+
+/*
+ * generic fn
+ */
+co_object_t co_generic_fn_new(co_object_t obj, co_object_t args, co_object_t kwargs);
+co_object_t co_generic_fn_free(co_object_t obj, co_object_t args, co_object_t kwargs);
+
+/*
+ * None
+ */
+co_object_t co_none_new(co_object_t obj, co_object_t args, co_object_t kwargs);
+co_object_t co_none_free(co_object_t obj, co_object_t args, co_object_t kwargs);
+
+/*
+ * Some
+ */
+co_object_t co_some_new(co_object_t obj, co_object_t args, co_object_t kwargs);
+co_object_t co_some_free(co_object_t obj, co_object_t args, co_object_t kwargs);
+
+/*
+ * Option
+ */
+co_object_t co_option_new(co_object_t obj, co_object_t args, co_object_t kwargs);
+co_object_t co_option_free(co_object_t obj, co_object_t args, co_object_t kwargs);
+
+/*
+ * Ok
+ */
+co_object_t co_ok_new(co_object_t obj, co_object_t args, co_object_t kwargs);
+co_object_t co_ok_free(co_object_t obj, co_object_t args, co_object_t kwargs);
+
+/*
+ * Err
+ */
+co_object_t co_err_new(co_object_t obj, co_object_t args, co_object_t kwargs);
+co_object_t co_err_free(co_object_t obj, co_object_t args, co_object_t kwargs);
+
+/*
+ * Result
+ */
+co_object_t co_result_new(co_object_t obj, co_object_t args, co_object_t kwargs);
+co_object_t co_result_free(co_object_t obj, co_object_t args, co_object_t kwargs);
 
 #endif
