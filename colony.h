@@ -36,20 +36,22 @@ struct co_ok_t;
 struct co_err_t;
 struct co_result_t;
 
+#define CO_GC_DEBUG 0
+
 #define CO_GC_T \
     size_t rc;
 
 typedef enum co_kind_t {
     // special kinds
-    CO_KIND_UNDEFINED,
+    CO_KIND_UNDEFINED = 0,
     // primitive kinds
-    CO_KIND_BOOL,
-    CO_KIND_INT,
-    CO_KIND_FLOAT,
+    CO_KIND_BOOL = 1,
+    CO_KIND_INT = 2,
+    CO_KIND_FLOAT = 3,
     // GC kinds
-    CO_KIND_GC,
-    CO_KIND_CTX,
-    CO_KIND_FRAME,
+    CO_KIND_GC = 4,
+    CO_KIND_CTX = 5,
+    CO_KIND_FRAME = 6,
     CO_KIND_MODULE,
     CO_KIND_BYTES,
     CO_KIND_STR,
@@ -105,12 +107,20 @@ typedef struct co_frame_t {
     struct co_object_t closure; // unsafe mutable struct
 } co_frame_t;
 
-static co_object_t CO_OBJECT_UNDEFINED = (co_object_t){
+/*
+ * object
+ */
+static struct co_object_t CO_OBJECT_UNDEFINED = (co_object_t){
     .k = CO_KIND_UNDEFINED,
     .v = (co_value_t){
         .p = (co_gc_t*)NULL
     }
 };
+
+void co_object_c_incref(co_object_t ctx, co_object_t obj);
+void co_object_c_decref(co_object_t ctx, co_object_t obj);
+
+co_object_t co_object_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
 
 /*
  * bool
@@ -133,14 +143,16 @@ co_object_t co_float_free(co_object_t ctx, co_object_t obj, co_object_t args, co
 /*
  * ctx
  */
-co_object_t co_ctx_new(co_object_t ctx_cls, co_object_t obj, co_object_t args, co_object_t kwargs);
+co_object_t co_ctx_c_new_root(void);
+
 co_object_t co_ctx_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
 co_object_t co_ctx_spawn(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
 
 /*
  * frame
  */
-co_object_t co_frame_new(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
+co_object_t co_frame_c_new(co_object_t ctx, co_object_t parent_frame);
+
 co_object_t co_frame_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
 
 /*

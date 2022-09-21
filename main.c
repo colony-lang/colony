@@ -4,7 +4,7 @@
 int main(int argc, char **argv) {
     // root context
     // co_ctx_t *root_ctx = co_ctx_new();
-    co_object_t root_ctx = co_ctx_new(CO_OBJECT_UNDEFINED, CO_OBJECT_UNDEFINED, CO_OBJECT_UNDEFINED, CO_OBJECT_UNDEFINED);
+    co_object_t root_ctx = co_ctx_c_new_root();
     // co_object_t builtins;
     
     // root context - builtins
@@ -14,7 +14,8 @@ int main(int argc, char **argv) {
     // co_ctx_t *ctx = co_ctx_spawn(root_ctx);
 
     // cleanup
-    // co_ctx_free(ctx);
-    co_ctx_free(root_ctx, root_ctx, CO_OBJECT_UNDEFINED, CO_OBJECT_UNDEFINED);
+    // co_object_c_decref(root_ctx, ctx);
+    co_object_c_decref(root_ctx, root_ctx);
+
     return 0;
 }
