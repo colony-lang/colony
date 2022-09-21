@@ -105,6 +105,13 @@ typedef struct co_frame_t {
     struct co_object_t closure; // unsafe mutable struct
 } co_frame_t;
 
+static co_object_t CO_OBJECT_UNDEFINED = (co_object_t){
+    .k = CO_KIND_UNDEFINED,
+    .v = (co_value_t){
+        .p = (co_gc_t*)NULL
+    }
+};
+
 /*
  * bool
  */
@@ -128,7 +135,7 @@ co_object_t co_float_free(co_object_t ctx, co_object_t obj, co_object_t args, co
  */
 co_object_t co_ctx_new(co_object_t ctx_cls, co_object_t obj, co_object_t args, co_object_t kwargs);
 co_object_t co_ctx_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
-co_object_t co_ctx_spawn(co_object_t ctx, co_object_t ctx, co_object_t args, co_object_t kwargs);
+co_object_t co_ctx_spawn(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
 
 /*
  * frame
