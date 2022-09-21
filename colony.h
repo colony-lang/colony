@@ -6,6 +6,16 @@
 #include <string.h>
 #include <stdlib.h>
 
+#define CO_GC_DEBUG 1
+
+#if CO_GC_DEBUG == 1
+    #define CO_OBJECT_C_INCREF(ctx, obj) co_object_c_incref(ctx, obj, __FILE__, __LINE__)
+    #define CO_OBJECT_C_DECREF(ctx, obj) co_object_c_decref(ctx, obj, __FILE__, __LINE__)
+#else
+    #define CO_OBJECT_C_INCREF(ctx, obj) co_object_c_incref(ctx, obj)
+    #define CO_OBJECT_C_DECREF(ctx, obj) co_object_c_decref(ctx, obj)
+#endif
+
 struct co_ctx_t;
 struct co_frame_t;
 enum co_kind_t;
@@ -35,8 +45,6 @@ struct co_option_t;
 struct co_ok_t;
 struct co_err_t;
 struct co_result_t;
-
-#define CO_GC_DEBUG 0
 
 #define CO_GC_T \
     size_t rc;
@@ -117,8 +125,13 @@ static struct co_object_t CO_OBJECT_UNDEFINED = (co_object_t){
     }
 };
 
-void co_object_c_incref(co_object_t ctx, co_object_t obj);
-void co_object_c_decref(co_object_t ctx, co_object_t obj);
+#if CO_GC_DEBUG == 1
+    void co_object_c_incref(co_object_t ctx, co_object_t obj, char *filename, int line);
+    void co_object_c_decref(co_object_t ctx, co_object_t obj, char *filename, int line);
+#else
+    void co_object_c_incref(co_object_t ctx, co_object_t obj);
+    void co_object_c_decref(co_object_t ctx, co_object_t obj);
+#endif
 
 co_object_t co_object_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
 
@@ -144,6 +157,7 @@ co_object_t co_float_free(co_object_t ctx, co_object_t obj, co_object_t args, co
  * ctx
  */
 co_object_t co_ctx_c_new_root(void);
+co_object_t co_ctx_c_spawn(co_object_t parent_ctx);
 
 co_object_t co_ctx_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
 co_object_t co_ctx_spawn(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
