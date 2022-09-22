@@ -51,15 +51,15 @@ struct co_result_t;
 
 typedef enum co_kind_t {
     // special kinds
-    CO_KIND_UNDEFINED = 0,
+    CO_KIND_UNDEFINED,
     // primitive kinds
-    CO_KIND_BOOL = 1,
-    CO_KIND_INT = 2,
-    CO_KIND_FLOAT = 3,
+    CO_KIND_BOOL,
+    CO_KIND_I64,
+    CO_KIND_F64,
     // GC kinds
-    CO_KIND_GC = 4,
-    CO_KIND_CTX = 5,
-    CO_KIND_FRAME = 6,
+    CO_KIND_GC,
+    CO_KIND_CTX,
+    CO_KIND_FRAME,
     CO_KIND_MODULE,
     CO_KIND_BYTES,
     CO_KIND_STR,
@@ -84,8 +84,8 @@ typedef enum co_kind_t {
 } co_kind_t;
 
 typedef _Bool co_bool_t;
-typedef int64_t co_int_t;
-typedef double co_float_t;
+typedef int64_t co_i64_t;
+typedef double co_f64_t;
 
 typedef struct co_gc_t {
     CO_GC_T
@@ -93,8 +93,8 @@ typedef struct co_gc_t {
 
 typedef union co_value_t {
     co_bool_t b;
-    co_int_t i;
-    co_float_t f;
+    co_i64_t i64;
+    co_f64_t f64;
     co_gc_t *p;
 } co_value_t;
 
@@ -144,14 +144,14 @@ co_object_t co_bool_free(co_object_t ctx, co_object_t obj, co_object_t args, co_
 /*
  * int
  */
-co_object_t co_int_new(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
-co_object_t co_int_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
+co_object_t co_i64_new(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
+co_object_t co_i64_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
 
 /*
  * float
  */
-co_object_t co_float_new(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
-co_object_t co_float_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
+co_object_t co_f64_new(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
+co_object_t co_f64_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
 
 /*
  * ctx

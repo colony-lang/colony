@@ -15,13 +15,13 @@ inline void co_object_c_incref(co_object_t ctx, co_object_t obj)
         gc_value = (co_gc_t*)obj.v.p;
 
         #if CO_GC_DEBUG == 1
-        printf("incref [0] %s %d %p %zu\n", filename, line, gc_value, gc_value->rc);
+        printf("incref [0] %s\t%d\t%p %zu\n", filename, line, gc_value, gc_value->rc);
         #endif
 
         gc_value->rc++;
 
         #if CO_GC_DEBUG == 1
-        printf("incref [1] %s %d %p %zu\n", filename, line, gc_value, gc_value->rc);
+        printf("incref [1] %s\t%d\t%p %zu\n", filename, line, gc_value, gc_value->rc);
         #endif
     }
 }
@@ -38,13 +38,13 @@ inline void co_object_c_decref(co_object_t ctx, co_object_t obj)
         gc_value = (co_gc_t*)obj.v.p;
 
         #if CO_GC_DEBUG == 1
-        printf("decref [0] %s %d %p %zu\n", filename, line, gc_value, gc_value->rc);
+        printf("decref [0] %s\t%d\t%p %zu\n", filename, line, gc_value, gc_value->rc);
         #endif
         
         gc_value->rc--;
         
         #if CO_GC_DEBUG == 1
-        printf("decref [1] %s %d %p %zu\n", filename, line, gc_value, gc_value->rc);
+        printf("decref [1] %s\t%d\t%p %zu\n", filename, line, gc_value, gc_value->rc);
         #endif
         
         if (gc_value->rc == 0) {
@@ -61,9 +61,9 @@ co_object_t co_object_free(co_object_t ctx, co_object_t obj, co_object_t args, c
             break;
         case CO_KIND_BOOL:
             break;
-        case CO_KIND_INT:
+        case CO_KIND_I64:
             break;
-        case CO_KIND_FLOAT:
+        case CO_KIND_F64:
             break;
         case CO_KIND_GC:
             break;
