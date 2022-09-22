@@ -53,3 +53,6 @@ dkms.conf
 
 colony
 /tmp
+
+# valgrind
+vgcore.*
