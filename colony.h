@@ -1,6 +1,7 @@
 #ifndef CO_COLONY_H
 #define CO_COLONY_H
 
+#include <stdio.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
@@ -9,8 +10,8 @@
 #define CO_GC_DEBUG 1
 
 #if CO_GC_DEBUG == 1
-    #define CO_OBJECT_C_INCREF(ctx, obj) co_object_c_incref(ctx, obj, __FILE__, __LINE__)
-    #define CO_OBJECT_C_DECREF(ctx, obj) co_object_c_decref(ctx, obj, __FILE__, __LINE__)
+    #define CO_OBJECT_C_INCREF(ctx, obj) co_object_c_incref(ctx, obj, __FILE__, __LINE__, __FUNCTION__)
+    #define CO_OBJECT_C_DECREF(ctx, obj) co_object_c_decref(ctx, obj, __FILE__, __LINE__, __FUNCTION__)
 #else
     #define CO_OBJECT_C_INCREF(ctx, obj) co_object_c_incref(ctx, obj)
     #define CO_OBJECT_C_DECREF(ctx, obj) co_object_c_decref(ctx, obj)
@@ -83,7 +84,7 @@ typedef enum co_kind_t {
     CO_KIND_RESULT,
 } co_kind_t;
 
-typedef _Bool co_bool_t;
+typedef bool co_bool_t;
 typedef int64_t co_i64_t;
 typedef double co_f64_t;
 
@@ -115,6 +116,18 @@ typedef struct co_frame_t {
     struct co_object_t closure; // unsafe mutable struct
 } co_frame_t;
 
+typedef struct co_bytes_t {
+    size_t len;
+    char *items;
+    int64_t hash;
+} co_bytes_t;
+
+typedef struct co_str_t {
+    size_t len;
+    char *items;
+    int64_t hash;
+} co_str_t;
+
 /*
  * object
  */
@@ -126,19 +139,26 @@ static struct co_object_t CO_OBJECT_UNDEFINED = (co_object_t){
 };
 
 #if CO_GC_DEBUG == 1
-    void co_object_c_incref(co_object_t ctx, co_object_t obj, char *filename, int line);
-    void co_object_c_decref(co_object_t ctx, co_object_t obj, char *filename, int line);
+    void co_object_c_incref(co_object_t ctx, co_object_t obj, char *filename, int line, const char *funcname);
+    void co_object_c_decref(co_object_t ctx, co_object_t obj, char *filename, int line, const char *funcname);
 #else
     void co_object_c_incref(co_object_t ctx, co_object_t obj);
     void co_object_c_decref(co_object_t ctx, co_object_t obj);
 #endif
+
+co_object_t co_object_c_free(co_object_t ctx, co_object_t obj);
 
 co_object_t co_object_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
 
 /*
  * bool
  */
-co_object_t co_bool_new(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
+co_object_t co_bool_c_new(co_object_t ctx, bool b);
+co_object_t co_bool_c_free(co_object_t ctx, co_object_t obj);
+co_object_t co_bool_c_not(co_object_t ctx, co_object_t obj);
+co_object_t co_bool_c_and(co_object_t ctx, co_object_t obj, co_object_t other);
+co_object_t co_bool_c_or(co_object_t ctx, co_object_t obj, co_object_t other);
+
 co_object_t co_bool_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
 
 /*
@@ -157,7 +177,8 @@ co_object_t co_f64_free(co_object_t ctx, co_object_t obj, co_object_t args, co_o
  * ctx
  */
 co_object_t co_ctx_c_new_root(void);
-co_object_t co_ctx_c_spawn(co_object_t parent_ctx);
+co_object_t co_ctx_c_free(co_object_t ctx, co_object_t obj);
+co_object_t co_ctx_c_spawn(co_object_t ctx);
 
 co_object_t co_ctx_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
 co_object_t co_ctx_spawn(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
@@ -166,6 +187,7 @@ co_object_t co_ctx_spawn(co_object_t ctx, co_object_t obj, co_object_t args, co_
  * frame
  */
 co_object_t co_frame_c_new(co_object_t ctx, co_object_t parent_frame);
+co_object_t co_frame_c_free(co_object_t ctx, co_object_t obj);
 
 co_object_t co_frame_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
 
@@ -178,13 +200,27 @@ co_object_t co_module_free(co_object_t ctx, co_object_t obj, co_object_t args, c
 /*
  * bytes
  */
-co_object_t co_bytes_new(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
+co_object_t co_bytes_c_new(co_object_t ctx, size_t len, char *items);
+co_object_t co_bytes_c_free(co_object_t ctx, co_object_t obj);
+co_object_t co_bytes_c_len(co_object_t ctx, co_object_t obj);
+co_object_t co_bytes_c_hash(co_object_t ctx, co_object_t obj);
+co_object_t co_bytes_c_repr(co_object_t ctx, co_object_t obj);
+co_object_t co_bytes_c_eq(co_object_t ctx, co_object_t obj, co_object_t other);
+co_object_t co_bytes_c_lt(co_object_t ctx, co_object_t obj, co_object_t other);
+
 co_object_t co_bytes_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
 
 /*
  * str
  */
-co_object_t co_str_new(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
+co_object_t co_str_c_new(co_object_t ctx, size_t len, char *items);
+co_object_t co_str_c_free(co_object_t ctx, co_object_t obj);
+co_object_t co_str_c_len(co_object_t ctx, co_object_t obj);
+co_object_t co_str_c_hash(co_object_t ctx, co_object_t obj);
+co_object_t co_str_c_repr(co_object_t ctx, co_object_t obj);
+co_object_t co_str_c_eq(co_object_t ctx, co_object_t obj, co_object_t other);
+co_object_t co_str_c_lt(co_object_t ctx, co_object_t obj, co_object_t other);
+
 co_object_t co_str_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
 
 /*
