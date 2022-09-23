@@ -197,7 +197,7 @@ co_object_t co_bool_free(co_object_t ctx, co_object_t obj, co_object_t args, co_
 }
 
 /*
- * int
+ * i64
  */
 co_object_t co_i64_c_new(co_object_t ctx, co_i64_t i64) {
     co_object_t res;
@@ -303,7 +303,7 @@ co_object_t co_i64_free(co_object_t ctx, co_object_t obj, co_object_t args, co_o
 }
 
 /*
- * float
+ * f64
  */
 co_object_t co_f64_c_new(co_object_t ctx, co_f64_t f64) {
     co_object_t res;

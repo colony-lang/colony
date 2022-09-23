@@ -183,7 +183,7 @@ co_object_t co_bool_c_gt(co_object_t ctx, co_object_t obj, co_object_t other);
 co_object_t co_bool_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
 
 /*
- * int
+ * i64
  */
 co_object_t co_i64_c_new(co_object_t ctx, co_i64_t i);
 co_object_t co_i64_c_free(co_object_t ctx, co_object_t obj);
@@ -211,7 +211,7 @@ co_object_t co_i64_c_bitxor(co_object_t ctx, co_object_t obj, co_object_t other)
 co_object_t co_i64_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
 
 /*
- * float
+ * f64
  */
 co_object_t co_f64_c_new(co_object_t ctx, co_f64_t f64);
 co_object_t co_f64_c_free(co_object_t ctx, co_object_t obj);
