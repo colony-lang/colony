@@ -1,9 +1,10 @@
 #ifndef CO_COLONY_H
 #define CO_COLONY_H
 
-#include <stdio.h>
+#include <assert.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
@@ -16,6 +17,8 @@
     #define CO_OBJECT_C_INCREF(ctx, obj) co_object_c_incref(ctx, obj)
     #define CO_OBJECT_C_DECREF(ctx, obj) co_object_c_decref(ctx, obj)
 #endif
+
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
 
 struct co_ctx_t;
 struct co_frame_t;
@@ -117,12 +120,14 @@ typedef struct co_frame_t {
 } co_frame_t;
 
 typedef struct co_bytes_t {
+    CO_GC_T
     size_t len;
     char *items;
     int64_t hash;
 } co_bytes_t;
 
 typedef struct co_str_t {
+    CO_GC_T
     size_t len;
     char *items;
     int64_t hash;
@@ -164,13 +169,48 @@ co_object_t co_bool_free(co_object_t ctx, co_object_t obj, co_object_t args, co_
 /*
  * int
  */
-co_object_t co_i64_new(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
+co_object_t co_i64_c_new(co_object_t ctx, int64_t i);
+co_object_t co_i64_c_free(co_object_t ctx, co_object_t obj);
+co_object_t co_i64_c_hash(co_object_t ctx, co_object_t obj);
+co_object_t co_i64_c_repr(co_object_t ctx, co_object_t obj);
+co_object_t co_i64_c_lt(co_object_t ctx, co_object_t obj, co_object_t other);
+co_object_t co_i64_c_le(co_object_t ctx, co_object_t obj, co_object_t other);
+co_object_t co_i64_c_eq(co_object_t ctx, co_object_t obj, co_object_t other);
+co_object_t co_i64_c_ne(co_object_t ctx, co_object_t obj, co_object_t other);
+co_object_t co_i64_c_ge(co_object_t ctx, co_object_t obj, co_object_t other);
+co_object_t co_i64_c_gt(co_object_t ctx, co_object_t obj, co_object_t other);
+co_object_t co_i64_c_add(co_object_t ctx, co_object_t obj, co_object_t other);
+co_object_t co_i64_c_sub(co_object_t ctx, co_object_t obj, co_object_t other);
+co_object_t co_i64_c_mul(co_object_t ctx, co_object_t obj, co_object_t other);
+co_object_t co_i64_c_div(co_object_t ctx, co_object_t obj, co_object_t other);
+co_object_t co_i64_c_mod(co_object_t ctx, co_object_t obj, co_object_t other);
+co_object_t co_i64_c_shl(co_object_t ctx, co_object_t obj, co_object_t other);
+co_object_t co_i64_c_shr(co_object_t ctx, co_object_t obj, co_object_t other);
+co_object_t co_i64_c_bitinv(co_object_t ctx, co_object_t obj);
+co_object_t co_i64_c_bitand(co_object_t ctx, co_object_t obj, co_object_t other);
+co_object_t co_i64_c_bitor(co_object_t ctx, co_object_t obj, co_object_t other);
+co_object_t co_i64_c_bitxor(co_object_t ctx, co_object_t obj, co_object_t other);
+
 co_object_t co_i64_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
 
 /*
  * float
  */
-co_object_t co_f64_new(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
+co_object_t co_f64_c_new(co_object_t ctx, double f64);
+co_object_t co_f64_c_free(co_object_t ctx, co_object_t obj);
+co_object_t co_f64_c_hash(co_object_t ctx, co_object_t obj);
+co_object_t co_f64_c_repr(co_object_t ctx, co_object_t obj);
+co_object_t co_f64_c_lt(co_object_t ctx, co_object_t obj, co_object_t other);
+co_object_t co_f64_c_le(co_object_t ctx, co_object_t obj, co_object_t other);
+co_object_t co_f64_c_eq(co_object_t ctx, co_object_t obj, co_object_t other);
+co_object_t co_f64_c_ne(co_object_t ctx, co_object_t obj, co_object_t other);
+co_object_t co_f64_c_ge(co_object_t ctx, co_object_t obj, co_object_t other);
+co_object_t co_f64_c_gt(co_object_t ctx, co_object_t obj, co_object_t other);
+co_object_t co_f64_c_add(co_object_t ctx, co_object_t obj, co_object_t other);
+co_object_t co_f64_c_sub(co_object_t ctx, co_object_t obj, co_object_t other);
+co_object_t co_f64_c_mul(co_object_t ctx, co_object_t obj, co_object_t other);
+co_object_t co_f64_c_div(co_object_t ctx, co_object_t obj, co_object_t other);
+
 co_object_t co_f64_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
 
 /*

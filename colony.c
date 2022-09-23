@@ -76,7 +76,7 @@ co_object_t co_object_c_free(co_object_t ctx, co_object_t obj) {
         case CO_KIND_MODULE:
             break;
         case CO_KIND_BYTES:
-            // res = co_bytes_c_free(ctx, obj);
+            res = co_bytes_c_free(ctx, obj);
             break;
         case CO_KIND_STR:
             // res = co_str_c_free(ctx, obj);
@@ -281,4 +281,93 @@ co_object_t co_frame_c_free(co_object_t ctx, co_object_t obj) {
 
 co_object_t co_frame_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs) {
     return co_frame_c_free(ctx, obj);
+}
+
+/*
+ * bytes
+ */
+co_object_t co_bytes_c_new(co_object_t ctx, size_t len, char *items) {
+    co_object_t obj;
+    co_bytes_t *bytes_value;
+
+    bytes_value = calloc(1, sizeof(co_bytes_t));
+    bytes_value->rc = 1;
+    bytes_value->len = len;
+    bytes_value->items = calloc(len, sizeof(char));
+
+    obj = (co_object_t){
+        .k = CO_KIND_BYTES,
+        .v = {
+            .p = (co_gc_t*)bytes_value,
+        }
+    };
+
+    return obj;
+}
+
+co_object_t co_bytes_c_free(co_object_t ctx, co_object_t obj) {
+    co_bytes_t *bytes_value = (co_bytes_t*)obj.v.p;
+    free(bytes_value->items);
+    free(bytes_value);
+    return CO_OBJECT_UNDEFINED;
+}
+
+co_object_t co_bytes_c_len(co_object_t ctx, co_object_t obj) {
+
+}
+
+co_object_t co_bytes_c_hash(co_object_t ctx, co_object_t obj) {
+
+}
+
+co_object_t co_bytes_c_repr(co_object_t ctx, co_object_t obj) {
+
+}
+
+co_object_t co_bytes_c_eq(co_object_t ctx, co_object_t obj, co_object_t other) {
+    co_bytes_t *obj_bytes_value = (co_bytes_t*)obj.v.p;
+    co_bytes_t *other_bytes_value = (co_bytes_t*)other.v.p;
+    co_object_t res;
+
+    assert(obj.k == CO_KIND_BYTES);
+    assert(other.k == CO_KIND_BYTES);
+
+    size_t min_len = MIN(obj_bytes_value->len, other_bytes_value->len);
+    int c = memcmp(obj_bytes_value->items, other_bytes_value->items, min_len);
+    bool v = c == 0;
+
+    res = (co_object_t){
+        .k = CO_KIND_BOOL,
+        .v = {
+            .b = v,
+        }
+    };
+
+    return res;
+}
+
+co_object_t co_bytes_c_lt(co_object_t ctx, co_object_t obj, co_object_t other) {
+    co_bytes_t *obj_bytes_value = (co_bytes_t*)obj.v.p;
+    co_bytes_t *other_bytes_value = (co_bytes_t*)other.v.p;
+    co_object_t res;
+
+    assert(obj.k == CO_KIND_BYTES);
+    assert(other.k == CO_KIND_BYTES);
+
+    size_t min_len = MIN(obj_bytes_value->len, other_bytes_value->len);
+    int c = memcmp(obj_bytes_value->items, other_bytes_value->items, min_len);
+    bool v = c < 0;
+
+    res = (co_object_t){
+        .k = CO_KIND_BOOL,
+        .v = {
+            .b = v,
+        }
+    };
+
+    return res;
+}
+
+co_object_t co_bytes_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs) {
+    return co_bytes_c_free(ctx, obj);
 }
