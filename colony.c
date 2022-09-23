@@ -60,6 +60,7 @@ co_object_t co_object_c_free(co_object_t ctx, co_object_t obj) {
         case CO_KIND_UNDEFINED:
             break;
         case CO_KIND_BOOL:
+            res = co_bool_c_free(ctx, obj);
             break;
         case CO_KIND_I64:
             res = co_i64_c_free(ctx, obj);
@@ -81,7 +82,7 @@ co_object_t co_object_c_free(co_object_t ctx, co_object_t obj) {
             res = co_bytes_c_free(ctx, obj);
             break;
         case CO_KIND_STR:
-            // res = co_str_c_free(ctx, obj);
+            res = co_str_c_free(ctx, obj);
             break;
         case CO_KIND_LIST:
             break;
@@ -599,4 +600,106 @@ co_object_t co_bytes_c_lt(co_object_t ctx, co_object_t obj, co_object_t other) {
 
 co_object_t co_bytes_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs) {
     return co_bytes_c_free(ctx, obj);
+}
+
+/*
+ * str
+ */
+co_object_t co_str_c_new(co_object_t ctx, co_i64_t len, char *items) {
+    co_object_t obj;
+    co_str_t *str_value;
+
+    str_value = calloc(1, sizeof(co_str_t));
+    str_value->rc = 1;
+    str_value->len = len;
+    str_value->items = calloc(len, sizeof(char));
+
+    obj = (co_object_t){
+        .k = CO_KIND_STR,
+        .v = {
+            .p = (co_gc_t*)str_value,
+        }
+    };
+
+    return obj;
+}
+
+co_object_t co_str_c_free(co_object_t ctx, co_object_t obj) {
+    co_str_t *str_value = (co_str_t*)obj.v.p;
+    free(str_value->items);
+    free(str_value);
+    return CO_OBJECT_UNDEFINED;
+}
+
+co_object_t co_str_c_len(co_object_t ctx, co_object_t obj) {
+    co_str_t *str_value = (co_str_t*)obj.v.p;
+    return co_i64_c_new(ctx, str_value->len);
+}
+
+co_object_t co_str_c_hash(co_object_t ctx, co_object_t obj) {
+    // djb2 hashing algorithm
+    co_str_t *str_value = (co_str_t*)obj.v.p;
+    co_u64_t hash = 5381;
+    int c;
+    
+    for (co_u64_t i=0; i < str_value->len; i++) {
+        c = str_value->items[i];
+        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+    }
+
+    _co_int_float_t num;
+    num.u64 = hash;
+    return co_i64_c_new(ctx, num.i64);
+}
+
+co_object_t co_str_c_repr(co_object_t ctx, co_object_t obj) {
+
+}
+
+co_object_t co_str_c_eq(co_object_t ctx, co_object_t obj, co_object_t other) {
+    co_str_t *obj_str_value = (co_str_t*)obj.v.p;
+    co_str_t *other_str_value = (co_str_t*)other.v.p;
+    co_object_t res;
+
+    assert(obj.k == CO_KIND_STR);
+    assert(other.k == CO_KIND_STR);
+
+    size_t min_len = MIN(obj_str_value->len, other_str_value->len);
+    int c = memcmp(obj_str_value->items, other_str_value->items, min_len);
+    bool v = c == 0;
+
+    res = (co_object_t){
+        .k = CO_KIND_BOOL,
+        .v = {
+            .b = v,
+        }
+    };
+
+    return res;
+}
+
+co_object_t co_str_c_lt(co_object_t ctx, co_object_t obj, co_object_t other) {
+    co_str_t *obj_str_value = (co_str_t*)obj.v.p;
+    co_str_t *other_str_value = (co_str_t*)other.v.p;
+    co_object_t res;
+
+    assert(obj.k == CO_KIND_STR);
+    assert(other.k == CO_KIND_STR);
+
+    size_t min_len = MIN(obj_str_value->len, other_str_value->len);
+    int c = memcmp(obj_str_value->items, other_str_value->items, min_len);
+    bool v = c < 0;
+
+    res = (co_object_t){
+        .k = CO_KIND_BOOL,
+        .v = {
+            .b = v,
+        }
+    };
+
+    return res;
+}
+
+co_object_t co_str_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs) {
+    return co_str_c_free(ctx, obj);
 }
