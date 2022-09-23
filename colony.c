@@ -13,15 +13,10 @@
 
     if (obj.k >= CO_KIND_GC) {
         gc_value = (co_gc_t*)obj.v.p;
-
-        // #if CO_GC_DEBUG == 1
-        // printf("incref [0] %s\t%d\t%p\t%zu\t%s\n", filename, line, gc_value, gc_value->rc, funcname);
-        // #endif
-
         gc_value->rc++;
 
         #if CO_GC_DEBUG == 1
-        printf("incref [1] %s\t%d\t%p\t%zu\t%s\n", filename, line, gc_value, gc_value->rc, funcname);
+        printf("incref  \t%s  \t%d\t%p\t%zu\t%s\n", filename, line, gc_value, gc_value->rc, funcname);
         #endif
     }
 }
@@ -36,15 +31,10 @@
 
     if (obj.k >= CO_KIND_GC) {
         gc_value = (co_gc_t*)obj.v.p;
-
-        // #if CO_GC_DEBUG == 1
-        // printf("decref [0] %s\t%d\t%p\t%zu\t%s\n", filename, line, gc_value, gc_value->rc, funcname);
-        // #endif
-        
         gc_value->rc--;
         
         #if CO_GC_DEBUG == 1
-        printf("decref [1] %s\t%d\t%p\t%zu\t%s\n", filename, line, gc_value, gc_value->rc, funcname);
+        printf("decref  \t%s  \t%d\t%p\t%zu\t%s\n", filename, line, gc_value, gc_value->rc, funcname);
         #endif
         
         if (gc_value->rc == 0) {
