@@ -125,7 +125,7 @@ co_object_t co_object_free(co_object_t ctx, co_object_t obj, co_object_t args, c
 /*
  * bool
  */
-inline co_object_t co_bool_c_new(co_object_t ctx, co_bool_t b) {
+co_object_t co_bool_c_new(co_object_t ctx, co_bool_t b) {
     co_object_t res;
 
     res = (co_object_t){
@@ -138,48 +138,48 @@ inline co_object_t co_bool_c_new(co_object_t ctx, co_bool_t b) {
     return res;
 }
 
-inline co_object_t co_bool_c_free(co_object_t ctx, co_object_t obj) {
+co_object_t co_bool_c_free(co_object_t ctx, co_object_t obj) {
     // NOTE: nothing to free
     return CO_OBJECT_UNDEFINED;
 }
 
-inline co_object_t co_bool_c_hash(co_object_t ctx, co_object_t obj) {
+co_object_t co_bool_c_hash(co_object_t ctx, co_object_t obj) {
     return co_i64_c_new(ctx, obj.v.b);
 }
 
-inline co_object_t co_bool_c_not(co_object_t ctx, co_object_t obj) {
+co_object_t co_bool_c_not(co_object_t ctx, co_object_t obj) {
     return co_bool_c_new(ctx, !(obj.v.b));
 }
 
-inline co_object_t co_bool_c_and(co_object_t ctx, co_object_t obj, co_object_t other) {
+co_object_t co_bool_c_and(co_object_t ctx, co_object_t obj, co_object_t other) {
     return co_bool_c_new(ctx, obj.v.b && other.v.b);
 }
 
-inline co_object_t co_bool_c_or(co_object_t ctx, co_object_t obj, co_object_t other) {
+co_object_t co_bool_c_or(co_object_t ctx, co_object_t obj, co_object_t other) {
     return co_bool_c_new(ctx, obj.v.b || other.v.b);
 }
 
-inline co_object_t co_bool_c_lt(co_object_t ctx, co_object_t obj, co_object_t other) {
+co_object_t co_bool_c_lt(co_object_t ctx, co_object_t obj, co_object_t other) {
     return co_bool_c_new(ctx, obj.v.b < other.v.b);
 }
 
-inline co_object_t co_bool_c_le(co_object_t ctx, co_object_t obj, co_object_t other) {
+co_object_t co_bool_c_le(co_object_t ctx, co_object_t obj, co_object_t other) {
     return co_bool_c_new(ctx, obj.v.b <= other.v.b);
 }
 
-inline co_object_t co_bool_c_eq(co_object_t ctx, co_object_t obj, co_object_t other) {
+co_object_t co_bool_c_eq(co_object_t ctx, co_object_t obj, co_object_t other) {
     return co_bool_c_new(ctx, obj.v.b == other.v.b);
 }
 
-inline co_object_t co_bool_c_ne(co_object_t ctx, co_object_t obj, co_object_t other) {
+co_object_t co_bool_c_ne(co_object_t ctx, co_object_t obj, co_object_t other) {
     return co_bool_c_new(ctx, obj.v.b != other.v.b);
 }
 
-inline co_object_t co_bool_c_ge(co_object_t ctx, co_object_t obj, co_object_t other) {
+co_object_t co_bool_c_ge(co_object_t ctx, co_object_t obj, co_object_t other) {
     return co_bool_c_new(ctx, obj.v.b >= other.v.b);
 }
 
-inline co_object_t co_bool_c_gt(co_object_t ctx, co_object_t obj, co_object_t other) {
+co_object_t co_bool_c_gt(co_object_t ctx, co_object_t obj, co_object_t other) {
     return co_bool_c_new(ctx, obj.v.b > other.v.b);
 }
 
