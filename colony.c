@@ -62,8 +62,10 @@ co_object_t co_object_c_free(co_object_t ctx, co_object_t obj) {
         case CO_KIND_BOOL:
             break;
         case CO_KIND_I64:
+            res = co_i64_c_free(ctx, obj);
             break;
         case CO_KIND_F64:
+            res = co_f64_c_free(ctx, obj);
             break;
         case CO_KIND_GC:
             break;
@@ -132,7 +134,7 @@ co_object_t co_object_free(co_object_t ctx, co_object_t obj, co_object_t args, c
 /*
  * bool
  */
-inline co_object_t co_bool_c_new(co_object_t ctx, bool b) {
+inline co_object_t co_bool_c_new(co_object_t ctx, co_bool_t b) {
     co_object_t res;
 
     res = (co_object_t){
@@ -150,6 +152,10 @@ inline co_object_t co_bool_c_free(co_object_t ctx, co_object_t obj) {
     return CO_OBJECT_UNDEFINED;
 }
 
+inline co_object_t co_bool_c_hash(co_object_t ctx, co_object_t obj) {
+    return co_i64_c_new(ctx, obj.v.b);
+}
+
 inline co_object_t co_bool_c_not(co_object_t ctx, co_object_t obj) {
     return co_bool_c_new(ctx, !(obj.v.b));
 }
@@ -162,8 +168,218 @@ inline co_object_t co_bool_c_or(co_object_t ctx, co_object_t obj, co_object_t ot
     return co_bool_c_new(ctx, obj.v.b || other.v.b);
 }
 
+inline co_object_t co_bool_c_lt(co_object_t ctx, co_object_t obj, co_object_t other) {
+    return co_bool_c_new(ctx, obj.v.b < other.v.b);
+}
+
+inline co_object_t co_bool_c_le(co_object_t ctx, co_object_t obj, co_object_t other) {
+    return co_bool_c_new(ctx, obj.v.b <= other.v.b);
+}
+
+inline co_object_t co_bool_c_eq(co_object_t ctx, co_object_t obj, co_object_t other) {
+    return co_bool_c_new(ctx, obj.v.b == other.v.b);
+}
+
+inline co_object_t co_bool_c_ne(co_object_t ctx, co_object_t obj, co_object_t other) {
+    return co_bool_c_new(ctx, obj.v.b != other.v.b);
+}
+
+inline co_object_t co_bool_c_ge(co_object_t ctx, co_object_t obj, co_object_t other) {
+    return co_bool_c_new(ctx, obj.v.b >= other.v.b);
+}
+
+inline co_object_t co_bool_c_gt(co_object_t ctx, co_object_t obj, co_object_t other) {
+    return co_bool_c_new(ctx, obj.v.b > other.v.b);
+}
+
 co_object_t co_bool_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs) {
     return co_bool_c_free(ctx, obj);
+}
+
+/*
+ * int
+ */
+co_object_t co_i64_c_new(co_object_t ctx, co_i64_t i64) {
+    co_object_t res;
+
+    res = (co_object_t){
+        .k = CO_KIND_I64,
+        .v = {
+            .i64 = i64,
+        }
+    };
+
+    return res;
+}
+
+co_object_t co_i64_c_free(co_object_t ctx, co_object_t obj) {
+    // NOTE: nothing to free
+    return CO_OBJECT_UNDEFINED;
+}
+
+co_object_t co_i64_c_hash(co_object_t ctx, co_object_t obj) {
+    return co_i64_c_new(ctx, obj.v.i64);
+}
+
+co_object_t co_i64_c_repr(co_object_t ctx, co_object_t obj) {
+
+}
+
+co_object_t co_i64_c_lt(co_object_t ctx, co_object_t obj, co_object_t other) {
+    return co_bool_c_new(ctx, obj.v.i64 < other.v.i64);
+}
+
+co_object_t co_i64_c_le(co_object_t ctx, co_object_t obj, co_object_t other) {
+    return co_bool_c_new(ctx, obj.v.i64 <= other.v.i64);
+}
+
+co_object_t co_i64_c_eq(co_object_t ctx, co_object_t obj, co_object_t other) {
+    return co_bool_c_new(ctx, obj.v.i64 == other.v.i64);
+}
+
+co_object_t co_i64_c_ne(co_object_t ctx, co_object_t obj, co_object_t other) {
+    return co_bool_c_new(ctx, obj.v.i64 != other.v.i64);
+}
+
+co_object_t co_i64_c_ge(co_object_t ctx, co_object_t obj, co_object_t other) {
+    return co_bool_c_new(ctx, obj.v.i64 >= other.v.i64);
+}
+
+co_object_t co_i64_c_gt(co_object_t ctx, co_object_t obj, co_object_t other) {
+    return co_bool_c_new(ctx, obj.v.i64 > other.v.i64);
+}
+
+co_object_t co_i64_c_add(co_object_t ctx, co_object_t obj, co_object_t other) {
+    return co_i64_c_new(ctx, obj.v.i64 + other.v.i64);
+}
+
+co_object_t co_i64_c_sub(co_object_t ctx, co_object_t obj, co_object_t other) {
+    return co_i64_c_new(ctx, obj.v.i64 - other.v.i64);
+}
+
+co_object_t co_i64_c_mul(co_object_t ctx, co_object_t obj, co_object_t other) {
+    return co_i64_c_new(ctx, obj.v.i64 * other.v.i64);
+}
+
+// FIXME: Result<int, str>
+co_object_t co_i64_c_div(co_object_t ctx, co_object_t obj, co_object_t other) {
+    return co_i64_c_new(ctx, obj.v.i64 / other.v.i64);
+}
+
+co_object_t co_i64_c_mod(co_object_t ctx, co_object_t obj, co_object_t other) {
+    return co_i64_c_new(ctx, obj.v.i64 % other.v.i64);
+}
+
+co_object_t co_i64_c_pow(co_object_t ctx, co_object_t obj, co_object_t other) {
+    return co_i64_c_new(ctx, (co_i64_t)pow(obj.v.i64, other.v.i64));
+}
+
+co_object_t co_i64_c_shl(co_object_t ctx, co_object_t obj, co_object_t other) {
+    return co_i64_c_new(ctx, obj.v.i64 << other.v.i64);
+}
+
+co_object_t co_i64_c_shr(co_object_t ctx, co_object_t obj, co_object_t other) {
+    return co_i64_c_new(ctx, obj.v.i64 >> other.v.i64);
+}
+
+co_object_t co_i64_c_bitinv(co_object_t ctx, co_object_t obj) {
+    return co_i64_c_new(ctx, ~obj.v.i64);
+}
+
+co_object_t co_i64_c_bitand(co_object_t ctx, co_object_t obj, co_object_t other) {
+    return co_i64_c_new(ctx, obj.v.i64 & other.v.i64);
+}
+
+co_object_t co_i64_c_bitor(co_object_t ctx, co_object_t obj, co_object_t other) {
+    return co_i64_c_new(ctx, obj.v.i64 | other.v.i64);
+}
+
+co_object_t co_i64_c_bitxor(co_object_t ctx, co_object_t obj, co_object_t other) {
+    return co_i64_c_new(ctx, obj.v.i64 ^ other.v.i64);
+}
+
+co_object_t co_i64_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs) {
+    return co_i64_c_free(ctx, obj);
+}
+
+/*
+ * float
+ */
+co_object_t co_f64_c_new(co_object_t ctx, co_f64_t f64) {
+    co_object_t res;
+
+    res = (co_object_t){
+        .k = CO_KIND_F64,
+        .v = {
+            .f64 = f64,
+        }
+    };
+
+    return res;
+}
+
+co_object_t co_f64_c_free(co_object_t ctx, co_object_t obj) {
+    // NOTE: nothing to free
+    return CO_OBJECT_UNDEFINED;
+}
+
+co_object_t co_f64_c_hash(co_object_t ctx, co_object_t obj) {
+    _co_int_float_t num;
+    num.f64 = obj.v.f64;
+    return co_i64_c_new(ctx, num.i64);
+}
+
+co_object_t co_f64_c_repr(co_object_t ctx, co_object_t obj) {
+
+}
+
+co_object_t co_f64_c_lt(co_object_t ctx, co_object_t obj, co_object_t other) {
+    return co_bool_c_new(ctx, obj.v.f64 < other.v.f64);
+}
+
+co_object_t co_f64_c_le(co_object_t ctx, co_object_t obj, co_object_t other) {
+    return co_bool_c_new(ctx, obj.v.f64 <= other.v.f64);
+}
+
+co_object_t co_f64_c_eq(co_object_t ctx, co_object_t obj, co_object_t other) {
+    return co_bool_c_new(ctx, obj.v.f64 == other.v.f64);
+}
+
+co_object_t co_f64_c_ne(co_object_t ctx, co_object_t obj, co_object_t other) {
+    return co_bool_c_new(ctx, obj.v.f64 != other.v.f64);
+}
+
+co_object_t co_f64_c_ge(co_object_t ctx, co_object_t obj, co_object_t other) {
+    return co_bool_c_new(ctx, obj.v.f64 >= other.v.f64);
+}
+
+co_object_t co_f64_c_gt(co_object_t ctx, co_object_t obj, co_object_t other) {
+    return co_bool_c_new(ctx, obj.v.f64 > other.v.f64);
+}
+
+co_object_t co_f64_c_add(co_object_t ctx, co_object_t obj, co_object_t other) {
+    return co_f64_c_new(ctx, obj.v.f64 + other.v.f64);
+}
+
+co_object_t co_f64_c_sub(co_object_t ctx, co_object_t obj, co_object_t other) {
+    return co_f64_c_new(ctx, obj.v.f64 - other.v.f64);
+}
+
+co_object_t co_f64_c_mul(co_object_t ctx, co_object_t obj, co_object_t other) {
+    return co_f64_c_new(ctx, obj.v.f64 * other.v.f64);
+}
+
+// FIXME: Result<f64, str>
+co_object_t co_f64_c_div(co_object_t ctx, co_object_t obj, co_object_t other) {
+    return co_f64_c_new(ctx, obj.v.f64 / other.v.f64);
+}
+
+co_object_t co_f64_c_pow(co_object_t ctx, co_object_t obj, co_object_t other) {
+    return co_f64_c_new(ctx, pow(obj.v.f64, other.v.f64));
+}
+
+co_object_t co_f64_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs) {
+    return co_f64_c_free(ctx, obj);
 }
 
 /*
@@ -286,7 +502,7 @@ co_object_t co_frame_free(co_object_t ctx, co_object_t obj, co_object_t args, co
 /*
  * bytes
  */
-co_object_t co_bytes_c_new(co_object_t ctx, size_t len, char *items) {
+co_object_t co_bytes_c_new(co_object_t ctx, co_i64_t len, char *items) {
     co_object_t obj;
     co_bytes_t *bytes_value;
 
@@ -313,11 +529,24 @@ co_object_t co_bytes_c_free(co_object_t ctx, co_object_t obj) {
 }
 
 co_object_t co_bytes_c_len(co_object_t ctx, co_object_t obj) {
-
+    co_bytes_t *bytes_value = (co_bytes_t*)obj.v.p;
+    return co_i64_c_new(ctx, bytes_value->len);
 }
 
 co_object_t co_bytes_c_hash(co_object_t ctx, co_object_t obj) {
+    // djb2 hashing algorithm
+    co_bytes_t *bytes_value = (co_bytes_t*)obj.v.p;
+    co_u64_t hash = 5381;
+    int c;
+    
+    for (co_u64_t i=0; i < bytes_value->len; i++) {
+        c = bytes_value->items[i];
+        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+    }
 
+    _co_int_float_t num;
+    num.u64 = hash;
+    return co_i64_c_new(ctx, num.i64);
 }
 
 co_object_t co_bytes_c_repr(co_object_t ctx, co_object_t obj) {
