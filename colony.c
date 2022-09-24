@@ -118,6 +118,81 @@ co_object_t co_object_c_free(co_object_t ctx, co_object_t obj) {
     return res;
 }
 
+co_object_t co_object_c_repr(co_object_t ctx, co_object_t obj) {
+    co_object_t res = CO_OBJECT_UNDEFINED;
+
+    switch (obj.k) {
+        case CO_KIND_UNDEFINED:
+            break;
+        case CO_KIND_BOOL:
+            res = co_bool_c_repr(ctx, obj);
+            break;
+        case CO_KIND_I64:
+            res = co_i64_c_repr(ctx, obj);
+            break;
+        case CO_KIND_F64:
+            res = co_f64_c_repr(ctx, obj);
+            break;
+        case CO_KIND_GC:
+            break;
+        case CO_KIND_CTX:
+            // res = co_ctx_c_repr(ctx, obj);
+            break;
+        case CO_KIND_FRAME:
+            // res = co_frame_c_repr(ctx, obj);
+            break;
+        case CO_KIND_MODULE:
+            break;
+        case CO_KIND_BYTES:
+            res = co_bytes_c_repr(ctx, obj);
+            break;
+        case CO_KIND_STR:
+            res = co_str_c_repr(ctx, obj);
+            break;
+        case CO_KIND_LIST:
+            break;
+        case CO_KIND_DICT:
+            break;
+        case CO_KIND_BLOCK:
+            break;
+        case CO_KIND_CODE:
+            break;
+        case CO_KIND_FN:
+            break;
+        case CO_KIND_STRUCT:
+            break;
+        case CO_KIND_UNION:
+            break;
+        case CO_KIND_GENERIC:
+            break;
+        case CO_KIND_GENERIC_STRUCT:
+            break;
+        case CO_KIND_GENERIC_UNION:
+            break;
+        case CO_KIND_GENERIC_TYPE:
+            break;
+        case CO_KIND_GENERIC_FN:
+            break;
+        case CO_KIND_NONE:
+            break;
+        case CO_KIND_SOME:
+            break;
+        case CO_KIND_OPTION:
+            break;
+        case CO_KIND_OK:
+            break;
+        case CO_KIND_ERR:
+            break;
+        case CO_KIND_RESULT:
+            break;
+        default:
+            exit(1);
+            break;
+    }
+
+    return res;
+}
+
 co_object_t co_object_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs) {
     return co_object_c_free(ctx, obj);
 }
@@ -141,6 +216,18 @@ co_object_t co_bool_c_new(co_object_t ctx, co_bool_t b) {
 co_object_t co_bool_c_free(co_object_t ctx, co_object_t obj) {
     // NOTE: nothing to free
     return CO_OBJECT_UNDEFINED;
+}
+
+co_object_t co_bool_c_repr(co_object_t ctx, co_object_t obj) {
+    co_object_t res;
+
+    if (obj.v.b == true) {
+        res = co_str_c_new(ctx, 4, "true", CO_OWN_TRANS_COPY);
+    } else {
+        res = co_str_c_new(ctx, 5, "false", CO_OWN_TRANS_COPY);
+    }
+
+    return res;
 }
 
 co_object_t co_bool_c_hash(co_object_t ctx, co_object_t obj) {
@@ -213,7 +300,13 @@ co_object_t co_i64_c_hash(co_object_t ctx, co_object_t obj) {
 }
 
 co_object_t co_i64_c_repr(co_object_t ctx, co_object_t obj) {
-
+    co_i64_t v = obj.v.i64;
+    int size = snprintf(NULL, 0, "%ld", v);
+    size += 1;
+    char *items = (char*)calloc(size, sizeof(char));
+    snprintf(items, size, "%ld", v);
+    co_object_t res = co_str_c_new(ctx, size, items, CO_OWN_TRANS_MOVE);
+    return res;
 }
 
 co_object_t co_i64_c_lt(co_object_t ctx, co_object_t obj, co_object_t other) {
@@ -321,7 +414,13 @@ co_object_t co_f64_c_hash(co_object_t ctx, co_object_t obj) {
 }
 
 co_object_t co_f64_c_repr(co_object_t ctx, co_object_t obj) {
-
+    co_f64_t v = obj.v.f64;
+    int size = snprintf(NULL, 0, "%f", v);
+    size += 1;
+    char *items = (char*)calloc(size, sizeof(char));
+    snprintf(items, size, "%f", v);
+    co_object_t res = co_str_c_new(ctx, size, items, CO_OWN_TRANS_MOVE);
+    return res;
 }
 
 co_object_t co_f64_c_lt(co_object_t ctx, co_object_t obj, co_object_t other) {
@@ -493,14 +592,39 @@ co_object_t co_frame_free(co_object_t ctx, co_object_t obj, co_object_t args, co
 /*
  * bytes
  */
-co_object_t co_bytes_c_new(co_object_t ctx, co_i64_t len, char *items) {
+co_object_t co_bytes_c_new(co_object_t ctx, co_i64_t len, char *items, co_own_trans_t ot) {
     co_object_t obj;
     co_bytes_t *bytes_value;
 
     bytes_value = calloc(1, sizeof(co_bytes_t));
     bytes_value->rc = 1;
     bytes_value->len = len;
-    bytes_value->items = calloc(len, sizeof(char));
+    bytes_value->ot = ot;
+
+    if (ot == CO_OWN_TRANS_NONE) {
+        bytes_value->items = items;
+    } else if (ot == CO_OWN_TRANS_COPY) {
+        bytes_value->items = calloc(len, sizeof(char));
+        bytes_value->items = memmove(bytes_value->items, items, len);
+    } else if (ot == CO_OWN_TRANS_MOVE) {
+        bytes_value->items = items;
+    } else {
+        exit(1);
+    }
+
+    // djb2 hashing algorithm
+    co_u64_t h = 5381;
+    int c;
+    
+    for (co_u64_t i=0; i < bytes_value->len; i++) {
+        c = bytes_value->items[i];
+        h = ((h << 5) + h) + c; /* h * 33 + c */
+    }
+
+    _co_int_float_t num;
+    num.u64 = h;
+    co_i64_t hash = num.i64;
+    bytes_value->hash = hash;
 
     obj = (co_object_t){
         .k = CO_KIND_BYTES,
@@ -514,7 +638,11 @@ co_object_t co_bytes_c_new(co_object_t ctx, co_i64_t len, char *items) {
 
 co_object_t co_bytes_c_free(co_object_t ctx, co_object_t obj) {
     co_bytes_t *bytes_value = (co_bytes_t*)obj.v.p;
-    free(bytes_value->items);
+    
+    if (bytes_value->ot == CO_OWN_TRANS_COPY || bytes_value->ot == CO_OWN_TRANS_MOVE) {
+        free(bytes_value->items);
+    }
+
     free(bytes_value);
     return CO_OBJECT_UNDEFINED;
 }
@@ -525,23 +653,13 @@ co_object_t co_bytes_c_len(co_object_t ctx, co_object_t obj) {
 }
 
 co_object_t co_bytes_c_hash(co_object_t ctx, co_object_t obj) {
-    // djb2 hashing algorithm
     co_bytes_t *bytes_value = (co_bytes_t*)obj.v.p;
-    co_u64_t hash = 5381;
-    int c;
-    
-    for (co_u64_t i=0; i < bytes_value->len; i++) {
-        c = bytes_value->items[i];
-        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
-    }
-
-    _co_int_float_t num;
-    num.u64 = hash;
-    return co_i64_c_new(ctx, num.i64);
+    return co_i64_c_new(ctx, bytes_value->hash);
 }
 
 co_object_t co_bytes_c_repr(co_object_t ctx, co_object_t obj) {
-
+    // FIXME:
+    exit(1);
 }
 
 co_object_t co_bytes_c_eq(co_object_t ctx, co_object_t obj, co_object_t other) {
@@ -595,15 +713,41 @@ co_object_t co_bytes_free(co_object_t ctx, co_object_t obj, co_object_t args, co
 /*
  * str
  */
-co_object_t co_str_c_new(co_object_t ctx, co_i64_t len, char *items) {
+co_object_t co_str_c_new(co_object_t ctx, co_i64_t len, char *items, co_own_trans_t ot) {
     co_object_t obj;
     co_str_t *str_value;
 
     str_value = calloc(1, sizeof(co_str_t));
     str_value->rc = 1;
     str_value->len = len;
-    str_value->items = calloc(len, sizeof(char));
+    str_value->ot = ot;
 
+    if (ot == CO_OWN_TRANS_NONE) {
+        str_value->items = items;
+    } else if (ot == CO_OWN_TRANS_COPY) {
+        str_value->items = calloc(len, sizeof(char));
+        str_value->items = memmove(str_value->items, items, len);
+    } else if (ot == CO_OWN_TRANS_MOVE) {
+        str_value->items = items;
+    } else {
+        exit(1);
+    }
+
+    // djb2 hashing algorithm
+    co_u64_t h = 5381;
+    int c;
+    
+    for (co_u64_t i=0; i < str_value->len; i++) {
+        c = str_value->items[i];
+        h = ((h << 5) + h) + c; /* h * 33 + c */
+    }
+
+    _co_int_float_t num;
+    num.u64 = h;
+    co_i64_t hash = num.i64;
+    str_value->hash = hash;
+
+    // object
     obj = (co_object_t){
         .k = CO_KIND_STR,
         .v = {
@@ -616,7 +760,11 @@ co_object_t co_str_c_new(co_object_t ctx, co_i64_t len, char *items) {
 
 co_object_t co_str_c_free(co_object_t ctx, co_object_t obj) {
     co_str_t *str_value = (co_str_t*)obj.v.p;
-    free(str_value->items);
+
+    if (str_value->ot == CO_OWN_TRANS_COPY || str_value->ot == CO_OWN_TRANS_MOVE) {
+        free(str_value->items);
+    }
+
     free(str_value);
     return CO_OBJECT_UNDEFINED;
 }
@@ -627,22 +775,12 @@ co_object_t co_str_c_len(co_object_t ctx, co_object_t obj) {
 }
 
 co_object_t co_str_c_hash(co_object_t ctx, co_object_t obj) {
-    // djb2 hashing algorithm
     co_str_t *str_value = (co_str_t*)obj.v.p;
-    co_u64_t hash = 5381;
-    int c;
-    
-    for (co_u64_t i=0; i < str_value->len; i++) {
-        c = str_value->items[i];
-        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
-    }
-
-    _co_int_float_t num;
-    num.u64 = hash;
-    return co_i64_c_new(ctx, num.i64);
+    return co_i64_c_new(ctx, str_value->hash);
 }
 
 co_object_t co_str_c_repr(co_object_t ctx, co_object_t obj) {
+    co_str_t *str_value = (co_str_t*)obj.v.p;
 
 }
 
@@ -692,4 +830,22 @@ co_object_t co_str_c_lt(co_object_t ctx, co_object_t obj, co_object_t other) {
 
 co_object_t co_str_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs) {
     return co_str_c_free(ctx, obj);
+}
+
+/*
+ * builtins
+ */
+co_object_t co_print_c(co_object_t ctx, co_object_t obj) {
+    co_object_t repr_obj = co_object_c_repr(ctx, obj);
+    co_str_t *repr_str_value = (co_str_t*)repr_obj.v.p;
+    size_t repr_str_len = repr_str_value->len;
+    char *repr_str_items = repr_str_value->items;
+    size_t size = repr_str_len + 1;
+    char *buf = (char*)calloc(size, sizeof(char));
+    printf("size: %lu\n", size);
+    snprintf(buf, size, "%s", repr_str_items);
+    printf("%s\n", buf);
+    free(buf);
+    CO_OBJECT_C_DECREF(ctx, repr_obj);
+    return CO_OBJECT_UNDEFINED;
 }
