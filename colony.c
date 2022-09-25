@@ -813,8 +813,24 @@ co_object_t co_str_c_hash(co_object_t ctx, co_object_t obj) {
 }
 
 co_object_t co_str_c_repr(co_object_t ctx, co_object_t obj) {
-    co_str_t *str_value = (co_str_t*)obj.v.p;
+    co_object_t res;
 
+    co_str_t *str_value = (co_str_t*)obj.v.p;
+    char *repr_items = (char*)calloc(str_value->len + 1, sizeof(char));
+    char c;
+
+    for (int i = 0; i < str_value->len; i++) {
+        c = str_value->items[i];
+
+        if (isprint(c)) {
+           repr_items[i] = c;
+        } else {
+            repr_items[i] = '?';
+        }
+    }
+
+    res = co_str_c_new(ctx, str_value->len + 1, repr_items, CO_OWN_TRANS_MOVE);
+    return res;
 }
 
 co_object_t co_str_c_eq(co_object_t ctx, co_object_t obj, co_object_t other) {
