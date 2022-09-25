@@ -39,9 +39,31 @@ void example_bytes(co_object_t ctx) {
     co_object_t b1 = co_bytes_c_new(ctx, 5, "Hello", CO_OWN_TRANS_COPY);
     co_object_t v0 = co_bytes_c_eq(ctx, b0, b1);
     assert(v0.v.b == true);
-
     CO_OBJECT_C_DECREF(ctx, b0);
     CO_OBJECT_C_DECREF(ctx, b1);
+
+    co_object_t b2 = co_bytes_c_new(ctx, 5, "Hello", CO_OWN_TRANS_COPY);
+    co_object_t b3 = co_bytes_c_new(ctx, 1, " ", CO_OWN_TRANS_COPY);
+    co_object_t b4 = co_bytes_c_new(ctx, 5, "world", CO_OWN_TRANS_COPY);
+    co_object_t b5 = co_bytes_c_new(ctx, 1, "!", CO_OWN_TRANS_COPY);
+    
+    co_object_t b6 = co_bytes_c_add(ctx, b2, b3);
+    co_object_t b7 = co_bytes_c_add(ctx, b6, b4);
+    co_object_t b8 = co_bytes_c_add(ctx, b7, b5);
+
+    co_print_c(ctx, b2);
+    co_print_c(ctx, b3);
+    co_print_c(ctx, b4);
+    co_print_c(ctx, b5);
+    co_print_c(ctx, b8);
+    
+    CO_OBJECT_C_DECREF(ctx, b2);
+    CO_OBJECT_C_DECREF(ctx, b3);
+    CO_OBJECT_C_DECREF(ctx, b4);
+    CO_OBJECT_C_DECREF(ctx, b5);
+    CO_OBJECT_C_DECREF(ctx, b6);
+    CO_OBJECT_C_DECREF(ctx, b7);
+    CO_OBJECT_C_DECREF(ctx, b8);
 }
 
 int main(int argc, char **argv) {

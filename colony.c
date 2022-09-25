@@ -669,8 +669,24 @@ co_object_t co_bytes_c_hash(co_object_t ctx, co_object_t obj) {
 }
 
 co_object_t co_bytes_c_repr(co_object_t ctx, co_object_t obj) {
-    // FIXME:
-    exit(1);
+    co_object_t res;
+
+    co_bytes_t *bytes_value = (co_bytes_t*)obj.v.p;
+    char *repr_items = (char*)calloc(bytes_value->len + 1, sizeof(char));
+    char c;
+
+    for (int i = 0; i < bytes_value->len; i++) {
+        c = bytes_value->items[i];
+
+        if (isprint(c)) {
+           repr_items[i] = c;
+        } else {
+            repr_items[i] = '?';
+        }
+    }
+
+    res = co_str_c_new(ctx, bytes_value->len + 1, repr_items, CO_OWN_TRANS_MOVE);
+    return res;
 }
 
 co_object_t co_bytes_c_eq(co_object_t ctx, co_object_t obj, co_object_t other) {
@@ -714,6 +730,23 @@ co_object_t co_bytes_c_lt(co_object_t ctx, co_object_t obj, co_object_t other) {
         }
     };
 
+    return res;
+}
+
+co_object_t co_bytes_c_add(co_object_t ctx, co_object_t obj, co_object_t other) {
+    co_bytes_t *obj_bytes_value = (co_bytes_t*)obj.v.p;
+    co_bytes_t *other_bytes_value = (co_bytes_t*)other.v.p;
+    co_object_t res;
+
+    assert(obj.k == CO_KIND_BYTES);
+    assert(other.k == CO_KIND_BYTES);
+
+    size_t len = obj_bytes_value->len + other_bytes_value->len;
+    char *items = (char*)calloc(len, sizeof(char));
+    memmove(items, obj_bytes_value->items, obj_bytes_value->len);
+    memmove(items + obj_bytes_value->len, other_bytes_value->items, other_bytes_value->len);
+    
+    res = co_bytes_c_new(ctx, len, items, CO_OWN_TRANS_MOVE);
     return res;
 }
 
@@ -828,6 +861,23 @@ co_object_t co_str_c_lt(co_object_t ctx, co_object_t obj, co_object_t other) {
     return res;
 }
 
+co_object_t co_str_c_add(co_object_t ctx, co_object_t obj, co_object_t other) {
+    co_str_t *obj_str_value = (co_str_t*)obj.v.p;
+    co_str_t *other_str_value = (co_str_t*)other.v.p;
+    co_object_t res;
+
+    assert(obj.k == CO_KIND_STR);
+    assert(other.k == CO_KIND_STR);
+
+    size_t len = obj_str_value->len + other_str_value->len;
+    char *items = (char*)calloc(len, sizeof(char));
+    memmove(items, obj_str_value->items, obj_str_value->len);
+    memmove(items + obj_str_value->len, other_str_value->items, other_str_value->len);
+    
+    res = co_str_c_new(ctx, len, items, CO_OWN_TRANS_MOVE);
+    return res;
+}
+
 co_object_t co_str_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs) {
     return co_str_c_free(ctx, obj);
 }
@@ -844,7 +894,7 @@ co_object_t co_print_c(co_object_t ctx, co_object_t obj) {
     
     // print into buf, then printf buf
     char *buf_format = co_c_create_len_str_format(repr_str_len - 1); // subtract 1 because '\0'
-    printf("buf_format: %s", buf_format);
+    // printf("buf_format: %s", buf_format);
     printf(buf_format, repr_str_items);
 
     free(buf_format);

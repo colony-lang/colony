@@ -7,9 +7,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include <math.h>
 
-#define CO_GC_DEBUG 1
+#define CO_GC_DEBUG 0
 
 #if CO_GC_DEBUG == 1
     #define CO_OBJECT_C_INCREF(ctx, obj) co_object_c_incref(ctx, obj, __FILE__, __LINE__, __FUNCTION__)
@@ -280,6 +281,7 @@ co_object_t co_bytes_c_hash(co_object_t ctx, co_object_t obj);
 co_object_t co_bytes_c_repr(co_object_t ctx, co_object_t obj);
 co_object_t co_bytes_c_eq(co_object_t ctx, co_object_t obj, co_object_t other);
 co_object_t co_bytes_c_lt(co_object_t ctx, co_object_t obj, co_object_t other);
+co_object_t co_bytes_c_add(co_object_t ctx, co_object_t obj, co_object_t other);
 
 co_object_t co_bytes_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
 
@@ -293,6 +295,7 @@ co_object_t co_str_c_hash(co_object_t ctx, co_object_t obj);
 co_object_t co_str_c_repr(co_object_t ctx, co_object_t obj);
 co_object_t co_str_c_eq(co_object_t ctx, co_object_t obj, co_object_t other);
 co_object_t co_str_c_lt(co_object_t ctx, co_object_t obj, co_object_t other);
+co_object_t co_str_c_add(co_object_t ctx, co_object_t obj, co_object_t other);
 
 co_object_t co_str_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
 
