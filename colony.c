@@ -3,6 +3,30 @@
 /*
  * object
  */
+co_i64_t co_c_cstr_hash_djb2(size_t len, char *items) {
+    // djb2 hashing algorithm
+    co_u64_t h = 5381;
+    int c;
+    
+    for (co_u64_t i = 0; i < len; i++) {
+        c = items[i];
+        h = ((h << 5) + h) + c; /* h * 33 + c */
+    }
+
+    _co_int_float_t num;
+    num.u64 = h;
+    co_i64_t hash = num.i64;
+    return hash;
+}
+
+char *co_c_create_len_str_format(size_t len) {
+    int size = snprintf(NULL, 0, "%lu", len);
+    // example: "%114s\n\0"
+    char *fmt = (char*)calloc(1 + size + 1 + 1 + 1, sizeof(char));
+    snprintf(fmt, 1 + size + 1 + 1 + 1, "%%%lus\n", len);
+    return fmt;
+}
+
 #if CO_GC_DEBUG == 1
     inline void co_object_c_incref(co_object_t ctx, co_object_t obj, char *filename, int line, const char *funcname)
 #else
@@ -222,9 +246,9 @@ co_object_t co_bool_c_repr(co_object_t ctx, co_object_t obj) {
     co_object_t res;
 
     if (obj.v.b == true) {
-        res = co_str_c_new(ctx, 4, "true", CO_OWN_TRANS_COPY);
+        res = co_str_c_new(ctx, 5, "true\0", CO_OWN_TRANS_COPY);
     } else {
-        res = co_str_c_new(ctx, 5, "false", CO_OWN_TRANS_COPY);
+        res = co_str_c_new(ctx, 6, "false\0", CO_OWN_TRANS_COPY);
     }
 
     return res;
@@ -302,10 +326,9 @@ co_object_t co_i64_c_hash(co_object_t ctx, co_object_t obj) {
 co_object_t co_i64_c_repr(co_object_t ctx, co_object_t obj) {
     co_i64_t v = obj.v.i64;
     int size = snprintf(NULL, 0, "%ld", v);
-    size += 1;
-    char *items = (char*)calloc(size, sizeof(char));
-    snprintf(items, size, "%ld", v);
-    co_object_t res = co_str_c_new(ctx, size, items, CO_OWN_TRANS_MOVE);
+    char *items = (char*)calloc(size + 1, sizeof(char));
+    snprintf(items, size + 1, "%ld", v);
+    co_object_t res = co_str_c_new(ctx, size + 1, items, CO_OWN_TRANS_MOVE);
     return res;
 }
 
@@ -416,10 +439,9 @@ co_object_t co_f64_c_hash(co_object_t ctx, co_object_t obj) {
 co_object_t co_f64_c_repr(co_object_t ctx, co_object_t obj) {
     co_f64_t v = obj.v.f64;
     int size = snprintf(NULL, 0, "%f", v);
-    size += 1;
-    char *items = (char*)calloc(size, sizeof(char));
-    snprintf(items, size, "%f", v);
-    co_object_t res = co_str_c_new(ctx, size, items, CO_OWN_TRANS_MOVE);
+    char *items = (char*)calloc(size + 1, sizeof(char));
+    snprintf(items, size + 1, "%f", v);
+    co_object_t res = co_str_c_new(ctx, size + 1, items, CO_OWN_TRANS_MOVE);
     return res;
 }
 
@@ -612,19 +634,8 @@ co_object_t co_bytes_c_new(co_object_t ctx, co_i64_t len, char *items, co_own_tr
         exit(1);
     }
 
-    // djb2 hashing algorithm
-    co_u64_t h = 5381;
-    int c;
-    
-    for (co_u64_t i=0; i < bytes_value->len; i++) {
-        c = bytes_value->items[i];
-        h = ((h << 5) + h) + c; /* h * 33 + c */
-    }
-
-    _co_int_float_t num;
-    num.u64 = h;
-    co_i64_t hash = num.i64;
-    bytes_value->hash = hash;
+    // precompute hash
+    bytes_value->hash = co_c_cstr_hash(bytes_value->len, bytes_value->items);
 
     obj = (co_object_t){
         .k = CO_KIND_BYTES,
@@ -733,19 +744,8 @@ co_object_t co_str_c_new(co_object_t ctx, co_i64_t len, char *items, co_own_tran
         exit(1);
     }
 
-    // djb2 hashing algorithm
-    co_u64_t h = 5381;
-    int c;
-    
-    for (co_u64_t i=0; i < str_value->len; i++) {
-        c = str_value->items[i];
-        h = ((h << 5) + h) + c; /* h * 33 + c */
-    }
-
-    _co_int_float_t num;
-    num.u64 = h;
-    co_i64_t hash = num.i64;
-    str_value->hash = hash;
+    // precompute hash
+    str_value->hash = co_c_cstr_hash(str_value->len, str_value->items);
 
     // object
     obj = (co_object_t){
@@ -837,15 +837,17 @@ co_object_t co_str_free(co_object_t ctx, co_object_t obj, co_object_t args, co_o
  */
 co_object_t co_print_c(co_object_t ctx, co_object_t obj) {
     co_object_t repr_obj = co_object_c_repr(ctx, obj);
+    
     co_str_t *repr_str_value = (co_str_t*)repr_obj.v.p;
     size_t repr_str_len = repr_str_value->len;
     char *repr_str_items = repr_str_value->items;
-    size_t size = repr_str_len + 1;
-    char *buf = (char*)calloc(size, sizeof(char));
-    printf("size: %lu\n", size);
-    snprintf(buf, size, "%s", repr_str_items);
-    printf("%s\n", buf);
-    free(buf);
+    
+    // print into buf, then printf buf
+    char *buf_format = co_c_create_len_str_format(repr_str_len - 1); // subtract 1 because '\0'
+    printf("buf_format: %s", buf_format);
+    printf(buf_format, repr_str_items);
+
+    free(buf_format);
     CO_OBJECT_C_DECREF(ctx, repr_obj);
     return CO_OBJECT_UNDEFINED;
 }

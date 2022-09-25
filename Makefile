@@ -1,6 +1,6 @@
 # CC=gcc
-CC=clang
-# CC=musl-clang
+# CC=clang
+CC=musl-clang
 CFLAGS=-c -Wall -Og
 LDFLAGS=-lm -lpthread
 SOURCES= colony.c main.c

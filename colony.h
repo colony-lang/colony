@@ -154,12 +154,16 @@ typedef struct co_str_t {
 /*
  * object
  */
-static struct co_object_t CO_OBJECT_UNDEFINED = (co_object_t){
+static struct co_object_t CO_OBJECT_UNDEFINED = {
     .k = CO_KIND_UNDEFINED,
     .v = (co_value_t){
         .p = (co_gc_t*)NULL
     }
 };
+
+#define co_c_cstr_hash co_c_cstr_hash_djb2
+co_i64_t co_c_cstr_hash_djb2(size_t len, char *items);
+char *co_c_create_len_str_format(size_t len);
 
 #if CO_GC_DEBUG == 1
     void co_object_c_incref(co_object_t ctx, co_object_t obj, char *filename, int line, const char *funcname);

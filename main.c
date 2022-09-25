@@ -18,13 +18,20 @@ void example_bool(co_object_t ctx) {
 
 void example_i64(co_object_t ctx) {
     co_object_t v0 = co_i64_c_new(ctx, 1);
-    co_object_t v1 = co_i64_c_new(ctx, 2);
+    co_object_t v1 = co_i64_c_new(ctx, 20);
     co_object_t v2 = co_i64_c_add(ctx, v0, v1);
-    // co_print_c(ctx, v2);
+    co_print_c(ctx, v2);
 
-    co_object_t sv2 = co_i64_c_repr(ctx, v2); // str
+    // co_object_t sv2 = co_i64_c_repr(ctx, v2); // str
     // co_print_c(ctx, sv2);
-    CO_OBJECT_C_DECREF(ctx, sv2);
+    // CO_OBJECT_C_DECREF(ctx, sv2);
+}
+
+void example_f64(co_object_t ctx) {
+    co_object_t v0 = co_f64_c_new(ctx, 1.0);
+    co_object_t v1 = co_f64_c_new(ctx, 20.0);
+    co_object_t v2 = co_f64_c_add(ctx, v0, v1);
+    co_print_c(ctx, v2);
 }
 
 void example_bytes(co_object_t ctx) {
@@ -50,6 +57,9 @@ int main(int argc, char **argv) {
 
     // i64
     example_i64(ctx);
+
+    // f64
+    example_f64(ctx);
 
     // bytes
     example_bytes(ctx);

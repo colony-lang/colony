@@ -1,6 +1,8 @@
 // booleans
 a: bool = true
 a: bool = false
+a := true
+a := false || true
 
 // integer numbers
 a: i8 = -1_i8
