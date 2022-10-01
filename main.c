@@ -98,6 +98,19 @@ void example_str(co_object_t ctx) {
     CO_OBJECT_C_DECREF(ctx, s8);
 }
 
+void example_list(co_object_t ctx) {
+    co_object_t items0[] = {
+        (co_object_t){.k = CO_KIND_F64, .v = { .f64 = 1.0 }},
+        (co_object_t){.k = CO_KIND_F64, .v = { .f64 = 2.0 }},
+        (co_object_t){.k = CO_KIND_F64, .v = { .f64 = 3.0 }}
+    };
+
+    co_object_t a0 = co_list_c_new(ctx, 3, items0);
+    // co_print_c(ctx, a0);
+
+    // CO_OBJECT_C_DECREF(ctx, a0);
+}
+
 int main(int argc, char **argv) {
     // root context
     co_object_t root_ctx = co_ctx_c_new_root();
@@ -120,6 +133,9 @@ int main(int argc, char **argv) {
 
     // str
     example_str(ctx);
+
+    // list
+    // example_list(ctx);
 
     // cleanup
     CO_OBJECT_C_DECREF(root_ctx, ctx2);

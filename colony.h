@@ -155,6 +155,8 @@ typedef struct co_str_t {
 typedef struct co_list_t {
     CO_GC_T
     co_u64_t len;
+    co_object_t *items;
+    co_i64_t hash;
 } co_list_t;
 
 /*
@@ -167,10 +169,6 @@ static struct co_object_t CO_OBJECT_UNDEFINED = {
     }
 };
 
-#define co_c_cstr_hash co_c_cstr_hash_djb2
-co_i64_t co_c_cstr_hash_djb2(size_t len, char *items);
-char *co_c_create_len_str_format(size_t len);
-
 #if CO_GC_DEBUG == 1
     void co_object_c_incref(co_object_t ctx, co_object_t obj, char *filename, int line, const char *funcname);
     void co_object_c_decref(co_object_t ctx, co_object_t obj, char *filename, int line, const char *funcname);
@@ -181,6 +179,7 @@ char *co_c_create_len_str_format(size_t len);
 
 co_object_t co_object_c_free(co_object_t ctx, co_object_t obj);
 co_object_t co_object_c_repr(co_object_t ctx, co_object_t obj);
+co_object_t co_object_c_hash(co_object_t ctx, co_object_t obj);
 
 co_object_t co_object_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
 
@@ -258,6 +257,8 @@ co_object_t co_f64_free(co_object_t ctx, co_object_t obj, co_object_t args, co_o
 co_object_t co_ctx_c_new_root(void);
 co_object_t co_ctx_c_free(co_object_t ctx, co_object_t obj);
 co_object_t co_ctx_c_spawn(co_object_t ctx);
+co_object_t co_ctx_c_hash(co_object_t ctx, co_object_t obj);
+co_object_t co_ctx_c_repr(co_object_t ctx, co_object_t obj);
 
 co_object_t co_ctx_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
 co_object_t co_ctx_spawn(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
@@ -267,6 +268,8 @@ co_object_t co_ctx_spawn(co_object_t ctx, co_object_t obj, co_object_t args, co_
  */
 co_object_t co_frame_c_new(co_object_t ctx, co_object_t parent_frame);
 co_object_t co_frame_c_free(co_object_t ctx, co_object_t obj);
+co_object_t co_frame_c_repr(co_object_t ctx, co_object_t obj);
+co_object_t co_frame_c_hash(co_object_t ctx, co_object_t obj);
 
 co_object_t co_frame_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
 
@@ -307,7 +310,23 @@ co_object_t co_str_free(co_object_t ctx, co_object_t obj, co_object_t args, co_o
 /*
  * list
  */
-co_object_t co_list_new(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
+co_object_t co_list_c_new(co_object_t ctx, co_u64_t len, co_object_t *items);
+co_object_t co_list_c_free(co_object_t ctx, co_object_t obj);
+co_object_t co_list_c_len(co_object_t ctx, co_object_t obj);
+co_object_t co_list_c_items(co_object_t ctx, co_object_t obj);
+co_object_t co_list_c_lt(co_object_t ctx, co_object_t obj, co_object_t other);
+co_object_t co_list_c_eq(co_object_t ctx, co_object_t obj, co_object_t other);
+co_object_t co_list_c_hash(co_object_t ctx, co_object_t obj);
+co_object_t co_list_c_repr(co_object_t ctx, co_object_t obj);
+co_object_t co_list_c_get(co_object_t ctx, co_object_t obj, co_object_t index);
+co_object_t co_list_c_set(co_object_t ctx, co_object_t obj, co_object_t index, co_object_t value);
+co_object_t co_list_c_del(co_object_t ctx, co_object_t obj, co_object_t index);
+co_object_t co_list_c_append(co_object_t ctx, co_object_t obj, co_object_t value);
+co_object_t co_list_c_prepend(co_object_t ctx, co_object_t obj, co_object_t value);
+co_object_t co_list_c_insert(co_object_t ctx, co_object_t obj, co_object_t index, co_object_t value);
+co_object_t co_list_c_remove(co_object_t ctx, co_object_t obj, co_object_t value, co_object_t n);
+co_object_t co_list_c_replace(co_object_t ctx, co_object_t obj, co_object_t value, co_object_t other, co_object_t n);
+
 co_object_t co_list_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
 
 /*
@@ -415,6 +434,9 @@ co_object_t co_result_free(co_object_t ctx, co_object_t obj, co_object_t args, c
 /*
  * builtins
  */
+co_i64_t co_c_cstr_hash(co_object_t ctx, size_t len, char *items);
+co_i64_t co_c_clistitems_hash(co_object_t ctx, size_t len, co_object_t *items);
+char *co_c_create_len_str_format(co_object_t ctx, size_t len);
 co_object_t co_print_c(co_object_t ctx, co_object_t obj);
 
 #endif
