@@ -614,7 +614,7 @@ co_object_t co_frame_free(co_object_t ctx, co_object_t obj, co_object_t args, co
 /*
  * bytes
  */
-co_object_t co_bytes_c_new(co_object_t ctx, co_i64_t len, char *items, co_own_trans_t ot) {
+co_object_t co_bytes_c_new(co_object_t ctx, co_u64_t len, char *items, co_own_trans_t ot) {
     co_object_t obj;
     co_bytes_t *bytes_value;
 
@@ -757,7 +757,7 @@ co_object_t co_bytes_free(co_object_t ctx, co_object_t obj, co_object_t args, co
 /*
  * str
  */
-co_object_t co_str_c_new(co_object_t ctx, co_i64_t len, char *items, co_own_trans_t ot) {
+co_object_t co_str_c_new(co_object_t ctx, co_u64_t len, char *items, co_own_trans_t ot) {
     co_object_t obj;
     co_str_t *str_value;
 
@@ -896,6 +896,17 @@ co_object_t co_str_c_add(co_object_t ctx, co_object_t obj, co_object_t other) {
 
 co_object_t co_str_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs) {
     return co_str_c_free(ctx, obj);
+}
+
+/*
+ * list
+ */
+co_object_t co_list_new(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs) {
+    return CO_OBJECT_UNDEFINED;
+}
+
+co_object_t co_list_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs) {
+     return CO_OBJECT_UNDEFINED;
 }
 
 /*

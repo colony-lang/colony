@@ -138,7 +138,7 @@ typedef struct co_frame_t {
 
 typedef struct co_bytes_t {
     CO_GC_T
-    co_i64_t len;
+    co_u64_t len;
     co_own_trans_t ot;
     char *items;
     co_i64_t hash;
@@ -146,11 +146,16 @@ typedef struct co_bytes_t {
 
 typedef struct co_str_t {
     CO_GC_T
-    co_i64_t len;
+    co_u64_t len;
     co_own_trans_t ot;
     char *items;
     co_i64_t hash;
 } co_str_t;
+
+typedef struct co_list_t {
+    CO_GC_T
+    co_u64_t len;
+} co_list_t;
 
 /*
  * object
@@ -274,7 +279,7 @@ co_object_t co_module_free(co_object_t ctx, co_object_t obj, co_object_t args, c
 /*
  * bytes
  */
-co_object_t co_bytes_c_new(co_object_t ctx, co_i64_t len, char *items, co_own_trans_t ot);
+co_object_t co_bytes_c_new(co_object_t ctx, co_u64_t len, char *items, co_own_trans_t ot);
 co_object_t co_bytes_c_free(co_object_t ctx, co_object_t obj);
 co_object_t co_bytes_c_len(co_object_t ctx, co_object_t obj);
 co_object_t co_bytes_c_hash(co_object_t ctx, co_object_t obj);
@@ -288,7 +293,7 @@ co_object_t co_bytes_free(co_object_t ctx, co_object_t obj, co_object_t args, co
 /*
  * str
  */
-co_object_t co_str_c_new(co_object_t ctx, co_i64_t len, char *items, co_own_trans_t ot);
+co_object_t co_str_c_new(co_object_t ctx, co_u64_t len, char *items, co_own_trans_t ot);
 co_object_t co_str_c_free(co_object_t ctx, co_object_t obj);
 co_object_t co_str_c_len(co_object_t ctx, co_object_t obj);
 co_object_t co_str_c_hash(co_object_t ctx, co_object_t obj);
