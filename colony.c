@@ -538,12 +538,10 @@ co_object_t co_object_c_eq(co_object_t ctx, co_object_t obj, co_object_t other) 
             exit(1);
             break;
         case CO_KIND_CTX:
-            // FIXME: implement
-            exit(1);
+            res = co_ctx_c_eq(ctx, obj, other);
             break;
         case CO_KIND_FRAME:
-            // FIXME: implement
-            exit(1);
+            res = co_frame_c_eq(ctx, obj, other);
             break;
         case CO_KIND_MODULE:
             // FIXME: implement
@@ -995,6 +993,14 @@ co_object_t co_ctx_c_repr(co_object_t ctx, co_object_t obj) {
     return CO_OBJECT_UNDEFINED;
 }
 
+co_object_t co_ctx_c_eq(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_CTX);
+    assert(other.k == CO_KIND_CTX);
+    bool res_value = (obj.v.p == other.v.p);
+    co_object_t res = co_bool_c_new(ctx, res_value);
+    return res;
+}
+
 co_object_t co_ctx_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs) {
     return co_ctx_c_free(ctx, obj);
 }
@@ -1051,6 +1057,14 @@ co_object_t co_frame_c_hash(co_object_t ctx, co_object_t obj) {
 co_object_t co_frame_c_repr(co_object_t ctx, co_object_t obj) {
     // FIXME: implement
     return CO_OBJECT_UNDEFINED;
+}
+
+co_object_t co_frame_c_eq(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_FRAME);
+    assert(other.k == CO_KIND_FRAME);
+    bool res_value = (obj.v.p == other.v.p);
+    co_object_t res = co_bool_c_new(ctx, res_value);
+    return res;
 }
 
 co_object_t co_frame_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs) {
