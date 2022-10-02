@@ -1,7 +1,7 @@
 CC=gcc
 # CC=clang
 # CC=musl-clang
-CFLAGS=-c -Wall -Og -g
+CFLAGS=-c -Wall -O0 -g
 LDFLAGS=-lm -lpthread
 SOURCES= colony.c main.c
 OBJECTS=$(SOURCES:.c=.o)

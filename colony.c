@@ -1122,7 +1122,7 @@ co_object_t co_list_c_new(co_object_t ctx, co_u64_t len, co_object_t *items) {
 
     // items
     list_value->items = calloc(len, sizeof(co_object_t));
-    list_value->items = memmove(list_value->items, items, len);
+    list_value->items = memmove(list_value->items, items, len * sizeof(co_object_t));
 
     for (co_u64_t i = 0; i < list_value->len; i++) {
         value = list_value->items[i];
@@ -1130,7 +1130,7 @@ co_object_t co_list_c_new(co_object_t ctx, co_u64_t len, co_object_t *items) {
     }
 
     // precompute hash
-    list_value->hash = co_c_clistitems_hash(ctx, list_value->len, list_value->items);
+    // list_value->hash = co_c_clistitems_hash(ctx, list_value->len, list_value->items);
 
     // object
     obj = (co_object_t){
@@ -1153,6 +1153,7 @@ co_object_t co_list_c_free(co_object_t ctx, co_object_t obj) {
     }
 
     free(list_value->items);
+    free(list_value);
     // obj = CO_OBJECT_UNDEFINED;
     return CO_OBJECT_UNDEFINED;
 }
