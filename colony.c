@@ -1042,18 +1042,9 @@ co_object_t co_frame_c_free(co_object_t ctx, co_object_t obj) {
 }
 
 co_object_t co_frame_c_hash(co_object_t ctx, co_object_t obj) {
-    co_object_t hash;
-    co_i64_t hash_value;
-
-    hash_value = (co_i64_t)(uintptr_t)(co_gc_t*)obj.v.p;
-
-    hash = (co_object_t){
-        .k = CO_KIND_I64,
-        .v = {
-            .i64 = hash_value,
-        }
-    };
-
+    _co_num_t num = { .p = obj.v.p };
+    co_i64_t hash_value = num.i64;
+    co_object_t hash = co_i64_c_new(ctx, hash_value);
     return hash;
 }
 
@@ -1073,7 +1064,7 @@ co_object_t co_bytes_c_new(co_object_t ctx, co_u64_t len, char *items, co_own_tr
     co_object_t obj;
     co_bytes_t *bytes_value;
 
-    bytes_value = calloc(1, sizeof(co_bytes_t));
+    bytes_value = (co_bytes_t*)calloc(1, sizeof(co_bytes_t));
     bytes_value->rc = 1;
     bytes_value->len = len;
     bytes_value->ot = ot;
@@ -1085,8 +1076,6 @@ co_object_t co_bytes_c_new(co_object_t ctx, co_u64_t len, char *items, co_own_tr
         bytes_value->items = memmove(bytes_value->items, items, len);
     } else if (ot == CO_OWN_TRANS_MOVE) {
         bytes_value->items = items;
-    } else {
-        exit(1);
     }
 
     // precompute hash
@@ -1130,7 +1119,7 @@ co_object_t co_bytes_c_repr(co_object_t ctx, co_object_t obj) {
     char *repr_items = (char*)calloc(bytes_value->len + 1, sizeof(char));
     char c;
 
-    for (int i = 0; i < bytes_value->len; i++) {
+    for (co_u64_t i = 0; i < bytes_value->len; i++) {
         c = bytes_value->items[i];
 
         if (isprint(c)) {
@@ -1156,13 +1145,7 @@ co_object_t co_bytes_c_eq(co_object_t ctx, co_object_t obj, co_object_t other) {
     int c = memcmp(obj_bytes_value->items, other_bytes_value->items, min_len);
     bool v = c == 0;
 
-    res = (co_object_t){
-        .k = CO_KIND_BOOL,
-        .v = {
-            .b = v,
-        }
-    };
-
+    res = co_bool_c_new(ctx, v);
     return res;
 }
 
@@ -1178,13 +1161,7 @@ co_object_t co_bytes_c_lt(co_object_t ctx, co_object_t obj, co_object_t other) {
     int c = memcmp(obj_bytes_value->items, other_bytes_value->items, min_len);
     bool v = c < 0;
 
-    res = (co_object_t){
-        .k = CO_KIND_BOOL,
-        .v = {
-            .b = v,
-        }
-    };
-
+    res = co_bool_c_new(ctx, v);
     return res;
 }
 
@@ -1216,7 +1193,7 @@ co_object_t co_str_c_new(co_object_t ctx, co_u64_t len, char *items, co_own_tran
     co_object_t obj;
     co_str_t *str_value;
 
-    str_value = calloc(1, sizeof(co_str_t));
+    str_value = (co_str_t*)calloc(1, sizeof(co_str_t));
     str_value->rc = 1;
     str_value->len = len;
     str_value->ot = ot;
@@ -1228,8 +1205,6 @@ co_object_t co_str_c_new(co_object_t ctx, co_u64_t len, char *items, co_own_tran
         str_value->items = memmove(str_value->items, items, len);
     } else if (ot == CO_OWN_TRANS_MOVE) {
         str_value->items = items;
-    } else {
-        exit(1);
     }
 
     // precompute hash
@@ -1274,7 +1249,7 @@ co_object_t co_str_c_repr(co_object_t ctx, co_object_t obj) {
     char *repr_items = (char*)calloc(str_value->len + 1, sizeof(char));
     char c;
 
-    for (int i = 0; i < str_value->len; i++) {
+    for (co_u64_t i = 0; i < str_value->len; i++) {
         c = str_value->items[i];
 
         if (isprint(c)) {
@@ -1300,13 +1275,7 @@ co_object_t co_str_c_eq(co_object_t ctx, co_object_t obj, co_object_t other) {
     int c = memcmp(obj_str_value->items, other_str_value->items, min_len);
     bool v = c == 0;
 
-    res = (co_object_t){
-        .k = CO_KIND_BOOL,
-        .v = {
-            .b = v,
-        }
-    };
-
+    res = co_bool_c_new(ctx, v);
     return res;
 }
 
@@ -1322,13 +1291,7 @@ co_object_t co_str_c_lt(co_object_t ctx, co_object_t obj, co_object_t other) {
     int c = memcmp(obj_str_value->items, other_str_value->items, min_len);
     bool v = c < 0;
 
-    res = (co_object_t){
-        .k = CO_KIND_BOOL,
-        .v = {
-            .b = v,
-        }
-    };
-
+    res = co_bool_c_new(ctx, v);
     return res;
 }
 
@@ -1399,7 +1362,6 @@ co_object_t co_list_c_free(co_object_t ctx, co_object_t obj) {
 
     free(list_value->items);
     free(list_value);
-    // obj = CO_OBJECT_UNDEFINED;
     return CO_OBJECT_UNDEFINED;
 }
 
@@ -1591,9 +1553,11 @@ co_i64_t co_c_clistitems_hash(co_object_t ctx, size_t len, co_object_t *items) {
 
 char *co_c_create_len_str_format(co_object_t ctx, size_t len) {
     int size = snprintf(NULL, 0, "%lu", len);
+    
     // example: "%114s\n\0"
     char *fmt = (char*)calloc(1 + size + 1 + 1 + 1, sizeof(char));
     snprintf(fmt, 1 + size + 1 + 1 + 1, "%%%lus\n", len);
+    
     return fmt;
 }
 
