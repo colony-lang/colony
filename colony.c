@@ -654,11 +654,15 @@ co_object_t co_bool_c_new(co_object_t ctx, co_bool_t b) {
 }
 
 co_object_t co_bool_c_free(co_object_t ctx, co_object_t obj) {
+    assert(obj.k == CO_KIND_BOOL);
+
     // NOTE: nothing to free
     return CO_OBJECT_UNDEFINED;
 }
 
 co_object_t co_bool_c_repr(co_object_t ctx, co_object_t obj) {
+    assert(obj.k == CO_KIND_BOOL);
+
     co_object_t res;
 
     if (obj.v.b == true) {
@@ -671,42 +675,60 @@ co_object_t co_bool_c_repr(co_object_t ctx, co_object_t obj) {
 }
 
 co_object_t co_bool_c_hash(co_object_t ctx, co_object_t obj) {
+    assert(obj.k == CO_KIND_BOOL);
     return co_i64_c_new(ctx, obj.v.b);
 }
 
 co_object_t co_bool_c_not(co_object_t ctx, co_object_t obj) {
+    assert(obj.k == CO_KIND_BOOL);
     return co_bool_c_new(ctx, !(obj.v.b));
 }
 
 co_object_t co_bool_c_and(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_BOOL);
+    assert(other.k == CO_KIND_BOOL);
     return co_bool_c_new(ctx, obj.v.b && other.v.b);
 }
 
 co_object_t co_bool_c_or(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_BOOL);
+    assert(other.k == CO_KIND_BOOL);
     return co_bool_c_new(ctx, obj.v.b || other.v.b);
 }
 
 co_object_t co_bool_c_lt(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_BOOL);
+    assert(other.k == CO_KIND_BOOL);
     return co_bool_c_new(ctx, obj.v.b < other.v.b);
 }
 
 co_object_t co_bool_c_le(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_BOOL);
+    assert(other.k == CO_KIND_BOOL);
     return co_bool_c_new(ctx, obj.v.b <= other.v.b);
 }
 
 co_object_t co_bool_c_eq(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_BOOL);
+    assert(other.k == CO_KIND_BOOL);
     return co_bool_c_new(ctx, obj.v.b == other.v.b);
 }
 
 co_object_t co_bool_c_ne(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_BOOL);
+    assert(other.k == CO_KIND_BOOL);
     return co_bool_c_new(ctx, obj.v.b != other.v.b);
 }
 
 co_object_t co_bool_c_ge(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_BOOL);
+    assert(other.k == CO_KIND_BOOL);
     return co_bool_c_new(ctx, obj.v.b >= other.v.b);
 }
 
 co_object_t co_bool_c_gt(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_BOOL);
+    assert(other.k == CO_KIND_BOOL);
     return co_bool_c_new(ctx, obj.v.b > other.v.b);
 }
 
@@ -731,15 +753,20 @@ co_object_t co_i64_c_new(co_object_t ctx, co_i64_t i64) {
 }
 
 co_object_t co_i64_c_free(co_object_t ctx, co_object_t obj) {
+    assert(obj.k == CO_KIND_I64);
+
     // NOTE: nothing to free
     return CO_OBJECT_UNDEFINED;
 }
 
 co_object_t co_i64_c_hash(co_object_t ctx, co_object_t obj) {
+    assert(obj.k == CO_KIND_I64);
     return co_i64_c_new(ctx, obj.v.i64);
 }
 
 co_object_t co_i64_c_repr(co_object_t ctx, co_object_t obj) {
+    assert(obj.k == CO_KIND_I64);
+
     co_i64_t v = obj.v.i64;
     int size = snprintf(NULL, 0, "%ld", v);
     
@@ -751,75 +778,111 @@ co_object_t co_i64_c_repr(co_object_t ctx, co_object_t obj) {
 }
 
 co_object_t co_i64_c_lt(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_I64);
+    assert(other.k == CO_KIND_I64);
     return co_bool_c_new(ctx, obj.v.i64 < other.v.i64);
 }
 
 co_object_t co_i64_c_le(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_I64);
+    assert(other.k == CO_KIND_I64);
     return co_bool_c_new(ctx, obj.v.i64 <= other.v.i64);
 }
 
 co_object_t co_i64_c_eq(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_I64);
+    assert(other.k == CO_KIND_I64);
     return co_bool_c_new(ctx, obj.v.i64 == other.v.i64);
 }
 
 co_object_t co_i64_c_ne(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_I64);
+    assert(other.k == CO_KIND_I64);
     return co_bool_c_new(ctx, obj.v.i64 != other.v.i64);
 }
 
 co_object_t co_i64_c_ge(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_I64);
+    assert(other.k == CO_KIND_I64);
     return co_bool_c_new(ctx, obj.v.i64 >= other.v.i64);
 }
 
 co_object_t co_i64_c_gt(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_I64);
+    assert(other.k == CO_KIND_I64);
     return co_bool_c_new(ctx, obj.v.i64 > other.v.i64);
 }
 
 co_object_t co_i64_c_add(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_I64);
+    assert(other.k == CO_KIND_I64);
     return co_i64_c_new(ctx, obj.v.i64 + other.v.i64);
 }
 
 co_object_t co_i64_c_sub(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_I64);
+    assert(other.k == CO_KIND_I64);
     return co_i64_c_new(ctx, obj.v.i64 - other.v.i64);
 }
 
 co_object_t co_i64_c_mul(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_I64);
+    assert(other.k == CO_KIND_I64);
     return co_i64_c_new(ctx, obj.v.i64 * other.v.i64);
 }
 
 // FIXME: Result<int, str>
 co_object_t co_i64_c_div(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_I64);
+    assert(other.k == CO_KIND_I64);
+    // FIXME:
     return co_i64_c_new(ctx, obj.v.i64 / other.v.i64);
 }
 
 co_object_t co_i64_c_mod(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_I64);
+    assert(other.k == CO_KIND_I64);
     return co_i64_c_new(ctx, obj.v.i64 % other.v.i64);
 }
 
 co_object_t co_i64_c_pow(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_I64);
+    assert(other.k == CO_KIND_I64);
     return co_i64_c_new(ctx, (co_i64_t)pow(obj.v.i64, other.v.i64));
 }
 
 co_object_t co_i64_c_shl(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_I64);
+    assert(other.k == CO_KIND_I64);
     return co_i64_c_new(ctx, obj.v.i64 << other.v.i64);
 }
 
 co_object_t co_i64_c_shr(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_I64);
+    assert(other.k == CO_KIND_I64);
     return co_i64_c_new(ctx, obj.v.i64 >> other.v.i64);
 }
 
 co_object_t co_i64_c_bitinv(co_object_t ctx, co_object_t obj) {
+    assert(obj.k == CO_KIND_I64);
     return co_i64_c_new(ctx, ~obj.v.i64);
 }
 
 co_object_t co_i64_c_bitand(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_I64);
+    assert(other.k == CO_KIND_I64);
     return co_i64_c_new(ctx, obj.v.i64 & other.v.i64);
 }
 
 co_object_t co_i64_c_bitor(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_I64);
+    assert(other.k == CO_KIND_I64);
     return co_i64_c_new(ctx, obj.v.i64 | other.v.i64);
 }
 
 co_object_t co_i64_c_bitxor(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_I64);
+    assert(other.k == CO_KIND_I64);
     return co_i64_c_new(ctx, obj.v.i64 ^ other.v.i64);
 }
 
@@ -844,17 +907,23 @@ co_object_t co_f64_c_new(co_object_t ctx, co_f64_t f64) {
 }
 
 co_object_t co_f64_c_free(co_object_t ctx, co_object_t obj) {
+    assert(obj.k == CO_KIND_F64);
+
     // NOTE: nothing to free
     return CO_OBJECT_UNDEFINED;
 }
 
 co_object_t co_f64_c_hash(co_object_t ctx, co_object_t obj) {
+    assert(obj.k == CO_KIND_F64);
+
     _co_num_t num;
     num.f64 = obj.v.f64;
     return co_i64_c_new(ctx, num.i64);
 }
 
 co_object_t co_f64_c_repr(co_object_t ctx, co_object_t obj) {
+    assert(obj.k == CO_KIND_F64);
+
     co_f64_t v = obj.v.f64;
     int size = snprintf(NULL, 0, "%f", v);
     
@@ -866,47 +935,70 @@ co_object_t co_f64_c_repr(co_object_t ctx, co_object_t obj) {
 }
 
 co_object_t co_f64_c_lt(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_F64);
+    assert(other.k == CO_KIND_F64);
     return co_bool_c_new(ctx, obj.v.f64 < other.v.f64);
 }
 
 co_object_t co_f64_c_le(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_F64);
+    assert(other.k == CO_KIND_F64);
     return co_bool_c_new(ctx, obj.v.f64 <= other.v.f64);
 }
 
 co_object_t co_f64_c_eq(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_F64);
+    assert(other.k == CO_KIND_F64);
     return co_bool_c_new(ctx, obj.v.f64 == other.v.f64);
 }
 
 co_object_t co_f64_c_ne(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_F64);
+    assert(other.k == CO_KIND_F64);
     return co_bool_c_new(ctx, obj.v.f64 != other.v.f64);
 }
 
 co_object_t co_f64_c_ge(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_F64);
+    assert(other.k == CO_KIND_F64);
     return co_bool_c_new(ctx, obj.v.f64 >= other.v.f64);
 }
 
 co_object_t co_f64_c_gt(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_F64);
+    assert(other.k == CO_KIND_F64);
     return co_bool_c_new(ctx, obj.v.f64 > other.v.f64);
 }
 
 co_object_t co_f64_c_add(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_F64);
+    assert(other.k == CO_KIND_F64);
     return co_f64_c_new(ctx, obj.v.f64 + other.v.f64);
 }
 
 co_object_t co_f64_c_sub(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_F64);
+    assert(other.k == CO_KIND_F64);
     return co_f64_c_new(ctx, obj.v.f64 - other.v.f64);
 }
 
 co_object_t co_f64_c_mul(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_F64);
+    assert(other.k == CO_KIND_F64);
     return co_f64_c_new(ctx, obj.v.f64 * other.v.f64);
 }
 
 // FIXME: Result<f64, str>
 co_object_t co_f64_c_div(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_F64);
+    assert(other.k == CO_KIND_F64);
+    // FIXME:
     return co_f64_c_new(ctx, obj.v.f64 / other.v.f64);
 }
 
 co_object_t co_f64_c_pow(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_F64);
+    assert(other.k == CO_KIND_F64);
     return co_f64_c_new(ctx, pow(obj.v.f64, other.v.f64));
 }
 
@@ -944,6 +1036,9 @@ co_object_t co_ctx_c_new_root(void) {
 }
 
 co_object_t co_ctx_c_free(co_object_t ctx, co_object_t obj) {
+    assert(ctx.k == CO_KIND_CTX);
+    assert(obj.k == CO_KIND_CTX);
+
     co_ctx_t *ctx_value = (co_ctx_t*)obj.v.p;
     CO_DECREF(ctx, ctx_value->parent_ctx);
     CO_DECREF(ctx, ctx_value->current_frame);
@@ -952,6 +1047,8 @@ co_object_t co_ctx_c_free(co_object_t ctx, co_object_t obj) {
 }
 
 co_object_t co_ctx_c_spawn(co_object_t ctx) {
+    assert(ctx.k == CO_KIND_CTX);
+
     co_object_t child_ctx;
     co_ctx_t *child_ctx_value;
     co_ctx_t *ctx_value;
@@ -982,6 +1079,9 @@ co_object_t co_ctx_c_spawn(co_object_t ctx) {
 }
 
 co_object_t co_ctx_c_hash(co_object_t ctx, co_object_t obj) {
+    assert(ctx.k == CO_KIND_CTX);
+    assert(obj.k == CO_KIND_CTX);
+
     _co_num_t num = { .p = obj.v.p };
     co_i64_t hash_value = num.i64;
     co_object_t hash = co_i64_c_new(ctx, hash_value);
@@ -989,6 +1089,9 @@ co_object_t co_ctx_c_hash(co_object_t ctx, co_object_t obj) {
 }
 
 co_object_t co_ctx_c_repr(co_object_t ctx, co_object_t obj) {
+    assert(ctx.k == CO_KIND_CTX);
+    assert(obj.k == CO_KIND_CTX);
+
     // FIXME: implement
     return CO_OBJECT_UNDEFINED;
 }
@@ -996,6 +1099,7 @@ co_object_t co_ctx_c_repr(co_object_t ctx, co_object_t obj) {
 co_object_t co_ctx_c_eq(co_object_t ctx, co_object_t obj, co_object_t other) {
     assert(obj.k == CO_KIND_CTX);
     assert(other.k == CO_KIND_CTX);
+
     bool res_value = (obj.v.p == other.v.p);
     co_object_t res = co_bool_c_new(ctx, res_value);
     return res;
@@ -1013,11 +1117,14 @@ co_object_t co_ctx_spawn(co_object_t ctx, co_object_t obj, co_object_t args, co_
  * frame
  */
 co_object_t co_frame_c_new(co_object_t ctx, co_object_t parent_frame) {
+    assert(ctx.k == CO_KIND_CTX);
+    assert(parent_frame.k == CO_KIND_FRAME || parent_frame.k == CO_KIND_UNDEFINED);
+
     co_object_t frame;
     co_frame_t *frame_value;
     co_object_t closure;
 
-    frame_value = calloc(1, sizeof(co_frame_t));
+    frame_value = (co_frame_t*)calloc(1, sizeof(co_frame_t));
     frame_value->rc = 1;
     
     frame = (co_object_t){
@@ -1040,6 +1147,9 @@ co_object_t co_frame_c_new(co_object_t ctx, co_object_t parent_frame) {
 }
 
 co_object_t co_frame_c_free(co_object_t ctx, co_object_t obj) {
+    assert(ctx.k == CO_KIND_CTX);
+    assert(obj.k == CO_KIND_FRAME);
+
     co_frame_t *frame_value = (co_frame_t*)obj.v.p;
     CO_DECREF(ctx, frame_value->parent_frame);
     CO_DECREF(ctx, frame_value->closure);
@@ -1048,6 +1158,9 @@ co_object_t co_frame_c_free(co_object_t ctx, co_object_t obj) {
 }
 
 co_object_t co_frame_c_hash(co_object_t ctx, co_object_t obj) {
+    assert(ctx.k == CO_KIND_CTX);
+    assert(obj.k == CO_KIND_FRAME);
+
     _co_num_t num = { .p = obj.v.p };
     co_i64_t hash_value = num.i64;
     co_object_t hash = co_i64_c_new(ctx, hash_value);
@@ -1055,13 +1168,18 @@ co_object_t co_frame_c_hash(co_object_t ctx, co_object_t obj) {
 }
 
 co_object_t co_frame_c_repr(co_object_t ctx, co_object_t obj) {
+    assert(ctx.k == CO_KIND_CTX);
+    assert(obj.k == CO_KIND_FRAME);
+
     // FIXME: implement
     return CO_OBJECT_UNDEFINED;
 }
 
 co_object_t co_frame_c_eq(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(ctx.k == CO_KIND_CTX);
     assert(obj.k == CO_KIND_FRAME);
     assert(other.k == CO_KIND_FRAME);
+
     bool res_value = (obj.v.p == other.v.p);
     co_object_t res = co_bool_c_new(ctx, res_value);
     return res;
@@ -1083,13 +1201,15 @@ co_object_t co_bytes_c_new(co_object_t ctx, co_u64_t len, char *items, co_own_tr
     bytes_value->len = len;
     bytes_value->ot = ot;
 
-    if (ot == CO_OWN_TRANS_NONE) {
-        bytes_value->items = items;
-    } else if (ot == CO_OWN_TRANS_COPY) {
-        bytes_value->items = calloc(len, sizeof(char));
-        bytes_value->items = memmove(bytes_value->items, items, len);
-    } else if (ot == CO_OWN_TRANS_MOVE) {
-        bytes_value->items = items;
+    switch (ot) {
+        case CO_OWN_TRANS_NONE:
+        case CO_OWN_TRANS_MOVE:
+            bytes_value->items = items;
+            break;
+        case CO_OWN_TRANS_COPY:
+            bytes_value->items = (char*)calloc(len, sizeof(char));
+            bytes_value->items = memmove(bytes_value->items, items, len);
+            break;
     }
 
     // precompute hash
@@ -1106,10 +1226,18 @@ co_object_t co_bytes_c_new(co_object_t ctx, co_u64_t len, char *items, co_own_tr
 }
 
 co_object_t co_bytes_c_free(co_object_t ctx, co_object_t obj) {
+    assert(obj.k == CO_KIND_BYTES);
+
     co_bytes_t *bytes_value = (co_bytes_t*)obj.v.p;
+    co_own_trans_t ot = bytes_value->ot;
     
-    if (bytes_value->ot == CO_OWN_TRANS_COPY || bytes_value->ot == CO_OWN_TRANS_MOVE) {
-        free(bytes_value->items);
+    switch (ot) {
+        case CO_OWN_TRANS_NONE:
+            break;
+        case CO_OWN_TRANS_COPY:
+        case CO_OWN_TRANS_MOVE:
+            free(bytes_value->items);
+            break;
     }
 
     free(bytes_value);
@@ -1117,16 +1245,19 @@ co_object_t co_bytes_c_free(co_object_t ctx, co_object_t obj) {
 }
 
 co_object_t co_bytes_c_len(co_object_t ctx, co_object_t obj) {
+    assert(obj.k == CO_KIND_BYTES);
     co_bytes_t *bytes_value = (co_bytes_t*)obj.v.p;
     return co_i64_c_new(ctx, bytes_value->len);
 }
 
 co_object_t co_bytes_c_hash(co_object_t ctx, co_object_t obj) {
+    assert(obj.k == CO_KIND_BYTES);
     co_bytes_t *bytes_value = (co_bytes_t*)obj.v.p;
     return co_i64_c_new(ctx, bytes_value->hash);
 }
 
 co_object_t co_bytes_c_repr(co_object_t ctx, co_object_t obj) {
+    assert(obj.k == CO_KIND_BYTES);
     co_object_t res;
 
     co_bytes_t *bytes_value = (co_bytes_t*)obj.v.p;
@@ -1148,6 +1279,9 @@ co_object_t co_bytes_c_repr(co_object_t ctx, co_object_t obj) {
 }
 
 co_object_t co_bytes_c_eq(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_BYTES);
+    assert(other.k == CO_KIND_BYTES);
+
     co_bytes_t *obj_bytes_value = (co_bytes_t*)obj.v.p;
     co_bytes_t *other_bytes_value = (co_bytes_t*)other.v.p;
     co_object_t res;
@@ -1164,6 +1298,9 @@ co_object_t co_bytes_c_eq(co_object_t ctx, co_object_t obj, co_object_t other) {
 }
 
 co_object_t co_bytes_c_lt(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_BYTES);
+    assert(other.k == CO_KIND_BYTES);
+
     co_bytes_t *obj_bytes_value = (co_bytes_t*)obj.v.p;
     co_bytes_t *other_bytes_value = (co_bytes_t*)other.v.p;
     co_object_t res;
@@ -1180,6 +1317,9 @@ co_object_t co_bytes_c_lt(co_object_t ctx, co_object_t obj, co_object_t other) {
 }
 
 co_object_t co_bytes_c_add(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_BYTES);
+    assert(other.k == CO_KIND_BYTES);
+
     co_bytes_t *obj_bytes_value = (co_bytes_t*)obj.v.p;
     co_bytes_t *other_bytes_value = (co_bytes_t*)other.v.p;
     co_object_t res;
@@ -1212,13 +1352,15 @@ co_object_t co_str_c_new(co_object_t ctx, co_u64_t len, char *items, co_own_tran
     str_value->len = len;
     str_value->ot = ot;
 
-    if (ot == CO_OWN_TRANS_NONE) {
-        str_value->items = items;
-    } else if (ot == CO_OWN_TRANS_COPY) {
-        str_value->items = calloc(len, sizeof(char));
-        str_value->items = memmove(str_value->items, items, len);
-    } else if (ot == CO_OWN_TRANS_MOVE) {
-        str_value->items = items;
+    switch (ot) {
+        case CO_OWN_TRANS_NONE:
+        case CO_OWN_TRANS_MOVE:
+            str_value->items = items;
+            break;
+        case CO_OWN_TRANS_COPY:
+            str_value->items = (char*)calloc(len, sizeof(char));
+            str_value->items = memmove(str_value->items, items, len);
+            break;
     }
 
     // precompute hash
@@ -1236,10 +1378,18 @@ co_object_t co_str_c_new(co_object_t ctx, co_u64_t len, char *items, co_own_tran
 }
 
 co_object_t co_str_c_free(co_object_t ctx, co_object_t obj) {
-    co_str_t *str_value = (co_str_t*)obj.v.p;
+    assert(obj.k == CO_KIND_STR);
 
-    if (str_value->ot == CO_OWN_TRANS_COPY || str_value->ot == CO_OWN_TRANS_MOVE) {
-        free(str_value->items);
+    co_str_t *str_value = (co_str_t*)obj.v.p;
+    co_own_trans_t ot = str_value->ot;
+
+    switch (ot) {
+        case CO_OWN_TRANS_NONE:
+            break;
+        case CO_OWN_TRANS_COPY:
+        case CO_OWN_TRANS_MOVE:
+            free(str_value->items);
+            break;
     }
 
     free(str_value);
@@ -1247,18 +1397,21 @@ co_object_t co_str_c_free(co_object_t ctx, co_object_t obj) {
 }
 
 co_object_t co_str_c_len(co_object_t ctx, co_object_t obj) {
+    assert(obj.k == CO_KIND_STR);
     co_str_t *str_value = (co_str_t*)obj.v.p;
     return co_i64_c_new(ctx, str_value->len);
 }
 
 co_object_t co_str_c_hash(co_object_t ctx, co_object_t obj) {
+    assert(obj.k == CO_KIND_STR);
     co_str_t *str_value = (co_str_t*)obj.v.p;
     return co_i64_c_new(ctx, str_value->hash);
 }
 
 co_object_t co_str_c_repr(co_object_t ctx, co_object_t obj) {
-    co_object_t res;
+    assert(obj.k == CO_KIND_STR);
 
+    co_object_t res;
     co_str_t *str_value = (co_str_t*)obj.v.p;
     char *repr_items = (char*)calloc(str_value->len + 1, sizeof(char));
     char c;
@@ -1278,12 +1431,12 @@ co_object_t co_str_c_repr(co_object_t ctx, co_object_t obj) {
 }
 
 co_object_t co_str_c_eq(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_STR);
+    assert(other.k == CO_KIND_STR);
+
     co_str_t *obj_str_value = (co_str_t*)obj.v.p;
     co_str_t *other_str_value = (co_str_t*)other.v.p;
     co_object_t res;
-
-    assert(obj.k == CO_KIND_STR);
-    assert(other.k == CO_KIND_STR);
 
     size_t min_len = MIN(obj_str_value->len, other_str_value->len);
     int c = memcmp(obj_str_value->items, other_str_value->items, min_len);
@@ -1294,12 +1447,12 @@ co_object_t co_str_c_eq(co_object_t ctx, co_object_t obj, co_object_t other) {
 }
 
 co_object_t co_str_c_lt(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_STR);
+    assert(other.k == CO_KIND_STR);
+
     co_str_t *obj_str_value = (co_str_t*)obj.v.p;
     co_str_t *other_str_value = (co_str_t*)other.v.p;
     co_object_t res;
-
-    assert(obj.k == CO_KIND_STR);
-    assert(other.k == CO_KIND_STR);
 
     size_t min_len = MIN(obj_str_value->len, other_str_value->len);
     int c = memcmp(obj_str_value->items, other_str_value->items, min_len);
@@ -1310,12 +1463,12 @@ co_object_t co_str_c_lt(co_object_t ctx, co_object_t obj, co_object_t other) {
 }
 
 co_object_t co_str_c_add(co_object_t ctx, co_object_t obj, co_object_t other) {
+    assert(obj.k == CO_KIND_STR);
+    assert(other.k == CO_KIND_STR);
+
     co_str_t *obj_str_value = (co_str_t*)obj.v.p;
     co_str_t *other_str_value = (co_str_t*)other.v.p;
     co_object_t res;
-
-    assert(obj.k == CO_KIND_STR);
-    assert(other.k == CO_KIND_STR);
 
     size_t len = obj_str_value->len + other_str_value->len;
     char *items = (char*)calloc(len, sizeof(char));
@@ -1366,6 +1519,8 @@ co_object_t co_list_c_new(co_object_t ctx, co_u64_t len, co_object_t *items) {
 }
 
 co_object_t co_list_c_free(co_object_t ctx, co_object_t obj) {
+    assert(obj.k == CO_KIND_LIST);
+
     co_object_t value;
     co_list_t *list_value = (co_list_t*)obj.v.p;
 
@@ -1380,16 +1535,18 @@ co_object_t co_list_c_free(co_object_t ctx, co_object_t obj) {
 }
 
 co_object_t co_list_c_len(co_object_t ctx, co_object_t obj) {
+    assert(obj.k == CO_KIND_LIST);
+
     co_list_t *list_value = (co_list_t*)obj.v.p;
     return co_i64_c_new(ctx, list_value->len);
 }
 
 co_object_t co_list_c_lt(co_object_t ctx, co_object_t obj, co_object_t other) {
-    co_object_t res;
-    bool res_value = true;
-
     assert(obj.k == CO_KIND_LIST);
     assert(other.k == CO_KIND_LIST);
+
+    co_object_t res;
+    bool res_value = true;
 
     co_list_t *obj_value = (co_list_t*)obj.v.p;
     co_list_t *other_value = (co_list_t*)other.v.p;
@@ -1426,11 +1583,11 @@ return_res:
 }
 
 co_object_t co_list_c_eq(co_object_t ctx, co_object_t obj, co_object_t other) {
-    co_object_t res;
-    bool res_value = true;
-
     assert(obj.k == CO_KIND_LIST);
     assert(other.k == CO_KIND_LIST);
+
+    co_object_t res;
+    bool res_value = true;
 
     co_list_t *obj_value = (co_list_t*)obj.v.p;
     co_list_t *other_value = (co_list_t*)other.v.p;
@@ -1462,11 +1619,15 @@ return_res:
 }
 
 co_object_t co_list_c_hash(co_object_t ctx, co_object_t obj) {
+    assert(obj.k == CO_KIND_LIST);
+
     co_list_t *list_value = (co_list_t*)obj.v.p;
     return co_i64_c_new(ctx, list_value->hash);
 }
 
 co_object_t co_list_c_repr(co_object_t ctx, co_object_t obj) {
+    assert(obj.k == CO_KIND_LIST);
+
     co_object_t res;
     co_list_t *list_value = (co_list_t*)obj.v.p;
     
