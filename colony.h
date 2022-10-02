@@ -10,14 +10,21 @@
 #include <ctype.h>
 #include <math.h>
 
+#define DEBUG
 #define CO_GC_DEBUG 0
 
 #if CO_GC_DEBUG == 1
     #define CO_OBJECT_C_INCREF(ctx, obj) co_object_c_incref(ctx, obj, __FILE__, __LINE__, __FUNCTION__)
     #define CO_OBJECT_C_DECREF(ctx, obj) co_object_c_decref(ctx, obj, __FILE__, __LINE__, __FUNCTION__)
+
+    #define CO_INCREF(ctx, obj) co_object_c_incref(ctx, obj, __FILE__, __LINE__, __FUNCTION__)
+    #define CO_DECREF(ctx, obj) co_object_c_decref(ctx, obj, __FILE__, __LINE__, __FUNCTION__)
 #else
     #define CO_OBJECT_C_INCREF(ctx, obj) co_object_c_incref(ctx, obj)
     #define CO_OBJECT_C_DECREF(ctx, obj) co_object_c_decref(ctx, obj)
+    
+    #define CO_INCREF(ctx, obj) co_object_c_incref(ctx, obj)
+    #define CO_DECREF(ctx, obj) co_object_c_decref(ctx, obj)
 #endif
 
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
@@ -154,6 +161,7 @@ typedef struct co_str_t {
 
 typedef struct co_list_t {
     CO_GC_T
+    // co_object_t item_type;
     co_u64_t len;
     co_object_t *items;
     co_i64_t hash;
@@ -180,6 +188,8 @@ static struct co_object_t CO_OBJECT_UNDEFINED = {
 co_object_t co_object_c_free(co_object_t ctx, co_object_t obj);
 co_object_t co_object_c_repr(co_object_t ctx, co_object_t obj);
 co_object_t co_object_c_hash(co_object_t ctx, co_object_t obj);
+co_object_t co_object_c_lt(co_object_t ctx, co_object_t obj, co_object_t other);
+co_object_t co_object_c_eq(co_object_t ctx, co_object_t obj, co_object_t other);
 
 co_object_t co_object_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
 
@@ -313,7 +323,6 @@ co_object_t co_str_free(co_object_t ctx, co_object_t obj, co_object_t args, co_o
 co_object_t co_list_c_new(co_object_t ctx, co_u64_t len, co_object_t *items);
 co_object_t co_list_c_free(co_object_t ctx, co_object_t obj);
 co_object_t co_list_c_len(co_object_t ctx, co_object_t obj);
-co_object_t co_list_c_items(co_object_t ctx, co_object_t obj);
 co_object_t co_list_c_lt(co_object_t ctx, co_object_t obj, co_object_t other);
 co_object_t co_list_c_eq(co_object_t ctx, co_object_t obj, co_object_t other);
 co_object_t co_list_c_hash(co_object_t ctx, co_object_t obj);

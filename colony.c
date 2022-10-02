@@ -60,6 +60,7 @@ co_object_t co_object_c_free(co_object_t ctx, co_object_t obj) {
             res = co_f64_c_free(ctx, obj);
             break;
         case CO_KIND_GC:
+            // FIXME: implement
             exit(1);
             break;
         case CO_KIND_CTX:
@@ -150,6 +151,7 @@ co_object_t co_object_c_free(co_object_t ctx, co_object_t obj) {
             exit(1);
             break;
         default:
+            // FIXME: implement
             exit(1);
             break;
     }
@@ -162,6 +164,8 @@ co_object_t co_object_c_repr(co_object_t ctx, co_object_t obj) {
 
     switch (obj.k) {
         case CO_KIND_UNDEFINED:
+            // FIXME: implement
+            assert(obj.k != CO_KIND_UNDEFINED);
             exit(1);
             break;
         case CO_KIND_BOOL:
@@ -174,6 +178,8 @@ co_object_t co_object_c_repr(co_object_t ctx, co_object_t obj) {
             res = co_f64_c_repr(ctx, obj);
             break;
         case CO_KIND_GC:
+            // FIXME: implement
+            assert(obj.k != CO_KIND_UNDEFINED);
             exit(1);
             break;
         case CO_KIND_CTX:
@@ -191,8 +197,7 @@ co_object_t co_object_c_repr(co_object_t ctx, co_object_t obj) {
             res = co_str_c_repr(ctx, obj);
             break;
         case CO_KIND_LIST:
-            // FIXME: implement
-            exit(1);
+            res = co_list_c_repr(ctx, obj);
             break;
         case CO_KIND_DICT:
             // FIXME: implement
@@ -263,6 +268,7 @@ co_object_t co_object_c_repr(co_object_t ctx, co_object_t obj) {
             exit(1);
             break;
         default:
+            // FIXME: implement
             exit(1);
             break;
     }
@@ -275,6 +281,8 @@ co_object_t co_object_c_hash(co_object_t ctx, co_object_t obj) {
 
     switch (obj.k) {
         case CO_KIND_UNDEFINED:
+            // FIXME: implement
+            assert(obj.k != CO_KIND_UNDEFINED);
             exit(1);
             break;
         case CO_KIND_BOOL:
@@ -287,7 +295,9 @@ co_object_t co_object_c_hash(co_object_t ctx, co_object_t obj) {
             res = co_f64_c_hash(ctx, obj);
             break;
         case CO_KIND_GC:
-            // exit(1);
+            // FIXME: implement
+            assert(obj.k != CO_KIND_UNDEFINED);
+            exit(1);
             break;
         case CO_KIND_CTX:
             res = co_ctx_c_hash(ctx, obj);
@@ -306,8 +316,7 @@ co_object_t co_object_c_hash(co_object_t ctx, co_object_t obj) {
             res = co_str_c_hash(ctx, obj);
             break;
         case CO_KIND_LIST:
-            // FIXME: implement
-            exit(1);
+            res = co_list_c_hash(ctx, obj);
             break;
         case CO_KIND_DICT:
             // FIXME: implement
@@ -378,6 +387,247 @@ co_object_t co_object_c_hash(co_object_t ctx, co_object_t obj) {
             exit(1);
             break;
         default:
+            // FIXME: implement
+            exit(1);
+            break;
+    }
+
+    return res;
+}
+
+co_object_t co_object_c_lt(co_object_t ctx, co_object_t obj, co_object_t other) {
+    co_object_t res = CO_OBJECT_UNDEFINED;
+
+    switch (obj.k) {
+        case CO_KIND_UNDEFINED:
+            // FIXME: implement
+            assert(obj.k != CO_KIND_UNDEFINED);
+            exit(1);
+            break;
+        case CO_KIND_BOOL:
+            res = co_bool_c_lt(ctx, obj, other);
+            break;
+        case CO_KIND_I64:
+            res = co_i64_c_lt(ctx, obj, other);
+            break;
+        case CO_KIND_F64:
+            res = co_f64_c_lt(ctx, obj, other);
+            break;
+        case CO_KIND_GC:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_CTX:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_FRAME:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_MODULE:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_BYTES:
+            res = co_bytes_c_lt(ctx, obj, other);
+            break;
+        case CO_KIND_STR:
+            res = co_str_c_lt(ctx, obj, other);
+            break;
+        case CO_KIND_LIST:
+            res = co_list_c_lt(ctx, obj, other);
+            break;
+        case CO_KIND_DICT:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_BLOCK:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_CODE:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_FN:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_STRUCT:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_UNION:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_GENERIC:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_GENERIC_STRUCT:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_GENERIC_UNION:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_GENERIC_TYPE:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_GENERIC_FN:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_NONE:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_SOME:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_OPTION:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_OK:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_ERR:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_RESULT:
+            // FIXME: implement
+            exit(1);
+            break;
+        default:
+            // FIXME: implement
+            exit(1);
+            break;
+    }
+
+    return res;
+}
+
+co_object_t co_object_c_eq(co_object_t ctx, co_object_t obj, co_object_t other) {
+    co_object_t res = CO_OBJECT_UNDEFINED;
+
+    switch (obj.k) {
+        case CO_KIND_UNDEFINED:
+            // FIXME: implement
+            assert(obj.k != CO_KIND_UNDEFINED);
+            exit(1);
+            break;
+        case CO_KIND_BOOL:
+            res = co_bool_c_eq(ctx, obj, other);
+            break;
+        case CO_KIND_I64:
+            res = co_i64_c_eq(ctx, obj, other);
+            break;
+        case CO_KIND_F64:
+            res = co_f64_c_eq(ctx, obj, other);
+            break;
+        case CO_KIND_GC:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_CTX:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_FRAME:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_MODULE:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_BYTES:
+            res = co_bytes_c_eq(ctx, obj, other);
+            break;
+        case CO_KIND_STR:
+            res = co_str_c_eq(ctx, obj, other);
+            break;
+        case CO_KIND_LIST:
+            res = co_list_c_eq(ctx, obj, other);
+            break;
+        case CO_KIND_DICT:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_BLOCK:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_CODE:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_FN:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_STRUCT:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_UNION:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_GENERIC:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_GENERIC_STRUCT:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_GENERIC_UNION:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_GENERIC_TYPE:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_GENERIC_FN:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_NONE:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_SOME:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_OPTION:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_OK:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_ERR:
+            // FIXME: implement
+            exit(1);
+            break;
+        case CO_KIND_RESULT:
+            // FIXME: implement
+            exit(1);
+            break;
+        default:
+            // FIXME: implement
             exit(1);
             break;
     }
@@ -682,7 +932,7 @@ co_object_t co_ctx_c_new_root(void) {
     
     // parent_ctx
     ctx_value->parent_ctx = CO_OBJECT_UNDEFINED;      // already zeroed
-    CO_OBJECT_C_INCREF(ctx, ctx_value->parent_ctx);
+    CO_INCREF(ctx, ctx_value->parent_ctx);
     
     // current_frame
     current_frame = co_frame_c_new(ctx, CO_OBJECT_UNDEFINED);
@@ -693,8 +943,8 @@ co_object_t co_ctx_c_new_root(void) {
 
 co_object_t co_ctx_c_free(co_object_t ctx, co_object_t obj) {
     co_ctx_t *ctx_value = (co_ctx_t*)obj.v.p;
-    CO_OBJECT_C_DECREF(ctx, ctx_value->parent_ctx);
-    CO_OBJECT_C_DECREF(ctx, ctx_value->current_frame);
+    CO_DECREF(ctx, ctx_value->parent_ctx);
+    CO_DECREF(ctx, ctx_value->current_frame);
     free(ctx_value);
     return CO_OBJECT_UNDEFINED;
 }
@@ -718,7 +968,7 @@ co_object_t co_ctx_c_spawn(co_object_t ctx) {
     
     // ctx
     child_ctx_value->parent_ctx = ctx;
-    CO_OBJECT_C_INCREF(child_ctx, child_ctx_value->parent_ctx);
+    CO_INCREF(child_ctx, child_ctx_value->parent_ctx);
     
     // current_frame
     ctx_value = (co_ctx_t*)ctx.v.p;
@@ -778,20 +1028,20 @@ co_object_t co_frame_c_new(co_object_t ctx, co_object_t parent_frame) {
 
     // parent_frame
     frame_value->parent_frame = parent_frame;
-    CO_OBJECT_C_INCREF(ctx, parent_frame);
+    CO_INCREF(ctx, parent_frame);
     
     // closure
     closure = CO_OBJECT_UNDEFINED; // FIXME:
     frame_value->closure = closure;
-    CO_OBJECT_C_INCREF(ctx, closure);
+    CO_INCREF(ctx, closure);
 
     return frame;
 }
 
 co_object_t co_frame_c_free(co_object_t ctx, co_object_t obj) {
     co_frame_t *frame_value = (co_frame_t*)obj.v.p;
-    CO_OBJECT_C_DECREF(ctx, frame_value->parent_frame);
-    CO_OBJECT_C_DECREF(ctx, frame_value->closure);
+    CO_DECREF(ctx, frame_value->parent_frame);
+    CO_DECREF(ctx, frame_value->closure);
     free(frame_value);
     return CO_OBJECT_UNDEFINED;
 }
@@ -1126,11 +1376,11 @@ co_object_t co_list_c_new(co_object_t ctx, co_u64_t len, co_object_t *items) {
 
     for (co_u64_t i = 0; i < list_value->len; i++) {
         value = list_value->items[i];
-        CO_OBJECT_C_INCREF(ctx, value);
+        CO_INCREF(ctx, value);
     }
 
     // precompute hash
-    // list_value->hash = co_c_clistitems_hash(ctx, list_value->len, list_value->items);
+    list_value->hash = co_c_clistitems_hash(ctx, list_value->len, list_value->items);
 
     // object
     obj = (co_object_t){
@@ -1149,7 +1399,7 @@ co_object_t co_list_c_free(co_object_t ctx, co_object_t obj) {
 
     for (co_u64_t i = 0; i < list_value->len; i++) {
         value = list_value->items[i];
-        CO_OBJECT_C_DECREF(ctx, value);
+        CO_DECREF(ctx, value);
     }
 
     free(list_value->items);
@@ -1159,13 +1409,8 @@ co_object_t co_list_c_free(co_object_t ctx, co_object_t obj) {
 }
 
 co_object_t co_list_c_len(co_object_t ctx, co_object_t obj) {
-    // FIXME: implement
-    return CO_OBJECT_UNDEFINED;
-}
-
-co_object_t co_list_c_items(co_object_t ctx, co_object_t obj) {
-    // FIXME: implement
-    return CO_OBJECT_UNDEFINED;
+    co_list_t *list_value = (co_list_t*)obj.v.p;
+    return co_i64_c_new(ctx, list_value->len);
 }
 
 co_object_t co_list_c_lt(co_object_t ctx, co_object_t obj, co_object_t other) {
@@ -1174,18 +1419,63 @@ co_object_t co_list_c_lt(co_object_t ctx, co_object_t obj, co_object_t other) {
 }
 
 co_object_t co_list_c_eq(co_object_t ctx, co_object_t obj, co_object_t other) {
-    // FIXME: implement
-    return CO_OBJECT_UNDEFINED;
+    co_object_t res;
+    bool res_value = true;
+
+    assert(obj.k == CO_KIND_LIST);
+    assert(other.k == CO_KIND_LIST);
+
+    co_list_t *obj_value = (co_list_t*)obj.v.p;
+    co_list_t *other_value = (co_list_t*)other.v.p;
+    co_object_t obj_item;
+    co_object_t other_item;
+    co_object_t t;
+
+    if (obj_value->len != other_value->len) {
+        res_value = false;
+        goto return_res;
+    }
+
+    for (co_u64_t i = 0; i < obj_value->len; i++) {
+        obj_item = obj_value->items[i];
+        other_item = other_value->items[i];
+        t = co_object_c_eq(ctx, obj_item, other_item);
+        
+        assert(t.k == CO_KIND_BOOL);
+
+        if (t.v.b == false) {
+            res_value = false;
+            goto return_res;
+        }
+    }
+
+return_res:
+    res = (co_object_t){
+        .k = CO_KIND_BOOL,
+        .v = {
+            .b = res_value
+        }
+    };
+
+    return res;
 }
 
 co_object_t co_list_c_hash(co_object_t ctx, co_object_t obj) {
-    // FIXME: implement
-    return CO_OBJECT_UNDEFINED;
+    co_list_t *list_value = (co_list_t*)obj.v.p;
+    return co_i64_c_new(ctx, list_value->hash);
 }
 
 co_object_t co_list_c_repr(co_object_t ctx, co_object_t obj) {
-    // FIXME: implement
-    return CO_OBJECT_UNDEFINED;
+    co_object_t res;
+
+    co_list_t *list_value = (co_list_t*)obj.v.p;
+    int size = snprintf(NULL, 0, "[list at %p of len %ld]", list_value, list_value->len);
+    size += 1;
+    char *repr_items = (char*)calloc(size, sizeof(char));
+    snprintf(repr_items, size, "[list at %p of len %ld]\0", list_value, list_value->len);
+
+    res = co_str_c_new(ctx, size, repr_items, CO_OWN_TRANS_MOVE);
+    return res;
 }
 
 co_object_t co_list_c_get(co_object_t ctx, co_object_t obj, co_object_t index) {
@@ -1262,9 +1552,11 @@ co_i64_t co_c_clistitems_hash(co_object_t ctx, size_t len, co_object_t *items) {
     for (co_u64_t i = 0; i < len; i++) {
         value = items[i];
         h = co_object_c_hash(ctx, value);
+        
         assert(h.k == CO_KIND_I64);
+        
         h_value = h.v.i64;
-        CO_OBJECT_C_DECREF(ctx, h);
+        CO_DECREF(ctx, h);
         hash ^= h_value;
     }
 
@@ -1292,6 +1584,6 @@ co_object_t co_print_c(co_object_t ctx, co_object_t obj) {
     printf(buf_format, repr_str_items);
 
     free(buf_format);
-    CO_OBJECT_C_DECREF(ctx, repr_obj);
+    CO_DECREF(ctx, repr_obj);
     return CO_OBJECT_UNDEFINED;
 }
