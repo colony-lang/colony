@@ -984,12 +984,9 @@ co_object_t co_ctx_c_spawn(co_object_t ctx) {
 }
 
 co_object_t co_ctx_c_hash(co_object_t ctx, co_object_t obj) {
-    co_object_t hash;
-    co_i64_t hash_value;
-
     _co_num_t num = { .p = obj.v.p };
-    hash_value = num.i64;
-    hash = co_i64_c_new(ctx, hash_value);
+    co_i64_t hash_value = num.i64;
+    co_object_t hash = co_i64_c_new(ctx, hash_value);
     return hash;
 }
 
