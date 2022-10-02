@@ -1414,8 +1414,44 @@ co_object_t co_list_c_len(co_object_t ctx, co_object_t obj) {
 }
 
 co_object_t co_list_c_lt(co_object_t ctx, co_object_t obj, co_object_t other) {
-    // FIXME: implement
-    return CO_OBJECT_UNDEFINED;
+    co_object_t res;
+    bool res_value = true;
+
+    assert(obj.k == CO_KIND_LIST);
+    assert(other.k == CO_KIND_LIST);
+
+    co_list_t *obj_value = (co_list_t*)obj.v.p;
+    co_list_t *other_value = (co_list_t*)other.v.p;
+    co_object_t obj_item;
+    co_object_t other_item;
+    co_object_t t;
+
+    if (obj_value->len < other_value->len) {
+        res_value = true;
+        goto return_res;
+    }
+
+    if (obj_value->len > other_value->len) {
+        res_value = false;
+        goto return_res;
+    }
+
+    for (co_u64_t i = 0; i < obj_value->len; i++) {
+        obj_item = obj_value->items[i];
+        other_item = other_value->items[i];
+        t = co_object_c_lt(ctx, obj_item, other_item);
+        
+        assert(t.k == CO_KIND_BOOL);
+
+        if (t.v.b == false) {
+            res_value = false;
+            goto return_res;
+        }
+    }
+
+return_res:
+    res = co_bool_c_new(ctx, res_value);
+    return res;
 }
 
 co_object_t co_list_c_eq(co_object_t ctx, co_object_t obj, co_object_t other) {
@@ -1450,13 +1486,7 @@ co_object_t co_list_c_eq(co_object_t ctx, co_object_t obj, co_object_t other) {
     }
 
 return_res:
-    res = (co_object_t){
-        .k = CO_KIND_BOOL,
-        .v = {
-            .b = res_value
-        }
-    };
-
+    res = co_bool_c_new(ctx, res_value);
     return res;
 }
 
@@ -1467,12 +1497,13 @@ co_object_t co_list_c_hash(co_object_t ctx, co_object_t obj) {
 
 co_object_t co_list_c_repr(co_object_t ctx, co_object_t obj) {
     co_object_t res;
-
     co_list_t *list_value = (co_list_t*)obj.v.p;
+    
     int size = snprintf(NULL, 0, "[list at %p of len %ld]", list_value, list_value->len);
     size += 1;
+    
     char *repr_items = (char*)calloc(size, sizeof(char));
-    snprintf(repr_items, size, "[list at %p of len %ld]\0", list_value, list_value->len);
+    snprintf(repr_items, size, "[list at %p of len %ld]", list_value, list_value->len);
 
     res = co_str_c_new(ctx, size, repr_items, CO_OWN_TRANS_MOVE);
     return res;

@@ -161,7 +161,7 @@ typedef struct co_str_t {
 
 typedef struct co_list_t {
     CO_GC_T
-    // co_object_t item_type;
+    co_object_t item_type;
     co_u64_t len;
     co_object_t *items;
     co_i64_t hash;
@@ -170,7 +170,7 @@ typedef struct co_list_t {
 /*
  * object
  */
-static struct co_object_t CO_OBJECT_UNDEFINED = {
+static struct co_object_t CO_OBJECT_UNDEFINED __attribute__ ((unused)) = {
     .k = CO_KIND_UNDEFINED,
     .v = (co_value_t){
         .p = (co_gc_t*)NULL

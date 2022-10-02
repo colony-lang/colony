@@ -4,15 +4,12 @@ void example_bool(co_object_t ctx) {
     co_object_t b0 = co_bool_c_new(ctx, true);
     co_object_t b1 = co_bool_c_new(ctx, false);
     co_object_t b2 = co_bool_c_not(ctx, b0);
-    assert(b2.v.b == false);
     co_print_c(ctx, b2);
     
     co_object_t b3 = co_bool_c_and(ctx, b0, b1);
-    assert(b3.v.b == false);
     co_print_c(ctx, b3);
     
     co_object_t b4 = co_bool_c_or(ctx, b0, b1);
-    assert(b4.v.b == true);
     co_print_c(ctx, b4);
 }
 
@@ -38,25 +35,25 @@ void example_bytes(co_object_t ctx) {
     co_object_t b0 = co_bytes_c_new(ctx, 5, "Hello", CO_OWN_TRANS_COPY);
     co_object_t b1 = co_bytes_c_new(ctx, 5, "Hello", CO_OWN_TRANS_COPY);
     co_object_t v0 = co_bytes_c_eq(ctx, b0, b1);
-    assert(v0.v.b == true);
-    CO_DECREF(ctx, b0);
-    CO_DECREF(ctx, b1);
+    co_print_c(ctx, v0);
 
     co_object_t b2 = co_bytes_c_new(ctx, 5, "Hello", CO_OWN_TRANS_COPY);
     co_object_t b3 = co_bytes_c_new(ctx, 1, " ", CO_OWN_TRANS_COPY);
     co_object_t b4 = co_bytes_c_new(ctx, 5, "world", CO_OWN_TRANS_COPY);
     co_object_t b5 = co_bytes_c_new(ctx, 1, "!", CO_OWN_TRANS_COPY);
+    co_print_c(ctx, b2);
+    co_print_c(ctx, b3);
+    co_print_c(ctx, b4);
+    co_print_c(ctx, b5);
     
     co_object_t b6 = co_bytes_c_add(ctx, b2, b3);
     co_object_t b7 = co_bytes_c_add(ctx, b6, b4);
     co_object_t b8 = co_bytes_c_add(ctx, b7, b5);
 
-    co_print_c(ctx, b2);
-    co_print_c(ctx, b3);
-    co_print_c(ctx, b4);
-    co_print_c(ctx, b5);
     co_print_c(ctx, b8);
     
+    CO_DECREF(ctx, b0);
+    CO_DECREF(ctx, b1);
     CO_DECREF(ctx, b2);
     CO_DECREF(ctx, b3);
     CO_DECREF(ctx, b4);
@@ -70,25 +67,25 @@ void example_str(co_object_t ctx) {
     co_object_t s0 = co_str_c_new(ctx, 5, "Hello", CO_OWN_TRANS_COPY);
     co_object_t s1 = co_str_c_new(ctx, 5, "Hello", CO_OWN_TRANS_COPY);
     co_object_t v0 = co_str_c_eq(ctx, s0, s1);
-    assert(v0.v.b == true);
-    CO_DECREF(ctx, s0);
-    CO_DECREF(ctx, s1);
+    co_print_c(ctx, v0);
 
     co_object_t s2 = co_str_c_new(ctx, 5, "Hello", CO_OWN_TRANS_COPY);
     co_object_t s3 = co_str_c_new(ctx, 1, " ", CO_OWN_TRANS_COPY);
     co_object_t s4 = co_str_c_new(ctx, 5, "world", CO_OWN_TRANS_COPY);
     co_object_t s5 = co_str_c_new(ctx, 1, "!", CO_OWN_TRANS_COPY);
+    co_print_c(ctx, s2);
+    co_print_c(ctx, s3);
+    co_print_c(ctx, s4);
+    co_print_c(ctx, s5);
     
     co_object_t s6 = co_str_c_add(ctx, s2, s3);
     co_object_t s7 = co_str_c_add(ctx, s6, s4);
     co_object_t s8 = co_str_c_add(ctx, s7, s5);
 
-    co_print_c(ctx, s2);
-    co_print_c(ctx, s3);
-    co_print_c(ctx, s4);
-    co_print_c(ctx, s5);
     co_print_c(ctx, s8);
     
+    CO_DECREF(ctx, s0);
+    CO_DECREF(ctx, s1);
     CO_DECREF(ctx, s2);
     CO_DECREF(ctx, s3);
     CO_DECREF(ctx, s4);
@@ -123,6 +120,10 @@ void example_list(co_object_t ctx) {
     co_print_c(ctx, a1);
     co_print_c(ctx, a2);
 
+    //
+    // eq
+    //
+    printf("eq:\n");
     co_object_t t0 = co_list_c_eq(ctx, a0, a1);
     co_print_c(ctx, t0);
 
@@ -135,6 +136,25 @@ void example_list(co_object_t ctx) {
     co_object_t t2 = co_list_c_eq(ctx, a1, a2);
     co_print_c(ctx, t2);
 
+    //
+    // lt
+    //
+    printf("lt:\n");
+    co_object_t r0 = co_list_c_lt(ctx, a0, a1);
+    co_print_c(ctx, r0);
+
+    co_object_t r0_0 = co_object_c_lt(ctx, a0, a1);
+    co_print_c(ctx, r0_0);
+
+    co_object_t r1 = co_list_c_lt(ctx, a0, a2);
+    co_print_c(ctx, r1);
+
+    co_object_t r2 = co_list_c_lt(ctx, a1, a2);
+    co_print_c(ctx, r2);
+
+    co_object_t r3 = co_list_c_lt(ctx, a2, a0);
+    co_print_c(ctx, r3);
+
     CO_DECREF(ctx, a0);
     CO_DECREF(ctx, a1);
     CO_DECREF(ctx, a2);
@@ -142,6 +162,11 @@ void example_list(co_object_t ctx) {
     CO_DECREF(ctx, t0_0);
     CO_DECREF(ctx, t1);
     CO_DECREF(ctx, t2);
+    CO_DECREF(ctx, r0);
+    CO_DECREF(ctx, r0_0);
+    CO_DECREF(ctx, r1);
+    CO_DECREF(ctx, r2);
+    CO_DECREF(ctx, r3);
 }
 
 int main(int argc, char **argv) {
