@@ -744,8 +744,10 @@ co_object_t co_i64_c_hash(co_object_t ctx, co_object_t obj) {
 co_object_t co_i64_c_repr(co_object_t ctx, co_object_t obj) {
     co_i64_t v = obj.v.i64;
     int size = snprintf(NULL, 0, "%ld", v);
+    
     char *items = (char*)calloc(size + 1, sizeof(char));
     snprintf(items, size + 1, "%ld", v);
+    
     co_object_t res = co_str_c_new(ctx, size + 1, items, CO_OWN_TRANS_MOVE);
     return res;
 }
@@ -857,8 +859,10 @@ co_object_t co_f64_c_hash(co_object_t ctx, co_object_t obj) {
 co_object_t co_f64_c_repr(co_object_t ctx, co_object_t obj) {
     co_f64_t v = obj.v.f64;
     int size = snprintf(NULL, 0, "%f", v);
+    
     char *items = (char*)calloc(size + 1, sizeof(char));
     snprintf(items, size + 1, "%f", v);
+    
     co_object_t res = co_str_c_new(ctx, size + 1, items, CO_OWN_TRANS_MOVE);
     return res;
 }
@@ -956,7 +960,7 @@ co_object_t co_ctx_c_spawn(co_object_t ctx) {
     co_object_t current_frame;
     co_object_t parent_frame;
 
-    child_ctx_value = calloc(1, sizeof(co_ctx_t));
+    child_ctx_value = (co_ctx_t*)calloc(1, sizeof(co_ctx_t));
     child_ctx_value->rc = 1;
 
     child_ctx = (co_object_t){
@@ -983,15 +987,9 @@ co_object_t co_ctx_c_hash(co_object_t ctx, co_object_t obj) {
     co_object_t hash;
     co_i64_t hash_value;
 
-    hash_value = (co_i64_t)(uintptr_t)(co_gc_t*)obj.v.p;
-
-    hash = (co_object_t){
-        .k = CO_KIND_I64,
-        .v = {
-            .i64 = hash_value,
-        }
-    };
-
+    _co_int_float_t num = { .p = obj.v.p };
+    hash_value = num.i64;
+    hash = co_i64_c_new(ctx, hash_value);
     return hash;
 }
 
@@ -1556,7 +1554,7 @@ co_object_t co_list_free(co_object_t ctx, co_object_t obj, co_object_t args, co_
 
 
 /*
- * builtins
+ * c builtins
  */
 co_i64_t co_c_cstr_hash(co_object_t ctx, size_t len, char *items) {
     // djb2 hashing algorithm

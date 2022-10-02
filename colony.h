@@ -113,6 +113,7 @@ typedef union _co_int_float_t {
     co_i64_t i64;
     co_u64_t u64;
     co_f64_t f64;
+    void *p;
 } _co_int_float_t;
 
 typedef struct co_gc_t {
@@ -441,7 +442,7 @@ co_object_t co_result_new(co_object_t ctx, co_object_t obj, co_object_t args, co
 co_object_t co_result_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
 
 /*
- * builtins
+ * c builtins
  */
 co_i64_t co_c_cstr_hash(co_object_t ctx, size_t len, char *items);
 co_i64_t co_c_clistitems_hash(co_object_t ctx, size_t len, co_object_t *items);
