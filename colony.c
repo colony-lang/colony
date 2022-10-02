@@ -851,7 +851,7 @@ co_object_t co_f64_c_free(co_object_t ctx, co_object_t obj) {
 }
 
 co_object_t co_f64_c_hash(co_object_t ctx, co_object_t obj) {
-    _co_int_float_t num;
+    _co_num_t num;
     num.f64 = obj.v.f64;
     return co_i64_c_new(ctx, num.i64);
 }
@@ -987,7 +987,7 @@ co_object_t co_ctx_c_hash(co_object_t ctx, co_object_t obj) {
     co_object_t hash;
     co_i64_t hash_value;
 
-    _co_int_float_t num = { .p = obj.v.p };
+    _co_num_t num = { .p = obj.v.p };
     hash_value = num.i64;
     hash = co_i64_c_new(ctx, hash_value);
     return hash;
@@ -1566,7 +1566,7 @@ co_i64_t co_c_cstr_hash(co_object_t ctx, size_t len, char *items) {
         h = ((h << 5) + h) + c; /* h * 33 + c */
     }
 
-    _co_int_float_t num;
+    _co_num_t num;
     num.u64 = h;
     co_i64_t hash = num.i64;
     return hash;

@@ -109,12 +109,12 @@ typedef uint64_t co_u64_t;
 typedef double co_f64_t;
 
 // special structure used for hashing of ints and floats
-typedef union _co_int_float_t {
+typedef union _co_num_t {
     co_i64_t i64;
     co_u64_t u64;
     co_f64_t f64;
     void *p;
-} _co_int_float_t;
+} _co_num_t;
 
 typedef struct co_gc_t {
     CO_GC_T
