@@ -19,6 +19,11 @@ void example_i64(co_object_t ctx) {
     co_object_t v2 = co_i64_c_add(ctx, v0, v1);
     co_print_c(ctx, v2);
 
+    co_object_t v3 = co_i64_c_new(ctx, 11);
+    co_object_t v4 = co_i64_c_new(ctx, 22);
+    co_object_t v5 = co_i64_c_add(ctx, v3, v4);
+    co_print_c(ctx, v5);
+
     // co_object_t sv2 = co_i64_c_repr(ctx, v2); // str
     // co_print_c(ctx, sv2);
     // CO_DECREF(ctx, sv2);
@@ -184,16 +189,16 @@ int main(int argc, char **argv) {
     example_i64(ctx);
 
     // f64
-    example_f64(ctx);
+    // example_f64(ctx);
 
     // bytes
-    example_bytes(ctx);
+    // example_bytes(ctx);
 
     // str
-    example_str(ctx);
+    // example_str(ctx);
 
     // list
-    example_list(ctx);
+    // example_list(ctx);
 
     // cleanup
     CO_DECREF(root_ctx, ctx2);

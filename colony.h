@@ -448,7 +448,6 @@ co_object_t co_result_free(co_object_t ctx, co_object_t obj, co_object_t args, c
  */
 co_i64_t co_c_cstr_hash(co_object_t ctx, size_t len, char *items);
 co_i64_t co_c_clistitems_hash(co_object_t ctx, size_t len, co_object_t *items);
-char *co_c_create_len_str_format(co_object_t ctx, size_t len);
 co_object_t co_print_c(co_object_t ctx, co_object_t obj);
 
 #endif

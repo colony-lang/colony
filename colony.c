@@ -662,13 +662,12 @@ co_object_t co_bool_c_free(co_object_t ctx, co_object_t obj) {
 
 co_object_t co_bool_c_repr(co_object_t ctx, co_object_t obj) {
     assert(obj.k == CO_KIND_BOOL);
-
     co_object_t res;
 
     if (obj.v.b == true) {
-        res = co_str_c_new(ctx, 5, "true\0", CO_OWN_TRANS_COPY);
+        res = co_str_c_new(ctx, 4, "true", CO_OWN_TRANS_COPY);
     } else {
-        res = co_str_c_new(ctx, 6, "false\0", CO_OWN_TRANS_COPY);
+        res = co_str_c_new(ctx, 5, "false", CO_OWN_TRANS_COPY);
     }
 
     return res;
@@ -769,11 +768,10 @@ co_object_t co_i64_c_repr(co_object_t ctx, co_object_t obj) {
 
     co_i64_t v = obj.v.i64;
     int size = snprintf(NULL, 0, "%ld", v);
-    
-    char *items = (char*)calloc(size + 1, sizeof(char));
+    char *items = calloc(size, sizeof(char));
     snprintf(items, size + 1, "%ld", v);
     
-    co_object_t res = co_str_c_new(ctx, size + 1, items, CO_OWN_TRANS_MOVE);
+    co_object_t res = co_str_c_new(ctx, size, items, CO_OWN_TRANS_MOVE);
     return res;
 }
 
@@ -927,7 +925,7 @@ co_object_t co_f64_c_repr(co_object_t ctx, co_object_t obj) {
     co_f64_t v = obj.v.f64;
     int size = snprintf(NULL, 0, "%f", v);
     
-    char *items = (char*)calloc(size + 1, sizeof(char));
+    char *items = calloc(size + 1, sizeof(char));
     snprintf(items, size + 1, "%f", v);
     
     co_object_t res = co_str_c_new(ctx, size + 1, items, CO_OWN_TRANS_MOVE);
@@ -1055,7 +1053,7 @@ co_object_t co_ctx_c_spawn(co_object_t ctx) {
     co_object_t current_frame;
     co_object_t parent_frame;
 
-    child_ctx_value = (co_ctx_t*)calloc(1, sizeof(co_ctx_t));
+    child_ctx_value = calloc(1, sizeof(co_ctx_t));
     child_ctx_value->rc = 1;
 
     child_ctx = (co_object_t){
@@ -1124,7 +1122,7 @@ co_object_t co_frame_c_new(co_object_t ctx, co_object_t parent_frame) {
     co_frame_t *frame_value;
     co_object_t closure;
 
-    frame_value = (co_frame_t*)calloc(1, sizeof(co_frame_t));
+    frame_value = calloc(1, sizeof(co_frame_t));
     frame_value->rc = 1;
     
     frame = (co_object_t){
@@ -1196,7 +1194,7 @@ co_object_t co_bytes_c_new(co_object_t ctx, co_u64_t len, char *items, co_own_tr
     co_object_t obj;
     co_bytes_t *bytes_value;
 
-    bytes_value = (co_bytes_t*)calloc(1, sizeof(co_bytes_t));
+    bytes_value = calloc(1, sizeof(co_bytes_t));
     bytes_value->rc = 1;
     bytes_value->len = len;
     bytes_value->ot = ot;
@@ -1207,7 +1205,7 @@ co_object_t co_bytes_c_new(co_object_t ctx, co_u64_t len, char *items, co_own_tr
             bytes_value->items = items;
             break;
         case CO_OWN_TRANS_COPY:
-            bytes_value->items = (char*)calloc(len, sizeof(char));
+            bytes_value->items = calloc(len, sizeof(char));
             bytes_value->items = memmove(bytes_value->items, items, len);
             break;
     }
@@ -1261,7 +1259,7 @@ co_object_t co_bytes_c_repr(co_object_t ctx, co_object_t obj) {
     co_object_t res;
 
     co_bytes_t *bytes_value = (co_bytes_t*)obj.v.p;
-    char *repr_items = (char*)calloc(bytes_value->len + 1, sizeof(char));
+    char *repr_items = calloc(bytes_value->len + 1, sizeof(char));
     char c;
 
     for (co_u64_t i = 0; i < bytes_value->len; i++) {
@@ -1328,7 +1326,7 @@ co_object_t co_bytes_c_add(co_object_t ctx, co_object_t obj, co_object_t other) 
     assert(other.k == CO_KIND_BYTES);
 
     size_t len = obj_bytes_value->len + other_bytes_value->len;
-    char *items = (char*)calloc(len, sizeof(char));
+    char *items = calloc(len, sizeof(char));
     memmove(items, obj_bytes_value->items, obj_bytes_value->len);
     memmove(items + obj_bytes_value->len, other_bytes_value->items, other_bytes_value->len);
     
@@ -1347,7 +1345,7 @@ co_object_t co_str_c_new(co_object_t ctx, co_u64_t len, char *items, co_own_tran
     co_object_t obj;
     co_str_t *str_value;
 
-    str_value = (co_str_t*)calloc(1, sizeof(co_str_t));
+    str_value = calloc(1, sizeof(co_str_t));
     str_value->rc = 1;
     str_value->len = len;
     str_value->ot = ot;
@@ -1358,7 +1356,7 @@ co_object_t co_str_c_new(co_object_t ctx, co_u64_t len, char *items, co_own_tran
             str_value->items = items;
             break;
         case CO_OWN_TRANS_COPY:
-            str_value->items = (char*)calloc(len, sizeof(char));
+            str_value->items = calloc(len, sizeof(char));
             str_value->items = memmove(str_value->items, items, len);
             break;
     }
@@ -1413,7 +1411,7 @@ co_object_t co_str_c_repr(co_object_t ctx, co_object_t obj) {
 
     co_object_t res;
     co_str_t *str_value = (co_str_t*)obj.v.p;
-    char *repr_items = (char*)calloc(str_value->len + 1, sizeof(char));
+    char *repr_items = calloc(str_value->len + 1, sizeof(char));
     char c;
 
     for (co_u64_t i = 0; i < str_value->len; i++) {
@@ -1471,7 +1469,7 @@ co_object_t co_str_c_add(co_object_t ctx, co_object_t obj, co_object_t other) {
     co_object_t res;
 
     size_t len = obj_str_value->len + other_str_value->len;
-    char *items = (char*)calloc(len, sizeof(char));
+    char *items = calloc(len, sizeof(char));
     memmove(items, obj_str_value->items, obj_str_value->len);
     memmove(items + obj_str_value->len, other_str_value->items, other_str_value->len);
     
@@ -1634,7 +1632,7 @@ co_object_t co_list_c_repr(co_object_t ctx, co_object_t obj) {
     int size = snprintf(NULL, 0, "[list at %p of len %ld]", list_value, list_value->len);
     size += 1;
     
-    char *repr_items = (char*)calloc(size, sizeof(char));
+    char *repr_items = calloc(size, sizeof(char));
     snprintf(repr_items, size, "[list at %p of len %ld]", list_value, list_value->len);
 
     res = co_str_c_new(ctx, size, repr_items, CO_OWN_TRANS_MOVE);
@@ -1726,29 +1724,24 @@ co_i64_t co_c_clistitems_hash(co_object_t ctx, size_t len, co_object_t *items) {
     return hash;
 }
 
-char *co_c_create_len_str_format(co_object_t ctx, size_t len) {
-    int size = snprintf(NULL, 0, "%lu", len);
-    
-    // example: "%114s\n\0"
-    char *fmt = (char*)calloc(1 + size + 1 + 1 + 1, sizeof(char));
-    snprintf(fmt, 1 + size + 1 + 1 + 1, "%%%lus\n", len);
-    
-    return fmt;
-}
-
 co_object_t co_print_c(co_object_t ctx, co_object_t obj) {
+    // repr
     co_object_t repr_obj = co_object_c_repr(ctx, obj);
-    
     co_str_t *repr_str_value = (co_str_t*)repr_obj.v.p;
-    size_t repr_str_len = repr_str_value->len;
-    char *repr_str_items = repr_str_value->items;
+    size_t repr_len = repr_str_value->len;
+    char *repr_items = repr_str_value->items;
     
-    // print into buf, then printf buf
-    char *buf_format = co_c_create_len_str_format(ctx, repr_str_len - 1); // subtract 1 because '\0'
-    // printf("buf_format: %s", buf_format);
-    printf(buf_format, repr_str_items);
+    // buf_fmt
+    int size = snprintf(NULL, 0, "%%%lus\n", repr_len);
+    size += 1;
+    char *buf_fmt = calloc(size, sizeof(char));
+    snprintf(buf_fmt, size, "%%%lus\n", repr_len);
 
-    free(buf_format);
+    // print
+    printf(buf_fmt, repr_items);
+
+    // cleanup
+    free(buf_fmt);
     CO_DECREF(ctx, repr_obj);
     return CO_OBJECT_UNDEFINED;
 }
