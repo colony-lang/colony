@@ -338,6 +338,7 @@ co_object_t co_list_c_prepend(co_object_t ctx, co_object_t obj, co_object_t valu
 co_object_t co_list_c_insert(co_object_t ctx, co_object_t obj, co_object_t index, co_object_t value);
 co_object_t co_list_c_remove(co_object_t ctx, co_object_t obj, co_object_t value, co_object_t n);
 co_object_t co_list_c_replace(co_object_t ctx, co_object_t obj, co_object_t value, co_object_t other, co_object_t n);
+co_object_t co_list_c_pop(co_object_t ctx, co_object_t obj);
 
 co_object_t co_list_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs);
 

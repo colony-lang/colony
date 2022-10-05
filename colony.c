@@ -1679,6 +1679,11 @@ co_object_t co_list_c_replace(co_object_t ctx, co_object_t obj, co_object_t valu
     return CO_OBJECT_UNDEFINED;
 }
 
+co_object_t co_list_c_pop(co_object_t ctx, co_object_t obj) {
+    // FIXME: implement
+    return CO_OBJECT_UNDEFINED;
+}
+
 co_object_t co_list_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs) {
     // FIXME: implement
     return CO_OBJECT_UNDEFINED;
