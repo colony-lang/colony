@@ -198,7 +198,7 @@ int main(int argc, char **argv) {
     example_str(ctx);
 
     // list
-    // example_list(ctx);
+    example_list(ctx);
 
     // cleanup
     CO_DECREF(root_ctx, ctx2);
