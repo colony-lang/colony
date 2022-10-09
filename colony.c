@@ -928,7 +928,7 @@ co_object_t co_f64_c_repr(co_object_t ctx, co_object_t obj) {
     char *items = calloc(size + 1, sizeof(char));
     snprintf(items, size + 1, "%f", v);
     
-    co_object_t res = co_str_c_new(ctx, size + 1, items, CO_OWN_TRANS_MOVE);
+    co_object_t res = co_str_c_new(ctx, size, items, CO_OWN_TRANS_MOVE);
     return res;
 }
 

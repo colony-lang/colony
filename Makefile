@@ -1,7 +1,8 @@
-CC=gcc
-# CC=clang
+# CC=gcc
+CC=clang
 # CC=musl-clang
-CFLAGS=-c -Wall -O0 -g
+# CFLAGS=-c -Wall -Og -fsanitize=address -fno-omit-frame-pointer
+CFLAGS=-c -Wall -Og
 LDFLAGS=-lm -lpthread
 SOURCES= colony.c main.c
 OBJECTS=$(SOURCES:.c=.o)

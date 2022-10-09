@@ -189,7 +189,7 @@ int main(int argc, char **argv) {
     example_i64(ctx);
 
     // f64
-    // example_f64(ctx);
+    example_f64(ctx);
 
     // bytes
     // example_bytes(ctx);
