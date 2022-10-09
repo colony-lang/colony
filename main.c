@@ -178,10 +178,25 @@ int main(int argc, char **argv) {
     // root context
     co_object_t root_ctx = co_ctx_c_new_root();
     co_print_c(root_ctx, root_ctx);
-    
+
+    co_object_t root_frame = co_ctx_c_get_current_frame(root_ctx, root_ctx);
+    CO_INCREF(root_ctx, root_frame);
+    co_print_c(root_ctx, root_frame);
+
     // context with root contect as parent
     co_object_t ctx = co_ctx_c_spawn(root_ctx);
+    co_print_c(root_ctx, ctx);
+
+    co_object_t frame = co_ctx_c_get_current_frame(root_ctx, ctx);
+    CO_INCREF(ctx, frame);
+    co_print_c(ctx, frame);
+    
     co_object_t ctx2 = co_ctx_c_spawn(ctx);
+    co_print_c(ctx, ctx2);
+
+    co_object_t frame2 = co_ctx_c_get_current_frame(ctx, ctx2);
+    CO_INCREF(ctx2, frame2);
+    co_print_c(ctx2, frame2);
     
     // bool
     example_bool(ctx);
@@ -202,7 +217,10 @@ int main(int argc, char **argv) {
     example_list(ctx);
 
     // cleanup
-    CO_DECREF(root_ctx, ctx2);
+    CO_DECREF(ctx2, frame2);
+    CO_DECREF(ctx, frame);
+    CO_DECREF(root_ctx, root_frame);
+    CO_DECREF(ctx, ctx2);
     CO_DECREF(root_ctx, ctx);
     CO_DECREF(root_ctx, root_ctx);
     

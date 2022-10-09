@@ -1111,6 +1111,15 @@ co_object_t co_ctx_c_eq(co_object_t ctx, co_object_t obj, co_object_t other) {
     return res;
 }
 
+co_object_t co_ctx_c_get_current_frame(co_object_t ctx, co_object_t obj) {
+    assert(ctx.k == CO_KIND_CTX);
+    assert(obj.k == CO_KIND_CTX);
+
+    co_ctx_t *ctx_value = (co_ctx_t*)obj.v.p;
+    co_object_t current_frame = ctx_value->current_frame;
+    return current_frame;
+}
+
 co_object_t co_ctx_free(co_object_t ctx, co_object_t obj, co_object_t args, co_object_t kwargs) {
     return co_ctx_c_free(ctx, obj);
 }
