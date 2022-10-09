@@ -118,9 +118,9 @@ void example_list(co_object_t ctx) {
         (co_object_t){.k = CO_KIND_F64, .v = { .f64 = 2.0 }}
     };
 
-    co_object_t a0 = co_list_c_new(ctx, 3, items0);
-    co_object_t a1 = co_list_c_new(ctx, 3, items1);
-    co_object_t a2 = co_list_c_new(ctx, 2, items2);
+    co_object_t a0 = co_list_c_new(ctx, CO_OBJECT_UNDEFINED, 3, items0);
+    co_object_t a1 = co_list_c_new(ctx, CO_OBJECT_UNDEFINED, 3, items1);
+    co_object_t a2 = co_list_c_new(ctx, CO_OBJECT_UNDEFINED, 2, items2);
     co_print_c(ctx, a0);
     co_print_c(ctx, a1);
     co_print_c(ctx, a2);

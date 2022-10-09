@@ -1509,7 +1509,7 @@ co_object_t co_str_free(co_object_t ctx, co_object_t obj, co_object_t args, co_o
 /*
  * list
  */
-co_object_t co_list_c_new(co_object_t ctx, co_u64_t len, co_object_t *items) {
+co_object_t co_list_c_new(co_object_t ctx, co_object_t item_type, co_u64_t len, co_object_t *items) {
     co_object_t obj;
     co_list_t *list_value;
     co_object_t value;
