@@ -192,7 +192,7 @@ int main(int argc, char **argv) {
     example_f64(ctx);
 
     // bytes
-    // example_bytes(ctx);
+    example_bytes(ctx);
 
     // str
     // example_str(ctx);

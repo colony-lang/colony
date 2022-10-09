@@ -1259,7 +1259,7 @@ co_object_t co_bytes_c_repr(co_object_t ctx, co_object_t obj) {
     co_object_t res;
 
     co_bytes_t *bytes_value = (co_bytes_t*)obj.v.p;
-    char *repr_items = calloc(bytes_value->len + 1, sizeof(char));
+    char *repr_items = calloc(bytes_value->len, sizeof(char));
     char c;
 
     for (co_u64_t i = 0; i < bytes_value->len; i++) {
@@ -1272,7 +1272,7 @@ co_object_t co_bytes_c_repr(co_object_t ctx, co_object_t obj) {
         }
     }
 
-    res = co_str_c_new(ctx, bytes_value->len + 1, repr_items, CO_OWN_TRANS_MOVE);
+    res = co_str_c_new(ctx, bytes_value->len, repr_items, CO_OWN_TRANS_MOVE);
     return res;
 }
 
