@@ -1090,8 +1090,16 @@ co_object_t co_ctx_c_repr(co_object_t ctx, co_object_t obj) {
     assert(ctx.k == CO_KIND_CTX);
     assert(obj.k == CO_KIND_CTX);
 
-    // FIXME: implement
-    return CO_OBJECT_UNDEFINED;
+    co_object_t res;
+    co_ctx_t *ctx_value = (co_ctx_t*)obj.v.p;
+    
+    int size = snprintf(NULL, 0, "(ctx at %p)", ctx_value);
+    
+    char *repr_items = calloc(size, sizeof(char));
+    snprintf(repr_items, size + 1, "(ctx at %p)", ctx_value);
+
+    res = co_str_c_new(ctx, size, repr_items, CO_OWN_TRANS_MOVE);
+    return res;
 }
 
 co_object_t co_ctx_c_eq(co_object_t ctx, co_object_t obj, co_object_t other) {

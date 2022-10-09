@@ -177,6 +177,7 @@ void example_list(co_object_t ctx) {
 int main(int argc, char **argv) {
     // root context
     co_object_t root_ctx = co_ctx_c_new_root();
+    co_print_c(root_ctx, root_ctx);
     
     // context with root contect as parent
     co_object_t ctx = co_ctx_c_spawn(root_ctx);
