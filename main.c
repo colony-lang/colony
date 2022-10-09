@@ -195,7 +195,7 @@ int main(int argc, char **argv) {
     example_bytes(ctx);
 
     // str
-    // example_str(ctx);
+    example_str(ctx);
 
     // list
     // example_list(ctx);

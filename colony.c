@@ -1411,7 +1411,7 @@ co_object_t co_str_c_repr(co_object_t ctx, co_object_t obj) {
 
     co_object_t res;
     co_str_t *str_value = (co_str_t*)obj.v.p;
-    char *repr_items = calloc(str_value->len + 1, sizeof(char));
+    char *repr_items = calloc(str_value->len, sizeof(char));
     char c;
 
     for (co_u64_t i = 0; i < str_value->len; i++) {
@@ -1424,7 +1424,7 @@ co_object_t co_str_c_repr(co_object_t ctx, co_object_t obj) {
         }
     }
 
-    res = co_str_c_new(ctx, str_value->len + 1, repr_items, CO_OWN_TRANS_MOVE);
+    res = co_str_c_new(ctx, str_value->len, repr_items, CO_OWN_TRANS_MOVE);
     return res;
 }
 
