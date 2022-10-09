@@ -1,0 +1,43 @@
+
+f0 := (x: f64, y: f64) -> f64 {
+    x == 0 ? {
+        Err("ZeroDivisionError")
+    } : {
+        x / y
+    }
+}
+
+f1 := (x: f64, y: f64) -> Result<f64, str> {
+    x == 0 ? {
+        Err("ZeroDivisionError")
+    } : {
+        Ok(x / y)
+    }
+}
+
+g := () -> {
+    //
+    // union
+    //
+    r0: f64 | Err = f0(1.0, 2.0)
+
+    r0: f64 = match(f0(1.0, 2.0))
+        .case(f64, (v) -> { v })
+        .default((e) -> { panic(e) })
+
+    //
+    // Result / Ok / Err
+    //
+    r1: Result<f64, str> = f1(1.0, 2.0)
+
+    r1: f64 = f1(1.0, 2.0).unwrap()
+
+    r1: f64 = match(f1(1.0, 2.0))
+        .case(Ok, (v) -> { v })
+        .default((e) -> { panic(e) })
+}
+
+main := () -> {
+    // can panic, can it be handled?!
+    g()
+}
