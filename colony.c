@@ -767,9 +767,9 @@ co_object_t co_i64_c_repr(co_object_t ctx, co_object_t obj) {
     assert(obj.k == CO_KIND_I64);
 
     co_i64_t v = obj.v.i64;
-    int size = snprintf(NULL, 0, "%ld", v);
+    int size = snprintf(NULL, 0, "%lld", v);
     char *items = calloc(size, sizeof(char));
-    snprintf(items, size + 1, "%ld", v);
+    snprintf(items, size + 1, "%lld", v);
     
     co_object_t res = co_str_c_new(ctx, size, items, CO_OWN_TRANS_MOVE);
     return res;
@@ -1654,10 +1654,10 @@ co_object_t co_list_c_repr(co_object_t ctx, co_object_t obj) {
     co_object_t res;
     co_list_t *list_value = (co_list_t*)obj.v.p;
     
-    int size = snprintf(NULL, 0, "[list at %p of len %ld]", list_value, list_value->len);
+    int size = snprintf(NULL, 0, "[list at %p of len %lld]", list_value, list_value->len);
     
     char *repr_items = calloc(size, sizeof(char));
-    snprintf(repr_items, size + 1, "[list at %p of len %ld]", list_value, list_value->len);
+    snprintf(repr_items, size + 1, "[list at %p of len %lld]", list_value, list_value->len);
 
     res = co_str_c_new(ctx, size, repr_items, CO_OWN_TRANS_MOVE);
     return res;
