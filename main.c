@@ -13,6 +13,8 @@ void example_bool(co_object_t ctx) {
     co_print_c(ctx, b4);
 }
 
+
+
 void example_i64(co_object_t ctx) {
     co_object_t v0 = co_i64_c_new(ctx, 1);
     co_object_t v1 = co_i64_c_new(ctx, 20);
