@@ -3,6 +3,7 @@
 /*
  * object
  */
+
 #if CO_GC_DEBUG == 1
     inline void co_object_c_incref(co_object_t ctx, co_object_t obj, char *filename, int line, const char *funcname)
 #else
