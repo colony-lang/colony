@@ -4,44 +4,8 @@
  * object
  */
 
-#if CO_GC_DEBUG == 1
-    inline void co_object_c_incref(co_object_t ctx, co_object_t obj, char *filename, int line, const char *funcname)
-#else
-    inline void co_object_c_incref(co_object_t ctx, co_object_t obj)
-#endif
-{
-    co_gc_t *gc_value;
+void co_object_c_unref(co_object_t ctx, co_object_t obj) {
 
-    if (obj.k >= CO_KIND_GC) {
-        gc_value = (co_gc_t*)obj.v.p;
-        gc_value->rc++;
-
-        #if CO_GC_DEBUG == 1
-        printf("incref  \t%s  \t%d\t%p\t%zu\t%s\n", filename, line, gc_value, gc_value->rc, funcname);
-        #endif
-    }
-}
-
-#if CO_GC_DEBUG == 1
-    inline void co_object_c_decref(co_object_t ctx, co_object_t obj, char *filename, int line, const char *funcname)
-#else
-    inline void co_object_c_decref(co_object_t ctx, co_object_t obj)
-#endif
-{
-    co_gc_t *gc_value;
-
-    if (obj.k >= CO_KIND_GC) {
-        gc_value = (co_gc_t*)obj.v.p;
-        gc_value->rc--;
-        
-        #if CO_GC_DEBUG == 1
-        printf("decref  \t%s  \t%d\t%p\t%zu\t%s\n", filename, line, gc_value, gc_value->rc, funcname);
-        #endif
-        
-        if (gc_value->rc == 0) {
-            co_object_free(ctx, obj, CO_OBJECT_UNDEFINED, CO_OBJECT_UNDEFINED);
-        }
-    }
 }
 
 co_object_t co_object_c_free(co_object_t ctx, co_object_t obj) {
@@ -1012,10 +976,11 @@ co_object_t co_ctx_c_new_root(void) {
     co_object_t ctx;
     co_ctx_t *ctx_value;
     co_object_t current_frame;
+    
+    // alloc ctx value
+    ctx_value = calloc(1, sizeof(co_ctx_t));i
 
-    ctx_value = calloc(1, sizeof(co_ctx_t));
-    ctx_value->rc = 1;
-
+    // ctx object
     ctx = (co_object_t){
         .k = CO_KIND_CTX,
         .v = {
@@ -1024,13 +989,13 @@ co_object_t co_ctx_c_new_root(void) {
     };
     
     // parent_ctx
-    ctx_value->parent_ctx = CO_OBJECT_UNDEFINED;      // already zeroed
-    CO_INCREF(ctx, ctx_value->parent_ctx);
+    ctx_value->parent_ctx = CO_OBJECT_UNDEFINED;      // root ctx does not point to any parent_ctx
+                                                      // already zeroed
     
     // current_frame
     current_frame = co_frame_c_new(ctx, CO_OBJECT_UNDEFINED);
     ctx_value->current_frame = current_frame;
-
+    
     return ctx;
 }
 
@@ -1039,8 +1004,8 @@ co_object_t co_ctx_c_free(co_object_t ctx, co_object_t obj) {
     assert(obj.k == CO_KIND_CTX);
 
     co_ctx_t *ctx_value = (co_ctx_t*)obj.v.p;
-    CO_DECREF(ctx, ctx_value->parent_ctx);
-    CO_DECREF(ctx, ctx_value->current_frame);
+    CO_UNREF(ctx, ctx_value->parent_ctx);
+    CO_UNREF(ctx, ctx_value->current_frame);
     free(ctx_value);
     return CO_OBJECT_UNDEFINED;
 }
@@ -1053,10 +1018,11 @@ co_object_t co_ctx_c_spawn(co_object_t ctx) {
     co_ctx_t *ctx_value;
     co_object_t current_frame;
     co_object_t parent_frame;
-
+    
+    // alloc child ctx value
     child_ctx_value = calloc(1, sizeof(co_ctx_t));
-    child_ctx_value->rc = 1;
-
+    
+    // child ctx object
     child_ctx = (co_object_t){
         .k = CO_KIND_CTX,
         .v = {
@@ -1064,9 +1030,8 @@ co_object_t co_ctx_c_spawn(co_object_t ctx) {
         }
     };
     
-    // ctx
+    // parent_ctx
     child_ctx_value->parent_ctx = ctx;
-    CO_INCREF(child_ctx, child_ctx_value->parent_ctx);
     
     // current_frame
     ctx_value = (co_ctx_t*)ctx.v.p;
@@ -1139,16 +1104,37 @@ co_object_t co_frame_c_new(co_object_t ctx, co_object_t parent_frame) {
     co_object_t frame;
     co_frame_t *frame_value;
     co_object_t closure;
-
-    frame_value = calloc(1, sizeof(co_frame_t));
-    frame_value->rc = 1;
+    co_frame_t *parent_frame_value;
     
+    // parent_frame_value
+    if (parent_frame.k == CO_KIND_FRAME) {
+        parent_frame_value = (co_frame_t*)parent_frame.v.p;
+    } else {
+        parent_frame_value = NULL;
+    }
+
+    // frame value
+    frame_value = calloc(1, sizeof(co_frame_t));
+    
+    // frame object
     frame = (co_object_t){
         .k = CO_KIND_FRAME,
         .v = {
             .p = (co_gc_t*)frame_value,
         }
     };
+
+    // gen
+    size_t gen;
+
+    if (parent_frame_value != NULL) {
+        gen = parent_frame_value->gen + 1;
+    } else {
+        gen = 1;    // 1 is first ever generation
+                    // 0 is immortal objects' generation
+    }
+
+    frame_value->gen = gen;
 
     // parent_frame
     frame_value->parent_frame = parent_frame;
@@ -1159,6 +1145,9 @@ co_object_t co_frame_c_new(co_object_t ctx, co_object_t parent_frame) {
     frame_value->closure = closure;
     CO_INCREF(ctx, closure);
 
+    // frame obj root
+    co_frame_obj_t *root = NULL;    
+    frame_value->root = root;
     return frame;
 }
 
@@ -1221,7 +1210,6 @@ co_object_t co_bytes_c_new(co_object_t ctx, co_u64_t len, char *items, co_own_tr
     co_bytes_t *bytes_value;
 
     bytes_value = calloc(1, sizeof(co_bytes_t));
-    bytes_value->rc = 1;
     bytes_value->len = len;
     bytes_value->ot = ot;
 
@@ -1372,7 +1360,6 @@ co_object_t co_str_c_new(co_object_t ctx, co_u64_t len, char *items, co_own_tran
     co_str_t *str_value;
 
     str_value = calloc(1, sizeof(co_str_t));
-    str_value->rc = 1;
     str_value->len = len;
     str_value->ot = ot;
 
@@ -1516,7 +1503,6 @@ co_object_t co_list_c_new(co_object_t ctx, co_object_t item_type, co_u64_t len, 
     co_object_t value;
 
     list_value = calloc(1, sizeof(co_list_t));
-    list_value->rc = 1;
     list_value->len = len;
 
     // items

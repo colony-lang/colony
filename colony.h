@@ -11,21 +11,12 @@
 #include <math.h>
 
 #define DEBUG
-#define CO_GC_DEBUG 0
 
-#if CO_GC_DEBUG == 1
-    #define CO_OBJECT_C_INCREF(ctx, obj) co_object_c_incref(ctx, obj, __FILE__, __LINE__, __FUNCTION__)
-    #define CO_OBJECT_C_DECREF(ctx, obj) co_object_c_decref(ctx, obj, __FILE__, __LINE__, __FUNCTION__)
+// FIXME: remove
+#define CO_INCREF(ctx, obj) printf("nop incref ctx=%p obj=%p\n", &ctx, &obj)
+#define CO_DECREF(ctx, obj) printf("nop decref ctx=%p obj=%p\n", &ctx, &obj)
 
-    #define CO_INCREF(ctx, obj) co_object_c_incref(ctx, obj, __FILE__, __LINE__, __FUNCTION__)
-    #define CO_DECREF(ctx, obj) co_object_c_decref(ctx, obj, __FILE__, __LINE__, __FUNCTION__)
-#else
-    #define CO_OBJECT_C_INCREF(ctx, obj) co_object_c_incref(ctx, obj)
-    #define CO_OBJECT_C_DECREF(ctx, obj) co_object_c_decref(ctx, obj)
-    
-    #define CO_INCREF(ctx, obj) co_object_c_incref(ctx, obj)
-    #define CO_DECREF(ctx, obj) co_object_c_decref(ctx, obj)
-#endif
+#define CO_UNREF(ctx, obj) co_object_c_unref(ctx, obj)
 
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 
@@ -37,6 +28,7 @@ union co_value_t;
 struct co_object_t;
 struct co_gc_t;
 struct co_ctx_t;
+struct co_frame_obj_t;
 struct co_frame_t;
 struct co_module_t;
 struct co_bytes_t;
@@ -59,9 +51,6 @@ struct co_option_t;
 struct co_ok_t;
 struct co_err_t;
 struct co_result_t;
-
-#define CO_GC_T \
-    size_t rc;
 
 typedef enum co_own_trans_t {
     CO_OWN_TRANS_NONE,
@@ -117,7 +106,7 @@ typedef union _co_num_t {
 } _co_num_t;
 
 typedef struct co_gc_t {
-    CO_GC_T
+    void *dummy;
 } co_gc_t;
 
 typedef union co_value_t {
@@ -133,19 +122,24 @@ typedef struct co_object_t {
 } co_object_t;
 
 typedef struct co_ctx_t {
-    CO_GC_T
     struct co_object_t parent_ctx;
     struct co_object_t current_frame;
 } co_ctx_t;
 
+typedef struct co_frame_obj_t {
+    size_t gen;
+    struct co_object_t obj;
+    struct co_frame_obj_t *next;
+} co_frame_obj_t;
+
 typedef struct co_frame_t {
-    CO_GC_T
+    size_t gen;
     struct co_object_t parent_frame;
     struct co_object_t closure; // unsafe mutable struct
+    struct co_frame_obj_t *root;
 } co_frame_t;
 
 typedef struct co_bytes_t {
-    CO_GC_T
     co_u64_t len;
     co_own_trans_t ot;
     char *items;
@@ -153,7 +147,6 @@ typedef struct co_bytes_t {
 } co_bytes_t;
 
 typedef struct co_str_t {
-    CO_GC_T
     co_u64_t len;
     co_own_trans_t ot;
     char *items;
@@ -161,7 +154,6 @@ typedef struct co_str_t {
 } co_str_t;
 
 typedef struct co_list_t {
-    CO_GC_T
     co_object_t item_type;
     co_u64_t len;
     co_object_t *items;
@@ -178,13 +170,7 @@ static struct co_object_t CO_OBJECT_UNDEFINED __attribute__ ((unused)) = {
     }
 };
 
-#if CO_GC_DEBUG == 1
-    void co_object_c_incref(co_object_t ctx, co_object_t obj, char *filename, int line, const char *funcname);
-    void co_object_c_decref(co_object_t ctx, co_object_t obj, char *filename, int line, const char *funcname);
-#else
-    void co_object_c_incref(co_object_t ctx, co_object_t obj);
-    void co_object_c_decref(co_object_t ctx, co_object_t obj);
-#endif
+void co_object_c_unref(co_object_t ctx, co_object_t obj);
 
 co_object_t co_object_c_free(co_object_t ctx, co_object_t obj);
 co_object_t co_object_c_repr(co_object_t ctx, co_object_t obj);

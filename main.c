@@ -1,5 +1,6 @@
 #include "colony.h"
 
+/*
 void example_bool(co_object_t ctx) {
     co_object_t b0 = co_bool_c_new(ctx, true);
     co_object_t b1 = co_bool_c_new(ctx, false);
@@ -175,7 +176,9 @@ void example_list(co_object_t ctx) {
     CO_DECREF(ctx, r2);
     CO_DECREF(ctx, r3);
 }
+*/
 
+/*
 int main(int argc, char **argv) {
     // root context
     co_object_t root_ctx = co_ctx_c_new_root();
@@ -228,3 +231,39 @@ int main(int argc, char **argv) {
     
     return 0;
 }
+*/
+
+int main(int argc, char **argv) {
+    // root context
+    co_object_t root_ctx = co_ctx_c_new_root();
+    co_print_c(root_ctx, root_ctx);
+
+    // context with root contect as parent
+    // co_object_t ctx = co_ctx_c_spawn(root_ctx);
+    // co_print_c(ctx, ctx);
+    
+    // bool
+    // example_bool(ctx);
+
+    // i64
+    // example_i64(ctx);
+
+    // f64
+    // example_f64(ctx);
+
+    // bytes
+    // example_bytes(ctx);
+
+    // str
+    // example_str(ctx);
+
+    // list
+    // example_list(ctx);
+
+    // cleanup
+    // CO_UNREF(root_ctx, ctx);
+    CO_UNREF(root_ctx, root_ctx);
+    
+    return 0;
+}
+
