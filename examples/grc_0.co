@@ -1,0 +1,19 @@
+// ctx.enter()
+//  create "gen 0" handle
+ctx->curr_gen = 0
+
+a: list = []
+CO_INCREF(ctx, a)
+
+b: list = []
+CO_INCREF(ctx, b)
+
+a.push(b)
+  // step inside a.push
+  // CO_INCREF(ctx, b)
+  //    b not has same gen as a
+
+CO_DEREF(ctx, a)
+CO_DEREF(ctx, b)
+// ctx.exit()
+//  

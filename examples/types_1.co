@@ -5,22 +5,21 @@ A_Add: type = (
     __add__ := (self, other: Self) -> Self {
         Self(self.x + other.x, self.y + other.y)
     },
-);
+)
 
 A_Sub: type = (
     __sub__ := (self, other: Self) -> Self {
         Self(self.x - other.x, self.y - other.y)
     },
-);
+)
 
-A: type = <T: type> -> (
+A: type = <T: type> -> A_Add -> A_Sub -> (
     // implicit by default, __type__ is always 0th elemenet of a structure
     // __type__: type = struct,
     
     // implicit by default, __closure__ is always 1st element of a structure (and a function)
     // __closure__ := ... ,
 
-    __bases__ := [A_Add, A_Sub],
     __name__ := 'A',
     __mul__ := (self, other: Self) -> Self {
         Self(self.x * other.x, self.y * other.y)
@@ -56,3 +55,4 @@ a4: A = a0.__type__.__mul__(a0, a1)
 // f := getattr(a0, '__div__')
 a5: A = a0 / a1
 a5: A = a0.__type__.__div__(a0, a1)
+
