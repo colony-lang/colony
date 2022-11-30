@@ -32,7 +32,7 @@ p1: P = P(2.0, 3.0)
 p2: P = p0 + p1
 
 //
-//
+// ???
 //
 Point2D := <T:=i64|f64> -> (x: T, y: T) <- (
     __add__ := (self: Point2D, other: Point2D) -> Point2D {
