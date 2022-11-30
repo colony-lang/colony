@@ -1,0 +1,46 @@
+//
+//
+//
+P = (x: f64, y: f64)
+
+f := P -> P {
+    r: P = (x, y)
+    r
+}
+
+add := (self: P, other: P) -> P {
+    r: P = (self.x + other.x, self.y + other.y)
+    r
+}
+
+p0: P = f(1.0, 2.0)
+p1: P = f(2.0, 3.0)
+p2: P = add(p0, p1)
+
+//
+//
+//
+P = (x: f64, y: f64) <- (
+    __add__ := (self: P, other: P) -> P {
+        r: P = (self.x + other.x, self.y + other.y)
+        r
+    }
+)
+
+p0: P = P(1.0, 2.0)
+p1: P = P(2.0, 3.0)
+p2: P = p0 + p1
+
+//
+//
+//
+Point2D := <T:=i64|f64> -> (x: T, y: T) <- (
+    __add__ := (self: Point2D, other: Point2D) -> Point2D {
+        r: Point2D = (self.x + other.x, self.y + other.y)
+        r
+    }
+)
+
+p0: Point2D<f64> = Point2D<f64>(1.0, 2.0)
+p1: Point2D<f64> = Point2D<f64>(2.0, 3.0)
+p2: Point2D<f64> = p0 + p1
