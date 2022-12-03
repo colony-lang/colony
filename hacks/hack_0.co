@@ -1,28 +1,51 @@
-//
-//
-//
-P = (x: f64, y: f64)
+// type-system
+ST: type = struct
+UT: type = union
 
-f := P -> P {
+S: struct = (f64, f64)
+U: union = f64 | f64
+
+typeof((f64, f64)) == struct
+typeof((f64 | f64)) == union
+
+typeof(struct) == type
+typeof(union) == type
+
+// struct
+struct(x: f64, y: f64) == (x: f64, y: f64)
+
+P: struct = (x: f64, y: f64)
+P: struct = struct(x: f64, y: f64)
+P: struct(f64, f64) = (x: f64, y: f64)
+P: struct(x: f64, y: f64) = (x: f64, y: f64)
+P := (x: f64, y: f64)
+
+// function
+f: fn<P, P> = P -> P {
     r: P = (x, y)
-    r
-}
-
-add := (self: P, other: P) -> P {
-    r: P = (self.x + other.x, self.y + other.y)
     r
 }
 
 p0: P = f(1.0, 2.0)
 p1: P = f(2.0, 3.0)
+
+// function
+add: fn<(P, P), P> = (self: P, other: P) -> P {
+    r: P = (self.x + other.x, self.y + other.y)
+    r
+}
+
 p2: P = add(p0, p1)
 
-//
-//
-//
-P = (x: f64, y: f64) <- (
+// define struct with methods
+P: struct = (x: f64, y: f64) <- (
     __add__ := (self: P, other: P) -> P {
         r: P = (self.x + other.x, self.y + other.y)
+        r
+    },
+
+    __sub__ := (self: P, other: P) -> P {
+        r: P = (self.x - other.x, self.y - other.y)
         r
     }
 )
@@ -31,12 +54,23 @@ p0: P = P(1.0, 2.0)
 p1: P = P(2.0, 3.0)
 p2: P = p0 + p1
 
-//
-// ???
-//
+// union
+union(i64, f64) == (i64 | f64)
+
+n64: union = i64 | f64
+n64: union(i64, f64) = i64 | f64
+n64: union(i64, f64) = union(i64, f64)
+n64 := i64 | f64
+
+// generic struct with methods
 Point2D := <T:=i64|f64> -> (x: T, y: T) <- (
-    __add__ := (self: Point2D, other: Point2D) -> Point2D {
-        r: Point2D = (self.x + other.x, self.y + other.y)
+    __add__ := (self: Point2D<T>, other: Point2D<T>) -> Point2D<T> {
+        r: Point2D<T> = (self.x + other.x, self.y + other.y)
+        r
+    },
+
+    __sub__ := (self: Point2D<T>, other: Point2D<T>) -> Point2D<T> {
+        r: Point2D<T> = (self.x - other.x, self.y - other.y)
         r
     }
 )
