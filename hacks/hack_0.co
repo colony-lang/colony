@@ -1,9 +1,17 @@
+//
+// ???
+//
+
 // type-system
 ST: type = struct
 UT: type = union
 
-S: struct = (f64, f64)
-U: union = f64 | f64
+s: struct = struct(x: f64, y: f64)
+u: union = union(i64, f64)
+
+s: struct = (f64, f64)
+s: struct = (x: f64, y: f64)
+u: union = f64 | f64
 
 typeof((f64, f64)) == struct
 typeof((f64 | f64)) == union
