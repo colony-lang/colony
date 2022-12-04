@@ -1,18 +1,16 @@
-//
-// ???
-//
-
 // type-system
 ST: type = struct
 UT: type = union
 
 s: struct = struct(x: f64, y: f64)
+s: struct = struct(f64, f64)
 u: union = union(i64, f64)
 
-s: struct = (f64, f64)
 s: struct = (x: f64, y: f64)
+s: struct = (f64, f64)
 u: union = f64 | f64
 
+typeof((x: f64, y: f64)) == struct
 typeof((f64, f64)) == struct
 typeof((f64 | f64)) == union
 
@@ -21,15 +19,18 @@ typeof(union) == type
 
 // struct
 struct(x: f64, y: f64) == (x: f64, y: f64)
+struct(x: f64, y: f64) == (f64, f64)
+struct(f64, f64) == (x: f64, y: f64)
+struct(f64, f64) == (f64, f64)
 
-P: struct = (x: f64, y: f64)
-P: struct = struct(x: f64, y: f64)
-P: struct(f64, f64) = (x: f64, y: f64)
 P: struct(x: f64, y: f64) = (x: f64, y: f64)
+P: struct(f64, f64) = (x: f64, y: f64)
+P: struct = struct(x: f64, y: f64)
+P: struct = (x: f64, y: f64)
 P := (x: f64, y: f64)
 
 // function
-f: fn<P, P> = P -> P {
+f: fn(P, P) = P -> P {
     r: P = (x, y)
     r
 }
@@ -38,7 +39,7 @@ p0: P = f(1.0, 2.0)
 p1: P = f(2.0, 3.0)
 
 // function
-add: fn<(P, P), P> = (self: P, other: P) -> P {
+add: fn((P, P), P) = (self: P, other: P) -> P {
     r: P = (self.x + other.x, self.y + other.y)
     r
 }
@@ -66,8 +67,7 @@ p2: P = p0 + p1
 union(i64, f64) == (i64 | f64)
 
 n64: union = i64 | f64
-n64: union(i64, f64) = i64 | f64
-n64: union(i64, f64) = union(i64, f64)
+n64: union = union(i64, f64)
 n64 := i64 | f64
 
 // generic struct with methods
@@ -86,3 +86,28 @@ Point2D := <T:=i64|f64> -> (x: T, y: T) <- (
 p0: Point2D<f64> = Point2D<f64>(1.0, 2.0)
 p1: Point2D<f64> = Point2D<f64>(2.0, 3.0)
 p2: Point2D<f64> = p0 + p1
+
+// condition
+a: i64 = (1 == 1) ? 1 : 0
+
+b: f64 = (1 == 1) ? {
+    -1.0
+} : {
+    -2.0
+}
+
+// range, filter, map, reduce
+a: f64 = range(10)
+            .filter((n) -> { n % 2 })
+            .map((n) -> { float.from_int(n * 2) })
+            .reduce(0.0, (acc, n) -> { acc + n })
+
+// Option
+o0: Option<i64> = 1.0
+o1: Option<i64> = None
+
+// Result
+r0: Result<i64, Error> = 1.0
+r1: Result<i64, Error> = Error(ZeroDivisionError("zero division"))
+
+// match-case
