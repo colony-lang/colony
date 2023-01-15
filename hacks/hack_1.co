@@ -45,7 +45,7 @@ add: fn((P, P), P) = (self: P, other: P) -> P {
 p2: P = add(p0, p1)
 
 // define struct with methods
-P: struct = (x: f64, y: f64) <- (
+AddSub: struct = (
     __add__ := (self: P, other: P) -> P {
         r: P = (self.x + other.x, self.y + other.y)
         r
@@ -57,9 +57,12 @@ P: struct = (x: f64, y: f64) <- (
     }
 )
 
+P: struct = (x: f64, y: f64) <- AddSub
+
 p0: P = P(1.0, 2.0)
 p1: P = P(2.0, 3.0)
 p2: P = p0 + p1
+p3: P = p0 - p1
 
 // union
 union(i64, f64) == (i64 | f64)
