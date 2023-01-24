@@ -19,8 +19,8 @@ type == typeof(union)
 
 // struct
 struct(x: f64, y: f64) == (x: f64, y: f64)
-struct(x: f64, y: f64) == (f64, f64)
-struct(f64, f64) == (x: f64, y: f64)
+struct(x: f64, y: f64) == (f64, f64)    // ??
+struct(f64, f64) == (x: f64, y: f64)    // ??
 struct(f64, f64) == (f64, f64)
 
 P: struct = (x: f64, y: f64)
