@@ -31,7 +31,7 @@ typedef enum co_kind_t {
 } co_kind_t;
 
 #define CO_GC_RC \
-    size_t rc
+    co_u64_t rc
 
 typedef bool co_boo_t;
 typedef uint8_t co_u8_t;
@@ -45,12 +45,14 @@ typedef struct co_gc_t {
 
 typedef struct co_bytes_t {
     CO_GC_RC;
+    co_i64_t hash;
     size_t len;
     char *items;
 } co_bytes_t;
 
 typedef struct co_str_t {
     CO_GC_RC;
+    co_i64_t hash;
     size_t len;
     char *items;
 } co_str_t;
@@ -95,13 +97,14 @@ typedef union co_value_t {
     struct co_str_t str;
 } co_value_t;
 
+// obj
 typedef struct co_obj_t {
     enum co_kind_t k;
     union co_value_t v;
 } co_obj_t;
 
+// dict
 typedef struct co_dict_entry_t {
-    struct co_obj_t h;  // hash
     struct co_obj_t k;  // key
     struct co_obj_t v;  // value
 } co_dict_entry_t;
