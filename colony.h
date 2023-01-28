@@ -88,10 +88,11 @@ typedef struct co_ctx_t {
 } co_ctx_t;
 
 typedef union co_value_t {
-    bool b;
-    uint64_t u64;
-    int64_t i64;
-    double f64;
+    co_bool_t b;
+    co_u8_t u8;
+    co_u64_t u64;
+    co_i64_t i64;
+    co_f64_t f64;
     struct co_bytes_t bytes;
     struct co_str_t str;
 } co_value_t;
