@@ -73,8 +73,7 @@ typedef struct co_dict_t {
 
 typedef struct co_inst_t {
     size_t op;
-    void *dummy; // TODO: unions, specialized ins:w
-                 // tructions
+    void *dummy; // TODO: unions, specialized instructions
 } co_inst_t;
 
 typedef struct co_code_t {
