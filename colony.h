@@ -26,8 +26,8 @@ typedef enum co_kind_t {
     CO_KIND_STRUCT,
     CO_KIND_UNION,
     CO_KIND_MODULE,
-    CO_KIND_CTX,
-    CO_KIND_PTR
+    CO_KIND_PTR,
+    CO_KIND_CTX
 } co_kind_t;
 
 #define CO_GC_RC \
