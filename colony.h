@@ -5,6 +5,9 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+struct co_obj_t;
+struct co_dict_entry_t;
+
 typedef enum co_kind_t {
     CO_KIND_UNDEFINED,
     CO_KIND_BOOL,
@@ -58,11 +61,6 @@ typedef struct co_array_t {
     struct co_obj_t *items;
 } co_array_t;
 
-typedef struct co_dict_entry_t {
-    struct co_obj_t *k;
-    struct co_obj_t *v;
-} co_dict_entry_t;
-
 typedef struct co_dict_t {
     CO_GC_RC;
     size_t fill;        // used + number of entries with a dummy key
@@ -101,6 +99,12 @@ typedef struct co_obj_t {
     enum co_kind_t k;
     union co_value_t v;
 } co_obj_t;
+
+typedef struct co_dict_entry_t {
+    struct co_obj_t h;  // hash
+    struct co_obj_t k;  // key
+    struct co_obj_t v;  // value
+} co_dict_entry_t;
 
 #endif
 
