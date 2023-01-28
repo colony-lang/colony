@@ -33,7 +33,7 @@ typedef enum co_kind_t {
 #define CO_GC_RC \
     co_u64_t rc
 
-typedef bool co_boo_t;
+typedef bool co_bool_t;
 typedef uint8_t co_u8_t;
 typedef uint64_t co_u64_t;
 typedef int64_t co_i64_t;
