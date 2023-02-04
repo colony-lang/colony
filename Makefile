@@ -2,7 +2,7 @@
 CC=clang
 # CC=musl-clang
 # CFLAGS=-c -Wall -Og -fsanitize=address -fno-omit-frame-pointer
-CFLAGS=-c -Wall -Og
+CFLAGS=-c -Wall -O0 -g -std=c2x
 LDFLAGS=-lm -lpthread
 SOURCES= colony.c main.c
 OBJECTS=$(SOURCES:.c=.o)
