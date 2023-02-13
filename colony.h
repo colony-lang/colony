@@ -231,5 +231,35 @@ typedef struct co_struct_entry_t {
     struct co_obj_t v;  // value
 } co_struct_entry_t;
 
+/*
+
+Some: type = <T: type=type> -> (v: T)
+None: type = ()
+Option: type = <T: type=type> -> (Some<T> | None)
+
+Ok: type = <V: type=type> -> (v: V)
+Err: type = <E: type=type> -> (e: E)
+Result: type = <V: type=type, E: type=type> -> (Ok<V>, Err<E>)
+
+IOError: type = (e: Option<str>=None)
+ZeroDivisionError: type = (e: Option<str>=None)
+OverflowError: type = (e: Option<str>=None)
+
+Error := (
+    IOError,
+    ZeroDivisionError,
+    OverflowError,
+)
+
+sum_i64_i64 := (x: i64, y: i64) -> Result<i64, Error> {
+    // r: Result<i64, Error> = i64.__add__(x, y)
+    r: Result<i64, Error> = ops.add(x, y)
+
+    z: i64 = r.unwrap()
+    z
+}
+
+*/
+
 #endif
 
