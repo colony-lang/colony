@@ -29,30 +29,31 @@ struct co_err_entry_t;
 struct co_some_entry_t;
 
 #define CO_KIND_UNDEFINED 0     // special value for undefined objects on C-level only
-#define CO_KIND_BOOL 1          // true, false
-#define CO_KIND_U8 2            // [0, 255]
-#define CO_KIND_U64 3           // [0, 2**64)
-#define CO_KIND_I64 4           // [-2**32, 2**32)
-#define CO_KIND_F64 5
-#define CO_KIND_GC 6            // meta kind, everything below is GC'ed
-#define CO_KIND_BYTES 7         // bytes, Array<u8>
-#define CO_KIND_STR 8           // utf8
-#define CO_KIND_GENERIC 9
-#define CO_KIND_ARRAY 10
-#define CO_KIND_DICT 11
-#define CO_KIND_STRUCT 12
-#define CO_KIND_UNION 13
-#define CO_KIND_OK 14           // Ok<V: type=type>
-#define CO_KIND_ERR 15          // Err<E: type=type>
-#define CO_KIND_RESULT 16       // Result: type = <V: type=type, E: type=type> -> (Ok<V> | Err<E>)
-#define CO_KIND_NONE 17         // None - special value
-#define CO_KIND_SOME 18         // Some<V: type=type>
-#define CO_KIND_OPTION 19       // Option: type = <V: type=type> -> (None | Some<V>)
-#define CO_KIND_CODE 20
-#define CO_KIND_FN 21
-#define CO_KIND_MODULE 22
-#define CO_KIND_CTX 23
-#define CO_KIND_PTR 24
+#define CO_KIND_VOID 1          // special value for void objects
+#define CO_KIND_BOOL 10         // true, false
+#define CO_KIND_U8 20           // [0, 255]
+#define CO_KIND_U64 21          // [0, 2**64)
+#define CO_KIND_I64 23          // [-2**32, 2**32)
+#define CO_KIND_F64 30
+#define CO_KIND_GC 40           // meta kind, everything below is GC'ed
+#define CO_KIND_BYTES 50        // bytes, Array<u8>
+#define CO_KIND_STR 51          // utf8
+#define CO_KIND_GENERIC 60
+#define CO_KIND_ARRAY 61
+#define CO_KIND_DICT 62
+#define CO_KIND_STRUCT 63
+#define CO_KIND_UNION 64
+#define CO_KIND_OK 70           // Ok<V: type=type>
+#define CO_KIND_ERR 71          // Err<E: type=type>
+#define CO_KIND_RESULT 72       // Result: type = <V: type=type, E: type=type> -> (Ok<V> | Err<E>)
+#define CO_KIND_NONE 73         // None - special value
+#define CO_KIND_SOME 74         // Some<V: type=type>
+#define CO_KIND_OPTION 75       // Option: type = <V: type=type> -> (None | Some<V>)
+#define CO_KIND_CODE 80
+#define CO_KIND_FN 81
+#define CO_KIND_MODULE 82
+#define CO_KIND_PTR 90
+#define CO_KIND_CTX 100
 
 #define CO_GC_RC \
     co_u64_t rc
@@ -239,11 +240,16 @@ typedef union co_value_t {
     struct co_dict_t *dict;
     struct co_struct_t *struct_;
     struct co_union_t *union_;
+    struct co_ok_t *ok;
+    struct co_err_t *err;
+    struct co_result_t *result;
+    struct co_some_t *some;
+    struct co_option_t *option;
     struct co_code_t *code;
     struct co_fn_t *fn;
     struct co_module_t *module;
-    struct co_ctx_t *ctx;
     struct co_ptr_t *ptr;
+    struct co_ctx_t *ctx;
 } co_value_t;
 
 // obj
@@ -257,39 +263,39 @@ typedef struct co_small_str_obj_t {
     char8_t v[15];
 } co_small_str_obj_t;
 
-// entry 
+// generic entry 
 typedef struct co_generic_entry_t {
     struct co_obj_t a;  // attr
     struct co_obj_t t;  // type
     struct co_obj_t v;  // value
 } co_generic_entry_t;
 
-// dict
+// dict entry
 typedef struct co_dict_entry_t {
     struct co_obj_t k;  // key
     struct co_obj_t v;  // value
 } co_dict_entry_t;
 
-// struct
+// struct entry
 typedef struct co_struct_entry_t {
     struct co_obj_t a;  // attr
     struct co_obj_t t;  // type
     struct co_obj_t v;  // value
 } co_struct_entry_t;
 
-// ok
+// ok entry
 typedef struct co_ok_entry_t {
     struct co_obj_t t;  // type
     struct co_obj_t v;  // value
 } co_ok_entry_t;
 
-// err
+// err entry
 typedef struct co_err_entry_t {
     struct co_obj_t t;  // type
     struct co_obj_t v;  // value
 } co_err_entry_t;
 
-// some
+// some entry
 typedef struct co_some_entry_t {
     struct co_obj_t t;  // type
     struct co_obj_t v;  // value
@@ -325,6 +331,26 @@ sum_i64_i64 := (x: i64, y: i64) -> Result<i64, Error> {
 }
 
 */
+
+//
+// bool
+//
+
+//
+// object
+//
+inline co_obj_t co_object_incref(co_obj_t ctx, co_obj_t obj);   // inc RC
+inline co_obj_t co_object_decref(co_obj_t ctx, co_obj_t obj);   // dec RC
+inline co_obj_t co_object_setref(co_obj_t ctx, co_obj_t obj);   // set initial RC
+inline co_obj_t co_object_set_immortal_ref(co_obj_t ctx, co_obj_t obj);   // set immortal
+inline co_obj_t co_object_set_weak_ref(co_obj_t ctx, co_obj_t obj);   // set weak ref
+
+// object.__free__ := fn(self) -> void { ... }
+co_obj_t co_object_free(co_obj_t ctx, co_obj_t self);
+
+// object.__call__ := fn(obj, [args], {kwargs}) -> object { ... }
+co_obj_t co_object_call(co_obj_t ctx, co_obj_t obj, co_obj_t args, co_obj_t kwargs);
+
 
 #endif
 
