@@ -25,26 +25,31 @@ struct co_generic_entry_t;
 struct co_dict_entry_t;
 struct co_struct_entry_t;
 
-#define CO_KIND_UNDEFINED 0
-#define CO_KIND_BOOL 1
-#define CO_KIND_U8 2
-#define CO_KIND_U64 3
-#define CO_KIND_I64 4
+#define CO_KIND_UNDEFINED 0     // special value for undefined objects on C-level only
+#define CO_KIND_BOOL 1          // true, false
+#define CO_KIND_U8 2            // [0, 255]
+#define CO_KIND_U64 3           // [0, 2**64)
+#define CO_KIND_I64 4           // [-2**32, 2**32)
 #define CO_KIND_F64 5
-// meta kind, everything below is GC'ed
-#define CO_KIND_GC 6
-// utf8
-#define CO_KIND_STR 7
-#define CO_KIND_GENERIC 8
-#define CO_KIND_ARRAY 9
-#define CO_KIND_DICT 10
-#define CO_KIND_STRUCT 11
-#define CO_KIND_UNION 12
-#define CO_KIND_CODE 13
-#define CO_KIND_FN 14
-#define CO_KIND_MODULE 15
-#define CO_KIND_CTX 16
-#define CO_KIND_PTR 17
+#define CO_KIND_GC 6            // meta kind, everything below is GC'ed
+#define CO_KIND_BYTES 7         // bytes, Array<u8>
+#define CO_KIND_STR 8           // utf8
+#define CO_KIND_GENERIC 9
+#define CO_KIND_ARRAY 10
+#define CO_KIND_DICT 11
+#define CO_KIND_STRUCT 12
+#define CO_KIND_UNION 13
+#define CO_KIND_CODE 14
+#define CO_KIND_FN 15
+#define CO_KIND_OK 16           // Ok<V: type=type>
+#define CO_KIND_ERR 17          // Err<E: type=type>
+#define CO_KIND_RESULT 18       // Result: type = <V: type=type, E: type=type> -> (Ok<V> | Err<E>)
+#define CO_KIND_NONE 19         // None - special value
+#define CO_KIND_SOME 20         // Some<V: type=type>
+#define CO_KIND_OPTION 21       // Option: type = <V: type=type> -> (None | Some<V>)
+#define CO_KIND_MODULE 22
+#define CO_KIND_CTX 23
+#define CO_KIND_PTR 24
 
 #define CO_GC_RC \
     co_u64_t rc
