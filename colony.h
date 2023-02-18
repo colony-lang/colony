@@ -24,6 +24,9 @@ struct co_obj_t;
 struct co_generic_entry_t;
 struct co_dict_entry_t;
 struct co_struct_entry_t;
+struct co_ok_entry_t;
+struct co_err_entry_t;
+struct co_some_entry_t;
 
 #define CO_KIND_UNDEFINED 0     // special value for undefined objects on C-level only
 #define CO_KIND_BOOL 1          // true, false
@@ -39,14 +42,14 @@ struct co_struct_entry_t;
 #define CO_KIND_DICT 11
 #define CO_KIND_STRUCT 12
 #define CO_KIND_UNION 13
-#define CO_KIND_CODE 14
-#define CO_KIND_FN 15
-#define CO_KIND_OK 16           // Ok<V: type=type>
-#define CO_KIND_ERR 17          // Err<E: type=type>
-#define CO_KIND_RESULT 18       // Result: type = <V: type=type, E: type=type> -> (Ok<V> | Err<E>)
-#define CO_KIND_NONE 19         // None - special value
-#define CO_KIND_SOME 20         // Some<V: type=type>
-#define CO_KIND_OPTION 21       // Option: type = <V: type=type> -> (None | Some<V>)
+#define CO_KIND_OK 14           // Ok<V: type=type>
+#define CO_KIND_ERR 15          // Err<E: type=type>
+#define CO_KIND_RESULT 16       // Result: type = <V: type=type, E: type=type> -> (Ok<V> | Err<E>)
+#define CO_KIND_NONE 17         // None - special value
+#define CO_KIND_SOME 18         // Some<V: type=type>
+#define CO_KIND_OPTION 19       // Option: type = <V: type=type> -> (None | Some<V>)
+#define CO_KIND_CODE 20
+#define CO_KIND_FN 21
 #define CO_KIND_MODULE 22
 #define CO_KIND_CTX 23
 #define CO_KIND_PTR 24
@@ -64,11 +67,19 @@ typedef struct co_gc_t {
     CO_GC_RC;
 } co_gc_t;
 
+typedef struct co_bytes_t {
+    CO_GC_RC;
+    co_i64_t hash;              // precomputed hash since bytes value is immutable
+    size_t len;                 // bytes len
+    char8_t *items;             // bytes items stored in char8_t*
+} co_bytes_t;
+
 typedef struct co_str_t {
     CO_GC_RC;
-    co_i64_t hash;
-    size_t len;
-    char8_t *items;
+    co_i64_t hash;              // precomputed hash since str is immutable
+    size_t cap;                 // bytes-level cap of char8_t items
+    size_t len;                 // utf8 len
+    char8_t *items;             // utf8 items stored in char8_t*
 } co_str_t;
 
 typedef struct co_generic_t {
@@ -121,6 +132,36 @@ typedef struct co_union_t {
     struct co_obj_t *generic_type;      // Option<generic>
     struct co_obj_t *items;             // Array<type>
 } co_union_t;
+
+typedef struct co_ok_t {
+    CO_GC_RC;
+    struct co_ok_entry_t *v;
+} co_ok_t;
+
+typedef struct co_err_t {
+    CO_GC_RC;
+    struct co_err_entry_t *e;
+} co_err_t;
+
+typedef struct co_result_t {
+    CO_GC_RC;
+    struct co_ok_entry_t *v;
+    struct co_err_entry_t *e;
+} co_result_t;
+
+typedef struct co_none_t {
+    CO_GC_RC;
+} co_none_t;
+
+typedef struct co_some_t {
+    CO_GC_RC;
+    struct co_some_entry_t *v;
+} co_some_t;
+
+typedef struct co_option_t {
+    CO_GC_RC;
+    struct co_some_entry_t *v;
+} co_option_t;
 
 /*
 A := i64 | f64
@@ -235,6 +276,25 @@ typedef struct co_struct_entry_t {
     struct co_obj_t t;  // type
     struct co_obj_t v;  // value
 } co_struct_entry_t;
+
+// ok
+typedef struct co_ok_entry_t {
+    struct co_obj_t t;  // type
+    struct co_obj_t v;  // value
+} co_ok_entry_t;
+
+// err
+typedef struct co_err_entry_t {
+    struct co_obj_t t;  // type
+    struct co_obj_t v;  // value
+} co_err_entry_t;
+
+// some
+typedef struct co_some_entry_t {
+    struct co_obj_t t;  // type
+    struct co_obj_t v;  // value
+} co_some_entry_t;
+
 
 /*
 
