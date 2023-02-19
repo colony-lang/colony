@@ -55,6 +55,13 @@ struct co_some_entry_t;
 #define CO_KIND_PTR 90
 #define CO_KIND_CTX 100
 
+// 0th bit - immortal, if set to 1
+// 1st bit - weak, if set to 1
+//
+// 0b00... - mortal and strong, 2**62 ref count is max
+// 0b01... - weak, and mortal
+// 0b10... - immortal, and strong
+// 0b11... - impossible!
 #define CO_GC_RC \
     co_u64_t rc
 
