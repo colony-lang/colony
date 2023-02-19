@@ -346,9 +346,9 @@ sum_i64_i64 := (x: i64, y: i64) -> Result<i64, Error> {
 //
 // object
 //
-inline co_obj_t co_object_incref(co_obj_t ctx, co_obj_t obj);   // inc RC
-inline co_obj_t co_object_decref(co_obj_t ctx, co_obj_t obj);   // dec RC
-inline co_obj_t co_object_setref(co_obj_t ctx, co_obj_t obj);   // set initial RC
+inline co_obj_t co_object_inc_ref(co_obj_t ctx, co_obj_t obj);   // inc RC
+inline co_obj_t co_object_dec_ref(co_obj_t ctx, co_obj_t obj);   // dec RC
+inline co_obj_t co_object_set_ref(co_obj_t ctx, co_obj_t obj);   // set initial RC
 inline co_obj_t co_object_set_immortal_ref(co_obj_t ctx, co_obj_t obj);   // set immortal
 inline co_obj_t co_object_set_weak_ref(co_obj_t ctx, co_obj_t obj);   // set weak ref
 
@@ -358,6 +358,4 @@ co_obj_t co_object_free(co_obj_t ctx, co_obj_t self);
 // object.__call__ := fn(obj, [args], {kwargs}) -> object { ... }
 co_obj_t co_object_call(co_obj_t ctx, co_obj_t obj, co_obj_t args, co_obj_t kwargs);
 
-
 #endif
-
