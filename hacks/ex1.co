@@ -1,3 +1,4 @@
 f := (x: i64, y: i64) -> i64 {
-    sum := range(x).reduce()
+    sum := range(x).reduce((n, a) -> n + a, y)
 }
+

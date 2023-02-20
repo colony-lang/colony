@@ -75,6 +75,12 @@ typedef struct co_gc_t {
     CO_GC_RC;
 } co_gc_t;
 
+typedef struct co_gc_rc_t {
+    co_u64_t immortal : 1;
+    co_u64_t weak : 1;
+    co_u64_t rc : 62;
+} co_gc_rc_t;
+
 typedef struct co_bytes_t {
     CO_GC_RC;
     co_i64_t hash;              // precomputed hash since bytes value is immutable
@@ -357,6 +363,32 @@ co_obj_t co_object_free(co_obj_t ctx, co_obj_t self);
 
 // object.__call__ := fn(obj, [args], {kwargs}) -> object { ... }
 co_obj_t co_object_call(co_obj_t ctx, co_obj_t obj, co_obj_t args, co_obj_t kwargs);
+
+// object.__get_attr__ := fn(obj, attr: str) -> Result
+// object.__set_attr__ := fn(obj, attr: str, value: object) -> Result
+// object.__set_attr_in__ := fn(obj, attrs: Array<str>, value: object) -> Result
+// object.__get_item__ := fn(obj, key: object) -> Result
+// object.__set_item__ := fn(obj, keys: Array<object>, value: object) -> Result
+
+// object.__neg__ := fn(obj) -> Result
+// object.__pos__ := fn(obj) -> Result
+// object.__add__ := fn(obj, other) -> Result
+// object.__sub__ := fn(obj, other) -> Result
+// object.__mul__ := fn(obj, other) -> Result
+// object.__div__ := fn(obj, other) -> Result
+// object.__pow__ := fn(obj, other) -> Result
+// object.__mod__ := fn(obj, other) -> Result
+
+// object.__inv__ := fn(obj) -> Result
+// object.__bit_and__ := fn(obj, other) -> Result
+// object.__bit_or__ := fn(obj, other) -> Result
+// object.__bit_xor__ := fn(obj, other) -> Result
+// object.__shl__ := fn(obj, other) -> Result
+// object.__shr__ := fn(obj, other) -> Result
+
+// object.__not__ := fn(obj) -> Result
+// object.__and__ := fn(obj, other) -> Result
+// object.__or__ := fn(obj, other) -> Result
 
 
 #endif
