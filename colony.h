@@ -147,31 +147,49 @@ typedef struct co_union_t {
     struct co_obj_t *items;             // Array<type>
 } co_union_t;
 
+/*
+Ok: type = <V: type=type> -> (v: V)
+*/
 typedef struct co_ok_t {
     CO_GC_RC;
     struct co_ok_entry_t *v;
 } co_ok_t;
 
+/*
+Err: type = <E: type=type> -> (e: E)
+*/
 typedef struct co_err_t {
     CO_GC_RC;
     struct co_err_entry_t *e;
 } co_err_t;
 
+/*
+Result: type = <V: type=type, E: type=type> -> (Ok<V> | Err<E>)
+*/
 typedef struct co_result_t {
     CO_GC_RC;
     struct co_ok_entry_t *v;
     struct co_err_entry_t *e;
 } co_result_t;
 
+/*
+None: type = (__type__: type=type);
+*/
 typedef struct co_none_t {
     CO_GC_RC;
 } co_none_t;
 
+/*
+Some: type = <V: type=type> -> (v: V)
+*/
 typedef struct co_some_t {
     CO_GC_RC;
     struct co_some_entry_t *v;
 } co_some_t;
 
+/*
+Option: type = <V: type=type> -> (v: V)
+*/
 typedef struct co_option_t {
     CO_GC_RC;
     struct co_some_entry_t *v;
@@ -358,8 +376,8 @@ inline co_obj_t co_object_set_ref(co_obj_t ctx, co_obj_t obj);   // set initial 
 inline co_obj_t co_object_set_immortal_ref(co_obj_t ctx, co_obj_t obj);   // set immortal
 inline co_obj_t co_object_set_weak_ref(co_obj_t ctx, co_obj_t obj);   // set weak ref
 
-// object.__free__ := fn(self) -> void { ... }
-co_obj_t co_object_free(co_obj_t ctx, co_obj_t self);
+// object.__free__ := fn(obj) -> void { ... }
+co_obj_t co_object_free(co_obj_t ctx, co_obj_t obj);
 
 // object.__call__ := fn(obj, [args], {kwargs}) -> object { ... }
 co_obj_t co_object_call(co_obj_t ctx, co_obj_t obj, co_obj_t args, co_obj_t kwargs);
@@ -368,6 +386,7 @@ co_obj_t co_object_call(co_obj_t ctx, co_obj_t obj, co_obj_t args, co_obj_t kwar
 // object.__set_attr__ := fn(obj, attr: str, value: object) -> Result
 // object.__set_attr_in__ := fn(obj, attrs: Array<str>, value: object) -> Result
 // object.__get_item__ := fn(obj, key: object) -> Result
+// object.__set_item__ := fn(obj, key: object, value: object) -> Result
 // object.__set_item__ := fn(obj, keys: Array<object>, value: object) -> Result
 
 // object.__neg__ := fn(obj) -> Result
