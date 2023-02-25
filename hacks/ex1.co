@@ -1,4 +1,29 @@
-f := (x: i64, y: i64) -> i64 {
-    sum := range(x).reduce((n, a) -> n + a, y)
+Ok := <V> -> (v: V)
+Err := <E> -> (e: E)
+Result := <V, E> -> (Ok<V> | Err<E>)
+
+Error := <E> -> Err<E>
+ZeroDivisionError := (__type__: type = Error<str>("division by zero"))
+
+CustomError := (__type__: type = Error<str>("user-defined other error"))
+OtherError := (__type__: type = Error<str>("user-defined custom error"))
+
+
+e := OtherError()
+e := CustomError()
+
+
+div := (x: f64, y: f64) -> Result<f64, Error> {
+    y == 0.0 ? return(ZeroDivisionError())
+    z: f64 = x / y
+    z
 }
 
+div := (x: f64, y: f64) -> f64 | Error
+
+
+v: f64 = match(div(1.0, 0.0))
+    .case(Ok<f64>, v -> v)
+    .case(Error, e -> panic(e))
+
+v: f64 = div(1.0, 0.0)?

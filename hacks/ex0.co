@@ -40,3 +40,8 @@ e.a = A<i64>(-1, -2)
 // e = e.__type__.__set_in__(e, ['a', 'x'], 10)
 e.a.x = 10
 
+
+f := (x: i64, y: i64) -> i64 {
+    sum := range(x).reduce((n, a) -> n + a, y)
+}
+
