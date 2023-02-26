@@ -1,35 +1,31 @@
-// struct
-A: struct = (x: i64, y: i64=0)
+int: type = u8 | i32 | u32 | i64 | u64
+float: type = f32 | f64
+Number: type = int | float
 
-// generic
-G: generic = <x: i64, y: i64=0>
+A: type = (x: Number)
+B: type = <Y> -> (y: Y)
 
-// union
-Num64: union = i64 | f64;
-Num64Container_0: union = list<i64> | list<f64>;
-Num64Container_1: type = list<i64 | f64>;
-
-// struct pseudo implementation
-struct: type = (
-    __call__ := (cls: type, args: list, kwargs: dict) -> Self {
-        self: cls = cls.__new__(cls, args=args, kwargs=kwargs)
-        self
-    },
-    __new__ := (cls: type, args: list, kwargs: dict) -> Self {
-        self: cls = (
-            __type__: type = cls,
-            __closure__ := cls,
+C: type = <Y> -> (a: A, b: B<Y>) <- {
+    __add__: (self, other: C) -> C {
+        r: C = C(
+            a: A(self.a.x + other.a.x),
+            b: B<Number>(self.b.y + other.b.y),
         )
 
-        // NOTE: work out creation of struct; what is meaning of args and kwargs?
-        // self := self.extend(args)
-        // self := self.extend(kwargs)
-        self
-    },
-    __repr__ := (obj) -> str {
-        "({} at {})".format(
-            obj.__type__.__name__,
-            addressof(obj),
-        )
-    },
-);
+        r
+    }
+}
+
+c0: C = C(
+    a: A(1),
+    b: B<Number>(2),
+)
+
+c1: C = C(
+    a: A(2),
+    b: B<Number>(3),
+)
+
+// c2: C = c0.__type__.__add__(c0, c1)
+c2: C = c0 + c1
+

@@ -1,58 +1,37 @@
-//
-// user-defined types
-//
-A_Add: type = (
-    __add__ := (self, other: Self) -> Self {
-        Self(self.x + other.x, self.y + other.y)
-    },
+
+NoneType := ()
+None: NoneType = NoneType()
+Some: type = <V> -> (v: V) 
+Option: type = <V> -> (NoneType | Some<V>)
+
+Ok: type = <V> -> (v: V)
+Err: type = <E> -> (e: E)
+Result: type = <V, E> -> (Ok<V> | Err<E>)
+
+
+// ZeroDivisionError: type = (__bases__ := [Err<str>], e: str = 'division by zero'))
+ZeroDivisionError: type = derive(
+    [Err<str>],
+    (e: str = 'division by zero')
 )
 
-A_Sub: type = (
-    __sub__ := (self, other: Self) -> Self {
-        Self(self.x - other.x, self.y - other.y)
-    },
-)
 
-A: type = <T: type> -> A_Add -> A_Sub -> (
-    // implicit by default, __type__ is always 0th elemenet of a structure
-    // __type__: type = struct,
-    
-    // implicit by default, __closure__ is always 1st element of a structure (and a function)
-    // __closure__ := ... ,
+err := ZeroDivisionError()
 
-    __name__ := 'A',
-    __mul__ := (self, other: Self) -> Self {
-        Self(self.x * other.x, self.y * other.y)
-    },
-    __div__ := (self, other: Self) -> Self {
-        Self(self.x / other.x, self.y / other.y)
-    },
-) -> (
-    x: T,
-    y: T,
-)
+// issubtype(err, ZeroDivisionError)
+match(err)
+    .case(ZeroDivisionError, (e) -> { panic(e) })
 
-// R := A<i64>
-// R.__type__.__call__(R, [1, 2], {})
-a0: A = A<i64>(1, 2)
+// issubtype(err.__type__.__bases__[0], Err<str>)
+match(err)
+    .case(Err<str>, (e) -> { panic(e) })
 
-// R := A<i64>
-// R.__type__.__call__(R, [2], {'y': 3})
-a1: A = A<i64>(2, y=3)
+// issubtype(err.__type__.__bases__[0], Err)
+match(err)
+    .case(Err, (e) -> { panic(e) })
 
-// f := getattr(a0, '__add__')
-a2: A = a0 + a1
-a2: A = a0.__type__.__add__(a0, a1)
 
-// f := getattr(a0, '__sub__')
-a3: A = a0 - a1
-a3: A = a0.__type__.__sub__(a0, a1)
+// Error ???
+div := (x: Number, y: Number) -> Result<Number, Error> {
 
-// f := getattr(a0, '__mul__')
-a4: A = a0 * a1
-a4: A = a0.__type__.__mul__(a0, a1)
-
-// f := getattr(a0, '__div__')
-a5: A = a0 / a1
-a5: A = a0.__type__.__div__(a0, a1)
-
+}
