@@ -1,12 +1,13 @@
+
 Ok := <V> -> (v: V)
 Err := <E> -> (e: E)
 Result := <V, E> -> (Ok<V> | Err<E>)
 
 Error := <E> -> Err<E>
-ZeroDivisionError := (__type__: type = Error<str>("division by zero"))
+ZeroDivisionError := (__type__: type = Error<str>, e: Error<str>("division by zero"))
 
-CustomError := (__type__: type = Error<str>("user-defined other error"))
-OtherError := (__type__: type = Error<str>("user-defined custom error"))
+CustomError := (__type__: type = Error<str>, e: Error<str>("user-defined other error"))
+OtherError := (__type__: type = Error<str>, e: Error<str>("user-defined custom error"))
 
 
 e := OtherError()
@@ -27,3 +28,4 @@ v: f64 = match(div(1.0, 0.0))
     .case(Error, e -> panic(e))
 
 v: f64 = div(1.0, 0.0)?
+
