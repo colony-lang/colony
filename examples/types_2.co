@@ -1,3 +1,0 @@
-div: fn = (x: Number, y: Number) -> Result<Number, Error> {
-}
-

@@ -5,33 +5,34 @@ Some: type = <V> -> (v: V)
 Option: type = <V> -> (NoneType | Some<V>)
 
 Ok: type = <V> -> (v: V)
-Err: type = <E> -> (e: E)
+Err: type = <E> -> (__type__: type, e: E)
 Result: type = <V, E> -> (Ok<V> | Err<E>)
 
 
-// ZeroDivisionError: type = (__bases__ := [Err<str>], e: str = 'division by zero'))
-ZeroDivisionError: type = derive(
-    [Err<str>],
-    (e: str = 'division by zero')
-)
+ValueError: Err = <E:=str> -> Err<E>
+KeyError: Err = <E:=str> -> Err<E>
+ZeroDivisionError: Err = <E:=str> -> Err<E>
 
 
+// example 1
 err := ZeroDivisionError()
 
-// issubtype(err, ZeroDivisionError)
 match(err)
     .case(ZeroDivisionError, (e) -> { panic(e) })
-
-// issubtype(err.__type__.__bases__[0], Err<str>)
-match(err)
     .case(Err<str>, (e) -> { panic(e) })
-
-// issubtype(err.__type__.__bases__[0], Err)
-match(err)
     .case(Err, (e) -> { panic(e) })
+    .default(_ -> { abort(-1) })
 
+// example 2
+div := (x: Number, y: Number) -> Result<Number, Err> {
+    z: Result<Number, Err>
 
-// Error ???
-div := (x: Number, y: Number) -> Result<Number, Error> {
+    y == 0 ? {
+        z = ZeroDivisionError()
+        return(z)
+    }
 
+    z = Ok(x / y)
+    z
 }
+
