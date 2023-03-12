@@ -5,14 +5,15 @@ Some: type = <V> -> (v: V)
 Option: type = <V> -> (NoneType | Some<V>)
 
 Ok: type = <V> -> (v: V)
-Err: type = <E> -> (__type__: type, e: E)
+Err: type = <E> -> (e: E)
 Result: type = <V, E> -> (Ok<V> | Err<E>)
 
 
-ValueError: Err = <E:=str> -> Err<E>
-KeyError: Err = <E:=str> -> Err<E>
-ZeroDivisionError: Err = <E:=str> -> Err<E>
-
+ValueError: Err = (__type__: type = Err<str>, e: str = 'value error')
+KeyError: Err = (__type__: type = Err<str>, e: str = 'key error')
+AttrError: Err = (__type__: type = Err<str>, e: str = 'attr error')
+TypeError: Err = (__type__: type = Err<str>, e: str = 'type error')
+ZeroDivisionError: Err = (__type__: type = Err<str>, e: str = 'zero division error')
 
 // example 1
 err := ZeroDivisionError()
@@ -24,14 +25,17 @@ match(err)
     .default(_ -> { abort(-1) })
 
 // example 2
+mul := (x: Number, y: Number) -> Result<Number, Err> {
+    z: Result<Number, Err>
+    typeof(x) != typeof(y) ? return(TypeError())
+    z = Ok(x * y)
+    z
+}
+
 div := (x: Number, y: Number) -> Result<Number, Err> {
     z: Result<Number, Err>
-
-    y == 0 ? {
-        z = ZeroDivisionError()
-        return(z)
-    }
-
+    typeof(x) != typeof(y) ? return(TypeError())
+    y == 0 ? return(ZeroDivisionError())
     z = Ok(x / y)
     z
 }
