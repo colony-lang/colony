@@ -1,0 +1,52 @@
+
+/*
+ * Fibonacci
+ */
+fib := (n: u64) -> u64 {
+    n < 2 ? return(n)
+    fib(n - 1) + fib(n - 2)
+}
+
+/*
+ * Type, instance, operator
+ */
+A := <T: i64 | f64> -> (x: T, y: int: T) <- (
+    __new__: (cls: type, n: T) -> A {
+        self: A = (x=T, y=T)
+        self
+    },
+    __add__: (self: A, other: A) -> A {
+        res: A = (self.x + other.x, self.y + other.y)
+    },
+)
+
+a0: A = A(1)
+a1: A = A(2)
+// a2: A = a0.__type__.__add__(a0, a1)
+a2: A = a0 + a1
+
+/*
+ * Result
+ */
+Ok: type = <V: type> -> (v: V) <- (
+    __match_args__ := ["v"],
+)
+
+Err: type = <E: type=str> -> (e: E=E.default) <- (
+    __match_args__ := ["e"],
+)
+
+Result: type = <V: type, E: type=str> -> (Ok<V> | Err<E>)
+
+div := <V: type=i64 | f64=f64> -> (x: V, y: V) -> Result<V> {
+    y == 0 ? return(Err("Division by zero"))
+    Ok<V>(x / y)
+}
+
+v: f64 = match(div<f64>(1.0, 0.0))
+    .case(Ok, (v) -> { v })
+    .case(Err, (e) -> { -1 })
+
+/*
+ * Option
+ */
